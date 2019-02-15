@@ -1,6 +1,6 @@
 # TE3201-Software-Engineering Project Monty
 
-### [Full Project Details is here](https://nus-te3201.github.io/2019/admin/te3201-admin.html#project)
+### [>>> Full project details is here](https://nus-te3201.github.io/2019/admin/te3201-admin.html#project)
 
 ## Basic Functionality:
 
