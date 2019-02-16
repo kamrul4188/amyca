@@ -49,3 +49,13 @@ for i, animal in enumerate(pets):
   print(i+1, 'Can I buy '+ animal +'?')
 ```
 ## Methods
+> Methords is a function on object. when apply methon on object, the original object not change but it's return new object
+`<object>.<methord>`
+### List Methods
+| Method | Description |
+|-------------|-------------------|
+| `index()` |	finds the index of an item in a list |
+| `append()` | adds an item to the end of the list |
+| `insert()` | inserts an item to a specific position in the list |
+| `remove()` | removes the specified item from the list |
+|`sort()`	| sorts items in the list |
