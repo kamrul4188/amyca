@@ -8,22 +8,20 @@ def print_items():
         print('>>> Nothing to list')
     else:
         for i, item in enumerate(items):
-          print(i,'.', items[i])
-            # ...
-
+          print(str(i+1)+'.', items[i])
 
 def add_item(user_input):
-    items = user_input
-    print(items.index)    
-    items.append(user_input)
-    
-    
-
+    items_len = len(items)
+    print(items_len)
+    new_input = user_input.split(" ",1)[1]
+    print (new_input)
+    items.append(new_input) 
 
 def terminate():
     print('>>> Are you sure? y/n')
     response = input()
-    return response == 'y'
+    #return response == 'y'
+    sys.exit()
 
 
 def execute_command(command):
