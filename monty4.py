@@ -7,21 +7,23 @@ def print_items():
     if len(items) == 0:
         print('>>> Nothing to list')
     else:
+        print(">>> List of items:")
         for i, item in enumerate(items):
-          print(str(i+1)+'.', items[i])
+          print("   ", str(i+1)+'.', items[i])
 
 def add_item(user_input):
-    items_len = len(items)
-    print(items_len)
-    new_input = user_input.split(" ",1)[1]
-    print (new_input)
+    #items_len = len(items)
+    #print(items_len)
+    new_input = user_input.split(" ",1)[1] #remove first word 'add' from the input
+    #print (new_input)
     items.append(new_input) 
 
 def terminate():
     print('>>> Are you sure? y/n')
     response = input()
-    #return response == 'y'
-    sys.exit()
+    if response == 'y':
+        print(">>> Bye!")
+        sys.exit()
 
 
 def execute_command(command):
