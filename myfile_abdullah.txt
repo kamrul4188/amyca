@@ -1,0 +1,9 @@
+Use Case:
+=====================================
+System: AMICA
+Use case: Team leader add activity
+Actor : Team leader
+
+======================================
+
+1.
