@@ -1,0 +1,1 @@
+items = []items.append(['Hello', True])print(items)
