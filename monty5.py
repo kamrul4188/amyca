@@ -31,7 +31,7 @@ def done_item (user_input):
         try:
             items[new_input][1] = True
         except IndexError:
-            raise IndexError('No item at index ' + str(new_input))
+            raise IndexError('No item at index ' + str(new_input+1))
 
 
 def confirm_is_number(number):
