@@ -20,16 +20,27 @@ def add_item(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
     items.append([new_input, False])
 
-def done_item(user_input):
-    new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-    confirm_is_int(new_input)
-    new_input = int(new_input) - 1
-    items[new_input][1] = True
-    print(items[0][1])
 
-def confirm_is_int(number):
-  if type(number) is not int:
-    raise ValueError(str(number) + ' is not an integer')
+def done_item (user_input):
+    new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
+    new_input = confirm_is_number(new_input)  # Return as integer
+    new_input = new_input - 1
+    if new_input < 0:
+        raise ValueError('Index must be greather than 0')
+    else:
+        try:
+            items[new_input][1] = True
+        except IndexError:
+            raise IndexError('No item at index ' + str(new_input))
+
+
+def confirm_is_number(number):
+    try:
+        number = int(number)
+        return number
+    except ValueError:
+        raise ValueError((str(number) + ' is not a number'))
+
 
 def terminate():
     print('>>> Are you sure? y/n')
@@ -51,7 +62,7 @@ def execute_command(command):
     elif command.startswith('done '):
         done_item(command)
     else:
-        print('>>> OOPS! Unknown command')
+        raise ValueError('command not recognized')
 
 
 def print_greeting():
