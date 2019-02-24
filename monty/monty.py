@@ -57,5 +57,5 @@ def main():
     while True:
         command = read_command()
         execute_command(command)
-main()
 
+main()
