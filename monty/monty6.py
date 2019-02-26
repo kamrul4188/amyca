@@ -1,4 +1,5 @@
-# Monty for is updated as week 4.
+# Monty weekly project | MD KAMRUZZAMAN | A0107851H
+# *************************************************
 import sys
 
 items = []
@@ -11,14 +12,15 @@ def print_items():
         print(">>> Here is the list of tasks:")
         print('''
 ==================================================
-STATUS | INDEX  |  DESCRIPTION                
+STATUS |  INDEX  |  DESCRIPTION                
 -------------------------------------------------- ''')
         for i, item in enumerate(items):
             if items[i][1]:
-                print('  ✓ ' + '  |    ' + str(i + 1) + '   | ' + items[i][0])
+                print('  ✓ ' + '  |    ' + str(i + 1) + '    |  ' + items[i][0])
             else:
-                print('  ✗ ' + '  |    ' + str(i + 1) + '   | ' + items[i][0])
+                print('  ✗ ' + '  |    ' + str(i + 1) + '    |  ' + items[i][0])
         print('--------------------------------------------------')
+
 
 def add_item(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
