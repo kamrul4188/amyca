@@ -28,5 +28,14 @@ User Story [Project Manager]:
 =============================
 1. As a project manager, I can do all the task can be done by team leader.
 2. As a project manager, I can add cost. So that, I can assign cost for each activity.
+3. As a project manager, I can update/Modefy cost, So that, I can control and monitoring project costing.
+4. As a project manager, I can remove cost, So the the cost not require in project I can delete.
 
-[to be continue]
+User Story [System Admin]
+=========================
+1. As a system admin, I can do all task can be done by project manager.
+2. As a system admin, I can add project. So new project can be mange by amyca
+3. As a system admin, I can remove project. So that the project not require to monitoring I can delete
+4. As a system admin, I can add new user. So that, I can add user when require.
+5. As a system admin, I can modify or reset user password. So that, I can reset password for user when require.
+6. As a system admin, I can remove user. So that, I can remove the user when user no logger contribute.
