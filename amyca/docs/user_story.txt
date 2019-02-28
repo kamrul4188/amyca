@@ -1,0 +1,41 @@
+****************************************************************************************************************
+TE3201-Software Engineering
+System: AMYCA
+Description: There are four level of access control. Team Member, Team Leader, Project Manager , System Admin
+****************************************************************************************************************
+
+User Story [Team Member]:
+=========================
+1. As a team member, I can view task activity. So that, I can monitoring project activity progress.
+2. As a team member, I can view task scheduling. So that, I can monitoring project schedule in time manner.
+3. As a team member, I can view task resource. So that, I can know the each task constrain.
+
+User Story [Team Leader]:
+=========================
+1. As a team leader, I can do all the task can be done by team member.
+2. As a team leader, I can view task cost. so that, I can monitoring and control project cost.
+3. As a team leader, I can add task activity. So that, I can add new project activity.
+4. As a team leader, I can add task schedule. So that, I can add schedule into project activity.
+5. As a team leader, I can add task resources. So that, I can assign resource allocation.
+6. As a team leader, I can update/modify task activity. So that, I can update any change into project activity.
+7. As a team leader, I can update/modify task schedule. So that, I can update any change into project schedule.
+8. As a team leader, I can update/modify task resources. So that, I can update any change into project resource.
+9. As a team leader, I can remove task activity. So that, I can remove any activity is not require in project.
+10. As a team leader, I can remove task schedule. So that, I can remove any schedule is not require in project.
+11. As a team leader, I can remove task resources. So that, I can remove any resources is not require in project.
+
+User Story [Project Manager]:
+=============================
+1. As a project manager, I can do all the task can be done by team leader.
+2. As a project manager, I can add cost. So that, I can assign cost for each activity.
+3. As a project manager, I can update/Modefy cost, So that, I can control and monitoring project costing.
+4. As a project manager, I can remove cost, So the the cost not require in project I can delete.
+
+User Story [System Admin]
+=========================
+1. As a system admin, I can do all task can be done by project manager.
+2. As a system admin, I can add project. So new project can be mange by amyca
+3. As a system admin, I can remove project. So that the project not require to monitoring I can delete
+4. As a system admin, I can add new user. So that, I can add user when require.
+5. As a system admin, I can modify or reset user password. So that, I can reset password for user when require.
+6. As a system admin, I can remove user. So that, I can remove the user when user no logger contribute.

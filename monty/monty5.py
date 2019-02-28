@@ -64,7 +64,6 @@ def execute_command(command):
     else:
         raise ValueError('command not recognized')
 
-
 def print_greeting():
     print(">>> Hello, my name is Monty")
 
