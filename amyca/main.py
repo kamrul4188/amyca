@@ -1,15 +1,28 @@
 import sys
-
+import datetime
+# from tkinter import messagebox
 
 tasks = []  # 0.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
+
+# Access Level : 1.Team Member, 2.Team Leader, 3.Project Manger, 4.System Admin
+access_level = 3
 
 
 def confirm_is_number(number):
     try:
         number = int(number)
-        return number
+        return True
     except ValueError:
         raise ValueError((str(number) + ' is not a number'))
+
+
+def confirm_date(date):
+    date_format = '%d/%m/%Y'
+    try:
+        date_obj = datetime.datetime.strptime(date, date_format)
+        return True
+    except ValueError:
+        print("Incorrect data format, should be dd/mm/yyyy")
 
 
 def done_task(user_input):
@@ -25,11 +38,14 @@ def done_task(user_input):
         except IndexError:
             raise IndexError('No item at index ' + str(new_input+1))
 
+# def task_duration(start_date, end_date):
+
 
 def print_tasks(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
     new_input = int(new_input)
     task_index = new_input - 1
+
     if tasks[task_index][5]:
         task_status = 'Completed'
     else:
@@ -39,6 +55,7 @@ def print_tasks(user_input):
     print(' ACTIVITY     : ' + tasks[task_index][0])
     print(' START DATE   : ' + tasks[task_index][1])
     print(' END DATE     : ' + tasks[task_index][2])
+   # print(' Duration     : ' + str(duration))
     print(' MANPOWER     : ' + tasks[task_index][3])
     print(' COST         : ' + '$' + tasks[task_index][4])
     print(' STATUS       : ' + task_status)
@@ -66,14 +83,31 @@ def add_task(user_input):
     # 1.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
     print('----------------------------------------------------------')
     print('You are going to add activity >> ' + new_input + ' >> into to your new task.')
-    print('Please enter following details:  ')
+    print('Please enter following details. If you don\'t want now, enter \'n\' ')
     try:
-        task_activity = new_input
-        task_start_date = input('Start Date (dd/mm/yy): ')
-        task_end_date = input('End Date (dd/mm/yy): ')
-        task_manpower = input('Manpower: ')
-        task_cost = input('Cost($): ')
+        while True:
+            task_activity = new_input
+            task_start_date = input('Start Date (dd/mm/yyyy): ')
+            if confirm_date(task_start_date) is not True:
+                print('-------------Try Again-------------------')
+                continue
+            task_end_date = input('End Date (dd/mm/yyyy): ')
+            if confirm_date(task_end_date) is not True:
+                print('-------------Try Again-------------------')
+                continue
+            task_manpower = input('Manpower: ')
+            if confirm_is_number(task_manpower) is not True:
+                print('-------------Try Again-------------------')
+                continue
+            if access_level == 3:
+                task_cost = input('Cost($): ')
+                if confirm_is_number(task_cost) is not True:
+                    print('-------------Try Again-------------------')
+                    continue
+            else:
+                print('Task cost only can add by Project Manager')
 
+            break
         tasks.append([task_activity,task_start_date,task_end_date,task_manpower,task_cost, False])  # Added new items to list
         print('>>> Activity added to the task')
     except ValueError:
@@ -131,6 +165,7 @@ def print_greeting():
     '''
     print(banner.strip(), '\n')
 
+
 def main():
     print_greeting() # Welcome massage here
     while True:
@@ -139,6 +174,8 @@ def main():
             execute_command(command)
         except Exception as e:
             print('Sorry, I could not perform that command. Problem:', e)
+            # massage = '''Sorry, I could not perform that command.\n\n Problem: ''' + str(e)
+            # messagebox.showinfo('Error...!!!',  massage)
 
 
 main()
