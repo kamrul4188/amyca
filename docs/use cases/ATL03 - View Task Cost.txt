@@ -1,0 +1,19 @@
+*****************************************************
+ID: ATL03
+System: AMYCA
+Use Case: View task cost
+Actor: Team leader and above role
+Precondition: User Logged in
+*****************************************************
+
+MSS:
+====
+1. Amyca: Request for command
+2. User: Enter command <cost> <task ID>
+3. Amyca: Show cost details
+   <Use case end>
+
+Extension:
+==========
+2a. Amyca: Command not recognize!
+    <resume use case step: 1 to 2>

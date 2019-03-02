@@ -1,0 +1,18 @@
+****************************************************
+ID: ATM03
+System: AMYCA
+Use Case: View task scheduling
+Actor: Team member and above role
+Precondition: User <Logged in>
+****************************************************
+
+MSS:
+====
+1. Amyca: Request for command
+2. User: Enter command <dateline> <task ID>
+3. Amyca: Show schedule of details of that particular task
+   <use case end>
+
+Extension:
+2a. Amyca: Command not recognize!
+     <resume use case step: 1 to 2 until right command>
