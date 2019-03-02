@@ -27,11 +27,11 @@ MSS:
 Extension:
 ==========
 5a. User: Enter <n>
-    <use case resume step 8>
+    <use case resume step: 8>
 9a. User: Enter <n>
-    <use case resume step 10>
+    <use case resume step: 10>
 10a. As access control policy check user is not <Project Manager>
      <use case resume step: 12>
 11a. User: Enter <n>
-     <use case resume 12>
+     <use case resume: 12>
 
