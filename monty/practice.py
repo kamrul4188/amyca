@@ -1,17 +1,18 @@
-import datetime
+#%matplotlib online
+import matplotlib.pyplot as plt; plt.rcdefaults()
+import numpy as np
+import matplotlib.pyplot as plt
+
+objects = ['python', 'c++']
+performance = [5, 20]
+x_pos = np.arange(len(objects))
 
 
-def format_to_datetime(date):
-    date_format = '%d/%m/%Y'
-    try:
-        date_obj = datetime.datetime.strptime(date, date_format).date()
-        return date_obj
-    except ValueError:
-        print("Incorrect data format, should be dd/mm/yyyy")
 
 
-while True:
-    date = input('Date: ')
-    print(format_to_datetime(date))
+plt.barh(x_pos, performance, align='center', alpha = 0.5)
+plt.yticks(x_pos, objects)
+plt.xlabel('Usage')
+plt.title('Hello wold')
 
-
+plt.show()

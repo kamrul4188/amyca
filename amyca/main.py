@@ -1,5 +1,9 @@
 import sys
 import datetime
+import matplotlib.pyplot as plt; plt.rcdefaults()
+import numpy as np
+import matplotlib.pyplot as plt
+
 # from tkinter import messagebox
 
 tasks = []  # 0.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
@@ -145,6 +149,36 @@ def print_activity():
         print('--------------------------------------------------')
 
 
+def timeline_task():
+    task_id = []
+    duration = []
+    if len(tasks) == 0:
+        print('>>> Nothing to show on time-line')
+    else:
+        for i, task in enumerate(tasks):
+            index_id = 'Task ID : ' + str(i + 1)
+            task_id.append(index_id)
+
+            start_date = tasks[i][1]
+            end_date = tasks[i][2]
+            task_duration = duration_datetime(start_date, end_date)
+            task_duration = str(task_duration).split(' ', 1)[0]
+            duration.append(int(task_duration))
+            print(str(index_id) + ' >> Duration: ' + str(task_duration) + ' days')
+
+        x_pos = np.arange(len(task_id))
+
+        plt.barh(x_pos, duration, align='center', alpha = 0.5)
+
+        plt.yticks(x_pos, task_id)
+        #plt.xticks(x_pos, task_id)
+        plt.xlabel('days')
+        #plt.ylabel('days')
+        plt.title('Tasks Time Line')
+        plt.show()
+
+
+
 def add_task(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
     # 1.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
@@ -188,6 +222,8 @@ def execute_command(command):
         help_amyca()
     elif command == 'list':
         print_activity()
+    elif command == 'timeline':
+        timeline_task()
     elif command.startswith('task '):
         print_tasks(command)
     elif command.startswith('add '):
