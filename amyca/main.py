@@ -8,21 +8,73 @@ tasks = []  # 0.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
 access_level = 3
 
 
+def help_amyca():
+    need_help = '''
+>>> I'm glad you asked. Here it is:
+==================================================
+Amyca can understand the following commands:
+
+add DESCRIPTION 
+    Adds a task to the list
+    Example: add installation aircon 
+
+list
+    Lists the tasks in the Task
+     
+task INDEX 
+    full detail of teh INDEX task
+    Example: task 1
+    
+done INDEX
+    Marks the task at INDEX as 'done'
+    Example: done 1
+
+exit
+    Exits the application
+-------------------------------------------------- 
+'''
+    print(need_help.strip(), '\n')
+
+
 def confirm_is_number(number):
     try:
         number = int(number)
-        return True
+        return number
     except ValueError:
         raise ValueError((str(number) + ' is not a number'))
 
 
-def confirm_date(date):
+def format_to_datetime(date):
     date_format = '%d/%m/%Y'
+    while True:
+        date = date
+        try:
+            date_obj = datetime.datetime.strptime(date, date_format).date()
+            return date_obj
+            break
+        except ValueError:
+            print("Incorrect data format, should be dd/mm/yyyy")
+            date = input('Please enter your date again: ')
+
+
+def datetime_to_print_format(date):
     try:
-        date_obj = datetime.datetime.strptime(date, date_format)
-        return True
+        print_date = date.strftime("%d %b, %Y")
+        return print_date
     except ValueError:
-        print("Incorrect data format, should be dd/mm/yyyy")
+        print('Format of your input is not datetime')
+
+
+def duration_datetime(start_date, end_date):
+    try:
+        if end_date >= start_date:
+           duration = end_date - start_date
+           duration = str(duration).split(',', 1)[0]
+           return duration
+        else:
+           print('Your end date is earlier than start')
+    except ValueError:
+        print('Format of your input ins not detetime')
 
 
 def done_task(user_input):
@@ -38,27 +90,42 @@ def done_task(user_input):
         except IndexError:
             raise IndexError('No item at index ' + str(new_input+1))
 
-# def task_duration(start_date, end_date):
-
 
 def print_tasks(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
     new_input = int(new_input)
     task_index = new_input - 1
 
-    if tasks[task_index][5]:
-        task_status = 'Completed'
+    task_id = new_input
+    activity = tasks[task_index][0]
+    start_date = tasks[task_index][1]
+    end_date = tasks[task_index][2]
+    manpower = tasks[task_index][3]
+    cost = tasks[task_index][4]
+    status = tasks[task_index][5]
+
+    duration = duration_datetime(start_date, end_date)
+    today = datetime.date.today()
+
+    if status:
+        status = 'Completed'
+    elif start_date > today:
+        due_to_start = duration_datetime(today, start_date)
+        status = 'Due to start in' + str(due_to_start)
+    elif today > end_date:
+        status = 'Task is overdue by ' + duration_datetime(end_date, start_date)
     else:
-        task_status = 'Not Completed'
+        status = 'Task on progress'
+
     print('=======================================================')
-    print(' TASK ID      : ' + str(new_input))
-    print(' ACTIVITY     : ' + tasks[task_index][0])
-    print(' START DATE   : ' + tasks[task_index][1])
-    print(' END DATE     : ' + tasks[task_index][2])
-   # print(' Duration     : ' + str(duration))
-    print(' MANPOWER     : ' + tasks[task_index][3])
-    print(' COST         : ' + '$' + tasks[task_index][4])
-    print(' STATUS       : ' + task_status)
+    print(' TASK ID      : ' + str(task_id))
+    print(' ACTIVITY     : ' + activity)
+    print(' START DATE   : ' + datetime_to_print_format(start_date))
+    print(' END DATE     : ' + datetime_to_print_format(end_date))
+    print(' Duration     : ' + str(duration))
+    print(' MANPOWER     : ' + str(manpower))
+    print(' COST         : ' + '$' + str(cost))
+    print(' STATUS       : ' + status)
     print('=======================================================')
 
 
@@ -83,31 +150,17 @@ def add_task(user_input):
     # 1.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
     print('----------------------------------------------------------')
     print('You are going to add activity >> ' + new_input + ' >> into to your new task.')
-    print('Please enter following details. If you don\'t want now, enter \'n\' ')
+    print('Please enter following details into your task. ')
     try:
-        while True:
-            task_activity = new_input
-            task_start_date = input('Start Date (dd/mm/yyyy): ')
-            if confirm_date(task_start_date) is not True:
-                print('-------------Try Again-------------------')
-                continue
-            task_end_date = input('End Date (dd/mm/yyyy): ')
-            if confirm_date(task_end_date) is not True:
-                print('-------------Try Again-------------------')
-                continue
-            task_manpower = input('Manpower: ')
-            if confirm_is_number(task_manpower) is not True:
-                print('-------------Try Again-------------------')
-                continue
-            if access_level == 3:
-                task_cost = input('Cost($): ')
-                if confirm_is_number(task_cost) is not True:
-                    print('-------------Try Again-------------------')
-                    continue
-            else:
-                print('Task cost only can add by Project Manager')
+        task_activity = new_input
+        task_start_date = format_to_datetime(input('Start Date (dd/mm/yyyy): '))
+        task_end_date = format_to_datetime(input('End Date (dd/mm/yyyy): '))
+        task_manpower = confirm_is_number(input('Manpower: '))
+        if access_level == 3:
+            task_cost = confirm_is_number(input('Cost($): '))
+        else:
+            print('Task cost only can add by Project Manager')
 
-            break
         tasks.append([task_activity,task_start_date,task_end_date,task_manpower,task_cost, False])  # Added new items to list
         print('>>> Activity added to the task')
     except ValueError:
@@ -131,6 +184,8 @@ def execute_command(command):
         raise ValueError('You did not input anything')
     elif command == 'exit' or command == 'end':
         terminate()
+    elif command == 'help':
+        help_amyca()
     elif command == 'list':
         print_activity()
     elif command.startswith('task '):
