@@ -9,7 +9,33 @@ import matplotlib.pyplot as plt
 tasks = []  # 0.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
 
 # Access Level : 1.Team Member, 2.Team Leader, 3.Project Manger, 4.System Admin
-access_level = 3
+access_level = 0
+
+users = [['admin', 'admin123', 4], ['kamrul', 'kamrul123', 3], ['abdullah', 'abdullah123', 2], ['xiao','xiao123', 1]]  # [usr_id, password, access_level]
+
+
+def check_user_level(user_id, user_pw):
+    try:
+        for i, user in enumerate(users):
+            temp_user_id = users[i][0]
+            temp_user_pw = users[i][1]
+            set_user_level = users[i][2]
+
+            if temp_user_id == user_id and temp_user_pw == user_pw:
+                return set_user_level
+
+    except ValueError as e:
+        raise ValueError(e)
+
+
+def add_user():
+    if access_level == 4:
+        new_user_id = input('Please enter new user id: ')
+        new_user_pw = input('Please enter new password: ')
+        new_user_level = input('Please enter access level: ')
+        users.append([new_user_id, new_user_pw, new_user_level])
+    else:
+        print('You have not authorize to add or remove user')
 
 
 def help_amyca():
@@ -178,7 +204,6 @@ def timeline_task():
         plt.show()
 
 
-
 def add_task(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
     # 1.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
@@ -257,8 +282,26 @@ def print_greeting():
     print(banner.strip(), '\n')
 
 
+def access_control():
+    """ Access control function to control access into Amyca. The function only allow authorize user with
+    with right password. Without
+    """
+    while True:
+        try:
+            # print('\nCurrent ID: admin, PW: admin123 or ID: kamrul PW: kamrul123\n ')
+            user_id = input('Please Enter User ID: ')
+            user_pw = input('Please Enter Password: ')
+            access_level = check_user_level(user_id, user_pw)
+            if access_level > 0:
+                break
+        except TypeError:
+            print('!!! Invalid user ID or Password !!! Tty again......')
+
+
 def main():
+    access_control()
     print_greeting() # Welcome massage here
+
     while True:
         try:
             command = read_command()
