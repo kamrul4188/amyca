@@ -1,0 +1,37 @@
+**************************************************************
+ID: ATL01
+System: AMYCA
+Use Case: Adding New Task
+Actor: Team leader and Project Manager
+Precondition: User <Logged in>
+Guarantree: Access control policy.
+***************************************************************
+
+MSS:
+====
+
+1. Amyca: Request for entering command
+2. User: Enter command <add> <activity details>
+3. Amyca: Confiramtion to adding new activity to task.
+4. Amyca: Request for starting date.
+5. User: Enter starting date
+6. Amyca: Request for ending date.
+7. User: Enter ending date.
+8. Amyca: Request for enter manpower
+9. User: Enter manpower
+10. Amyca: Request of entering cost.
+11. User: Enter cost
+12. Amyca: Confirmation adding task
+    <use case end>
+
+Extension:
+==========
+5a. User: Enter <n>
+    <use case resume step: 8>
+9a. User: Enter <n>
+    <use case resume step: 10>
+10a. As access control policy check user is not <Project Manager>
+     <use case resume step: 12>
+11a. User: Enter <n>
+     <use case resume: 12>
+

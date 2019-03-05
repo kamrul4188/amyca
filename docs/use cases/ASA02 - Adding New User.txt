@@ -1,0 +1,27 @@
+**************************************
+ID: ASA02
+System: AMYCA
+Use Case: Adding new user
+Actor: System Admin
+Precondition: User is Logged in
+**************************************
+
+MSS:
+====
+1. Amyca: Request for command
+2. User: Enter command <add user> <new_use_ID>
+3. Amyca: Request for password
+4. User: Enter new password
+5. Amyca: Request for password again
+6. User: Enter password again
+7. Amyca: Request for user access level
+8. Enter user-access-level
+9. Amyca: Confirm updated
+   <Use case end>
+
+Extension:
+==========
+6a. Error! Password not match
+       <Use case step 3 to 6 until both password match>
+2a. wrong command!
+       <Use case step 1 to 2 repeat again>
