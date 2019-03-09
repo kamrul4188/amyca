@@ -2,14 +2,14 @@
 ID: ATL03
 System: AMYCA
 Use Case: View task cost
-Actor: Team leader and above role
+Actor: Team leader and above Project Manager
 Precondition: User Logged in
 *****************************************************
 
 MSS:
 ====
 1. Amyca: Request for command
-2. User: Enter command <cost> <task ID>
+2. User: Enter command <cost>
 3. Amyca: Show cost details
    <Use case end>
 
