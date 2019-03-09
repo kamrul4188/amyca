@@ -2,7 +2,7 @@
 ID: ATM01
 System: AMYCA
 Use Case: View task activity
-Actor: Team member and above role
+Actor: Team member, Team Leader and Team Manager.
 Precondition: User <Logged in>
 *************************************************
 

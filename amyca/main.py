@@ -11,7 +11,8 @@ tasks = []  # 0.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
 # Access Level : 1.Team Member, 2.Team Leader, 3.Project Manger, 4.System Admin
 access_level = 0
 
-users = [['admin', 'admin123', 4], ['kamrul', 'kamrul123', 3], ['abdullah', 'abdullah123', 2], ['xiao','xiao123', 1]]  # [usr_id, password, access_level]
+# [usr_id, password, access_level]
+users = [['admin', 'admin123', 4], ['kamrul', 'kamrul123', 3], ['abdullah', 'abdullah123', 2], ['xiao','xiao123', 1]]
 
 
 def check_user_level(user_id, user_pw):
@@ -70,6 +71,7 @@ def confirm_is_number(number):
     try:
         number = int(number)
         return number
+
     except ValueError:
         raise ValueError((str(number) + ' is not a number'))
 
@@ -102,7 +104,7 @@ def duration_datetime(start_date, end_date):
            duration = str(duration).split(',', 1)[0]
            return duration
         else:
-           print('Your end date is earlier than start')
+           print('Your end date ims earlier than start')
     except ValueError:
         print('Format of your input ins not detetime')
 
@@ -204,6 +206,16 @@ def timeline_task():
         plt.show()
 
 
+def confirm_manpower():
+    try:
+        while True:
+            manpower = input('Manpower: ')
+            if manpower.isnumeric():
+                return manpower
+    except ValueError:
+        raise ValueError((str(manpower) + ' is not a number'))
+
+
 def add_task(user_input):
     new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
     # 1.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
@@ -214,10 +226,12 @@ def add_task(user_input):
         task_activity = new_input
         task_start_date = format_to_datetime(input('Start Date (dd/mm/yyyy): '))
         task_end_date = format_to_datetime(input('End Date (dd/mm/yyyy): '))
-        task_manpower = confirm_is_number(input('Manpower: '))
+        # task_manpower = confirm_is_number(input('Manpower: '))
+        task_manpower = confirm_manpower()
         if access_level == 3:
             task_cost = confirm_is_number(input('Cost($): '))
         else:
+            task_cost = 0
             print('Task cost only can add by Project Manager')
 
         tasks.append([task_activity,task_start_date,task_end_date,task_manpower,task_cost, False])  # Added new items to list
