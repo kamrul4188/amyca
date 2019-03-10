@@ -3,7 +3,6 @@ import datetime
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
-
 # from tkinter import messagebox
 
 tasks = []
@@ -15,6 +14,11 @@ INDEX_MANPOWER = 3
 INDEX_COST = 4
 INDEX_STATUS = 5
 
+DEFAULT_USER_ID = 'admin'
+DEFAULT_USER_PW = 'admin123'
+DEFAULT_USER_LEVEL = 4
+
+users = [[DEFAULT_USER_ID, DEFAULT_USER_PW, DEFAULT_USER_LEVEL]]
 current_user = ['user', 'pw', 0]
 
 USER_LEVEL_1 = 1
@@ -26,11 +30,9 @@ INDEX_USER_ID = 0
 INDEX_USER_PW = 1
 INDEX_USER_LEVEL = 2
 
+MINIMUM_PW_LENGTH = 6
 INDEX_OFFSET = 1
 NULL = 0
-
-# [usr_id, password, access_level]
-users = [['admin', 'admin123', 4], ['kamrul', 'kamrul123', 3], ['abdullah', 'abdullah123', 2], ['xiao','xiao123', 1]]
 
 
 def check_user_level(user_id, user_pw):
@@ -46,14 +48,58 @@ def check_user_level(user_id, user_pw):
         raise ValueError(e)
 
 
-def add_user():
-    if current_user[2] == 4:
-        new_user_id = input('Please enter new user id: ')
-        new_user_pw = input('Please enter new password: ')
-        new_user_level = input('Please enter access level: ')
-        users.append([new_user_id, new_user_pw, new_user_level])
+def check_pw_length(user_input):
+    if len(user_input) >= MINIMUM_PW_LENGTH:
+        password = user_input
+        return password
     else:
-        print('You have not authorize to add or remove user')
+        raise ValueError('Minimum password length is 6.')
+
+
+def add_user():
+    try:
+        new_user_id = input('Please enter new user id: ')
+        new_user_pw = check_pw_length(input('Please enter new password with minimum length (6): '))
+        new_user_level = confirm_is_number(input('Please enter access level: '))
+        users.append([new_user_id, new_user_pw, new_user_level])
+
+    except ValueError as e:
+        raise ValueError(e)
+
+
+def remove_user():
+    print('Hello world')
+
+
+def change_password():
+    print('Hello world')
+
+
+def admin_task():
+    if current_user[INDEX_USER_LEVEL] == 4:
+        print('''
+------------------------------------------------------------------------
+Welcome to you in admin panel..............!!!!!!!
+Please select your index form the list. enter \'0\' to exit admin panel:
+    1. Add new user
+    2. Delete user
+    3. Change user password 
+-------------------------------------------------------------------------''')
+        while True:
+            admin_input = confirm_is_number(input('Please enter index: '))
+            if admin_input == 0:
+                break
+            elif admin_input == 1:
+                add_user()
+            elif admin_input == 2:
+                remove_user()
+            elif admin_input == 3:
+                change_password()
+            else:
+                print('You have entered invalid input. Please try again...')
+
+    else:
+        raise ValueError('You have not authorize to add or remove user')
 
 
 def help_amyca():
@@ -117,11 +163,11 @@ def datetime_to_print_format(date):
 def duration_datetime(start_date, end_date):
     try:
         if end_date >= start_date:
-           duration = end_date - start_date
-           duration = str(duration).split(',', 1)[0]
-           return duration
+            duration = end_date - start_date
+            duration = str(duration).split(',', 1)[0]
+            return duration
         else:
-           print('Your end date ims earlier than start')
+            print('Your end date ims earlier than start')
     except ValueError:
         print('Format of your input ins not detetime')
 
@@ -309,28 +355,27 @@ Enter \'0\' for exit update
 ------------------------------------------------------------------------
 ''')
 
-        # print('Task index: ', task_index)
         while True:
             parameter_input = confirm_is_number(input('Please enter your preference: '))
-            parameter_index = parameter_input -1
-            if parameter_input == 1:
+            parameter_index = parameter_input - INDEX_OFFSET
+            if parameter_index == INDEX_ACTIVITY:
                 task_activity = input('Update activity: ')
                 tasks[task_index][parameter_index] = task_activity
-            elif parameter_input == 2:
+            elif parameter_index == INDEX_START_DATE:
                 task_start_date = format_to_datetime(input('Update start date: '))
                 tasks[task_index][parameter_index] = task_start_date
-            elif parameter_input == 3:
+            elif parameter_index == INDEX_END_DATE:
                 task_end_date = format_to_datetime(input('Update end date: '))
                 tasks[task_index][parameter_index] = task_end_date
-            elif parameter_input == 4:
+            elif parameter_index == INDEX_MANPOWER:
                 task_manpower = confirm_manpower()
                 tasks[task_index][parameter_index] = task_manpower
-            elif parameter_input == 5 and current_user[2] == 3:
+            elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] == USER_LEVEL_3:
                 task_cost = confirm_is_number(input('Update cost($): '))
                 tasks[task_index][parameter_index] = task_cost
-            elif parameter_input == 5 and current_user[2] != 3:
+            elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] != USER_LEVEL_3:
                 print(' >> Only manager can update cost ')
-            elif parameter_input == 0:
+            elif parameter_index < 0:
                 break
             else:
                 print('Invalid input')
@@ -377,6 +422,8 @@ def execute_command(command):
         print_cost()
     elif command == 'logout':
         log_out()
+    elif command == 'admin':
+        admin_task()
     elif command.startswith('add '):
         add_task(command)
     elif command.startswith('task '):
@@ -422,9 +469,9 @@ def access_control():
             user_id = input('Please Enter User ID: ')
             user_pw = input('Please Enter Password: ')
             access_level = check_user_level(user_id, user_pw)
-            current_user[0] = user_id
-            current_user[1] = user_pw
-            current_user[2] = access_level
+            current_user[INDEX_USER_ID] = user_id
+            current_user[INDEX_USER_PW] = user_pw
+            current_user[INDEX_USER_LEVEL] = access_level
             print('Access Level: ', access_level)
             if access_level > 0:
                 break
