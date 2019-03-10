@@ -62,17 +62,38 @@ def add_user():
         new_user_pw = check_pw_length(input('Please enter new password with minimum length (6): '))
         new_user_level = confirm_is_number(input('Please enter access level: '))
         users.append([new_user_id, new_user_pw, new_user_level])
+        print('>>> You have added' + new_user_id + 'as user and his/her access level is ' + str(new_user_level))
 
     except ValueError as e:
         raise ValueError(e)
 
 
+def print_user():
+    print(">>> Here is the list of your user.")
+    print('==================================================')
+    print(' INDEX | USER ID ')
+    print('--------------------------------------------------')
+    for i, user in enumerate(users):
+        print('   ' + str(i + INDEX_OFFSET) + '   |   ' + str(users[i][INDEX_USER_ID]))
+    print('--------------------------------------------------')
+
+
 def remove_user():
-    print('Hello world')
+    user_input = confirm_is_number(input('Enter index to delete user: '))
+    input_index = user_input - INDEX_OFFSET
+    if len(users) < 2:
+        raise ValueError('Minimum user should be one.')
+    elif input_index < 0:
+        raise ValueError('Invalid input !!!')
+    else:
+        del users[input_index]
 
 
 def change_password():
-    print('Hello world')
+    user_input = confirm_is_number(input('Enter index to change password: '))
+    input_index = user_input - INDEX_OFFSET
+    new_password = check_pw_length(input('Please enter new password with minimum length(6)'))
+    users[input_index][INDEX_USER_PW] = new_password
 
 
 def admin_task():
@@ -80,24 +101,28 @@ def admin_task():
         print('''
 ------------------------------------------------------------------------
 Welcome to you in admin panel..............!!!!!!!
-Please select your index form the list. enter \'0\' to exit admin panel:
-    1. Add new user
-    2. Delete user
-    3. Change user password 
+Please select your index form the list.:
+    1. Add new user <add user>
+    2. Delete user <del user>
+    3. Change user password  <cp user>
+    4. View user index <show user>
+    5. To exit admin panel <end>
 -------------------------------------------------------------------------''')
         while True:
-            admin_input = confirm_is_number(input('Please enter index: '))
-            if admin_input == 0:
-                break
-            elif admin_input == 1:
+            print('>>> Enter your admin command')
+            admin_input = input()
+            if admin_input == 'add user':
                 add_user()
-            elif admin_input == 2:
+            elif admin_input == 'del user':
                 remove_user()
-            elif admin_input == 3:
+            elif admin_input == 'cp user':
                 change_password()
+            elif admin_input == 'show user':
+                print_user()
+            elif admin_input == 'end admin':
+                break
             else:
                 print('You have entered invalid input. Please try again...')
-
     else:
         raise ValueError('You have not authorize to add or remove user')
 
@@ -110,7 +135,7 @@ Amyca can understand the following commands:
 
 add DESCRIPTION 
     Adds a task to the list
-    Example: add installation aircon 
+    Example: add installation air-con 
 
 list
     Lists the tasks in the Task
