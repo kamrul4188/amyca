@@ -412,10 +412,10 @@ Enter \'0\' for exit update
 def terminate():
     print('>>> Are you sure? y/n')
     response = input()
-    if response == 'y':
+    if response.lower() == 'y':
         print(">>> Bye!")
         sys.exit()
-    elif response == 'n':
+    elif response.lower() == 'n':
         print('Welcome back !')
     else:
         raise ValueError('Invalid input')
