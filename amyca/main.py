@@ -62,7 +62,7 @@ def add_user():
         new_user_pw = check_pw_length(input('Please enter new password with minimum length (6): '))
         new_user_level = confirm_is_number(input('Please enter access level: '))
         users.append([new_user_id, new_user_pw, new_user_level])
-        print('>>> You have added' + new_user_id + 'as user and his/her access level is ' + str(new_user_level))
+        print('>>> You have added ' + new_user_id + ' as user and his/her access level is ' + str(new_user_level))
 
     except ValueError as e:
         raise ValueError(e)
@@ -106,7 +106,7 @@ Please select your index form the list.:
     2. Delete user <del user>
     3. Change user password  <cp user>
     4. View user index <show user>
-    5. To exit admin panel <end>
+    5. To exit admin panel <exit admin>
 -------------------------------------------------------------------------''')
         while True:
             print('>>> Enter your admin command')
@@ -119,7 +119,7 @@ Please select your index form the list.:
                 change_password()
             elif admin_input == 'show user':
                 print_user()
-            elif admin_input == 'end admin':
+            elif admin_input == 'exit admin':
                 break
             else:
                 print('You have entered invalid input. Please try again...')
@@ -139,6 +139,26 @@ add DESCRIPTION
 
 list
     Lists the tasks in the Task
+    
+timeline
+    To view schedule of task
+
+res
+    To view task resource
+
+cost
+    To view cost of task and project
+
+admin
+    Access to admin panel
+
+add DESCRIPTION
+    Add new task/activity 
+    Example: add Install air-caon
+
+update INDEX
+    Update/edit task parameter 
+    Example: update 1
      
 task INDEX 
     full detail of teh INDEX task
@@ -147,6 +167,9 @@ task INDEX
 done INDEX
     Marks the task at INDEX as 'done'
     Example: done 1
+    
+logout 
+    Logout from user
 
 exit
     Exits the application
