@@ -141,31 +141,31 @@ list
     Lists the tasks in the Task
     
 timeline
-    To view schedule of task
+    To display schedule of task
 
 res
-    To view task resource
+    To display task resource
 
 cost
-    To view cost of task and project
+    To display cost of task and project
 
 admin
     Access to admin panel
 
 add DESCRIPTION
     Add new task/activity 
-    Example: add Install air-caon
+    Example: add Install air-con
 
 update INDEX
     Update/edit task parameter 
     Example: update 1
      
 task INDEX 
-    full detail of teh INDEX task
+    full detail of  INDEX's task
     Example: task 1
     
 done INDEX
-    Marks the task at INDEX as 'done'
+    Marks the INDEX's task as 'done'
     Example: done 1
     
 logout 
@@ -173,7 +173,7 @@ logout
 
 exit
     Exits the application
--------------------------------------------------- 
+================================================== 
 '''
     print(need_help.strip(), '\n')
 
@@ -388,46 +388,48 @@ def update_task(user_input):
     :return:
     """
     try:
-        new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-        task_index = int(new_input) - 1
-        print('''
------------------------------------------------------------------------
-please select which following parameter index you would like to update. 
-    1. Activity
-    2. Start date
-    3. End date
-    4. Manpower
-    5. Cost
-    
-Enter \'0\' for exit update 
-------------------------------------------------------------------------
-''')
+        if current_user[INDEX_USER_LEVEL] == USER_LEVEL_3 or current_user[INDEX_USER_LEVEL] == USER_LEVEL_2:
+            new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
+            task_index = int(new_input) - 1
+            print('''
+    -----------------------------------------------------------------------
+    please select which following parameter index you would like to update. 
+        1. Activity
+        2. Start date
+        3. End date
+        4. Manpower
+        5. Cost
+        
+    Enter \'0\' for exit update 
+    ------------------------------------------------------------------------
+    ''')
 
-        while True:
-            parameter_input = confirm_is_number(input('Please enter your preference: '))
-            parameter_index = parameter_input - INDEX_OFFSET
-            if parameter_index == INDEX_ACTIVITY:
-                task_activity = input('Update activity: ')
-                tasks[task_index][parameter_index] = task_activity
-            elif parameter_index == INDEX_START_DATE:
-                task_start_date = format_to_datetime(input('Update start date: '))
-                tasks[task_index][parameter_index] = task_start_date
-            elif parameter_index == INDEX_END_DATE:
-                task_end_date = format_to_datetime(input('Update end date: '))
-                tasks[task_index][parameter_index] = task_end_date
-            elif parameter_index == INDEX_MANPOWER:
-                task_manpower = confirm_manpower()
-                tasks[task_index][parameter_index] = task_manpower
-            elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] == USER_LEVEL_3:
-                task_cost = confirm_is_number(input('Update cost($): '))
-                tasks[task_index][parameter_index] = task_cost
-            elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] != USER_LEVEL_3:
-                print(' >> Only manager can update cost ')
-            elif parameter_index < 0:
-                break
-            else:
-                print('Invalid input')
-
+            while True:
+                parameter_input = confirm_is_number(input('Please enter your preference: '))
+                parameter_index = parameter_input - INDEX_OFFSET
+                if parameter_index == INDEX_ACTIVITY:
+                    task_activity = input('Update activity: ')
+                    tasks[task_index][parameter_index] = task_activity
+                elif parameter_index == INDEX_START_DATE:
+                    task_start_date = format_to_datetime(input('Update start date: '))
+                    tasks[task_index][parameter_index] = task_start_date
+                elif parameter_index == INDEX_END_DATE:
+                    task_end_date = format_to_datetime(input('Update end date: '))
+                    tasks[task_index][parameter_index] = task_end_date
+                elif parameter_index == INDEX_MANPOWER:
+                    task_manpower = confirm_manpower()
+                    tasks[task_index][parameter_index] = task_manpower
+                elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] == USER_LEVEL_3:
+                    task_cost = confirm_is_number(input('Update cost($): '))
+                    tasks[task_index][parameter_index] = task_cost
+                elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] != USER_LEVEL_3:
+                    print(' >> Only manager can update cost ')
+                elif parameter_index < 0:
+                    break
+                else:
+                    print('Invalid input')
+        else:
+            print('You are not authorize to update task')
     except ValueError:
         raise ValueError('Invalid input')
 
