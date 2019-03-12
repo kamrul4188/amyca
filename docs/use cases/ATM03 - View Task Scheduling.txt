@@ -9,7 +9,7 @@ Precondition: User <Logged in>
 MSS:
 ====
 1. Amyca: Request for command
-2. User: Enter command <dateline> <task ID>
+2. User: Enter command <timeline>
 3. Amyca: Show schedule of details of that particular task
    <use case end>
 

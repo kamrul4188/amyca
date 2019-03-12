@@ -1,48 +1,46 @@
-users = [['admin', 'admin123', 4], ['kamrul', 'kamrul123', 3]]
+def get_file_content_as_list(filename):
+    """Return content of the file as a list of lines
 
-new_user = []
+    The file is expected to be in the current working directory.
+    The lines in the list contains trailing line breaks.
 
-
-access_level = 0
-
-
-def check_user(user_id, usre_pw):
-    try:
-        for i, user in enumerate(users):
-            temp_user_id = users[i][0]
-            temp_user_pw = users[i][1]
-            set_user_level = users[i][2]
-
-            if temp_user_id == user_id and temp_user_pw == user_pw:
-                print('Access Grantred !!!!!')
-
-                return set_user_level
-        print('Access Not Grantred !!!!')
-
-    except ValueError:
-        print('user id or passowd not match')
+    Example:
+    If the a.txt has two lines 'aaa' and 'bbb',
+    get_file_content_as_list('a.txt') returns ['aaa\n', 'bbb']
+    """
+    f = open(filename, 'r')
+    lines = f.readlines()
+    f.close()
+    return lines
 
 
-while True:
-    print('\nCurrent ID: admin, PW: admin123 or ID: kamrul PW: kamrul123\n ')
-    user_id = input('Please Enter User_ID: ')
-    user_pw = input('Please Enter Password: ')
-    access_level = check_user(user_id, user_pw)
-    print(access_level)
+stats = []
 
-    if access_level is 4:
-        print('Welcom to ' + str(user_id))
-        print('Your previlage level is ' + str(access_level))
 
-        while True:
-            user_input = input('Please enter your command ')
-            print('Your command is : ' + str(user_input))
+def get_file_stats(contents):
+    """Given a list of lines, return line count and letter count as a dictionary
 
-    elif access_level is 3:
-        print('Welcome to' + str(user_id))
-        print('Your previlage level is ' + str(access_level))
+    Trailing line breaks (if any) are not counted for letter count.
+    Spaces, even trailing spaces, are counted for letter count.
+    Example:
+    get_stats(['aaa\n', 'bbb']) returns {'lines': 2, 'letters': 6}
+    """
 
-        while True:
-            user_input = input('Please enter your command: ')
-            print('Your Command is: ' + str(user_input))
+    stats = contents
+    # stats = stats.strip()
+    for i, stat in enumerate(stats):
+        stats[i] = stat.strip()
+        stats = stats[i]
 
+    return len(stats)
+
+
+def analyze_file(filename):
+    contents_as_list = get_file_content_as_list(filename)
+    print('lines in file:', contents_as_list)
+    stats = get_file_stats(contents_as_list)
+    # print('It has', stats[0], 'lines containing', stats[1], 'letters')
+
+
+analyze_file('file1.txt')
+# analyze_file('file2.txt')
