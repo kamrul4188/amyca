@@ -1,0 +1,1 @@
+The folder 'data' is for store/back up project data into hard disk as .cv file.
