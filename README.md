@@ -7,7 +7,7 @@ Latin female form of Amicus of Latin Origin, Meaning: Female friend or Friendly,
 
 ### Access Control Feature
 * User login/Logout
-```bash
+```
 Please Enter User ID: admin
 Please Enter Password: admin123
 Access Level:  4
@@ -26,9 +26,18 @@ Access Level:  4
 >>> What can I do for you?
 ```
 
-
-
 * System exit
+```
+----------------------------------------------------------
+>>> What can I do for you?
+
+exit
+>>> Are you sure? y/n
+y
+>>> Bye!
+
+Process finished with exit code 0
+```
 
 ### Admin Panel Feature
 * Add a new user
