@@ -9,8 +9,8 @@ Precondition: User is Logged in
 MSS:
 ====
 1. Amyca: Request for command
-2. User: Enter command <add user> <new_use_ID>
-3. Amyca: Request for password
+2. User: Enter command <admin>
+3. Amyca: Request for select option
 4. User: Enter new password
 5. Amyca: Request for password again
 6. User: Enter password again

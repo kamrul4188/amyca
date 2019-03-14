@@ -3,6 +3,36 @@ Software Development Policy:
 System : Monty (A project management Assistance)
 **************************************************
 
+PROJECT REQUIREMENT (AMYCA)
+****************************
+FUNCTIONAL REQUIREMENTS
+=======================
+2. Adding
+3. Deleting
+4. Listing
+5. Searching
+6. Dateline
+7. Resource
+8. Task assignment
+9. Cost
+10. User information
+11. Progress update
+12. Issue
+
+NON-FUNCTIONAL REQUIREMENTS
+============================
+1. Uer Login
+2. Password Length
+3. Notification
+4. CSV
+5. Dateline Graph
+6. Access control level
+7. Password encryption
+8. Documentation
+9. Back-up
+10. Fault tolerance
+11. Constrain-can’t access by an unauthorized person
+
 Posword policy:
 ================
 1. Password length minimum 6
@@ -22,3 +52,4 @@ Data store and access policy:
 3. file should store in following folder:
     Windows: c:\AMYCA
      Linux: ./AMYCA
+
