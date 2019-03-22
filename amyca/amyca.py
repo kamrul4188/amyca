@@ -545,4 +545,5 @@ def main():
             messagebox.showerror('Error...!!!',  massage)
 
 
-main()
+if __name__ == '__main__':
+    main()

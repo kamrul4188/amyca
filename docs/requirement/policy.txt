@@ -50,6 +50,5 @@ Data store and access policy:
 1. Date store in .csv file format
 2. Software should be supported to store date into Windows, Mac, and Linux file system.
 3. file should store in following folder:
-    Windows: c:\AMYCA
-     Linux: ./AMYCA
+   .../amyca/data
 
