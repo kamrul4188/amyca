@@ -3,7 +3,7 @@ import datetime
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
-# from tkinter import messagebox
+from tkinter import messagebox
 
 tasks = []
 
@@ -130,7 +130,7 @@ Please select your index form the list.:
 def help_amyca():
     need_help = '''
 >>> I'm glad you asked. Here it is:
-==================================================
+============================================
 Amyca can understand the following commands:
 
 add DESCRIPTION 
@@ -173,9 +173,11 @@ logout
 
 exit
     Exits the application
-================================================== 
+============================================
 '''
     print(need_help.strip(), '\n')
+    massage = need_help
+    messagebox.showinfo('Help', massage)
 
 
 def confirm_is_number(number):
@@ -539,8 +541,9 @@ def main():
             execute_command(command)
         except Exception as e:
             print('Sorry, I could not perform that command. Problem:', e)
-            # massage = '''Sorry, I could not perform that command.\n\n Problem: ''' + str(e)
-            # messagebox.showinfo('Error...!!!',  massage)
+            massage = '''Sorry, I could not perform that command.\n\n Problem: ''' + str(e)
+            messagebox.showerror('Error...!!!',  massage)
 
 
-main()
+if __name__ == '__main__':
+    main()
