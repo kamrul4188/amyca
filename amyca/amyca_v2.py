@@ -93,7 +93,7 @@ class Process:
 	def login(cls):
 		while True:
 			try:
-				user_input = input(Fore.LIGHTGREEN_EX + 'Please enter username and password: ')
+				user_input = input(Fore.LIGHTGREEN_EX + '>>> Please enter username and password: ')
 				user_name = user_input.split(' ', 1)[0]
 				user_password = user_input.split(' ', 1)[1]
 				if User.verify(user_name, user_password):
@@ -107,7 +107,7 @@ class Process:
 
 	@classmethod
 	def logout(cls):
-		print('You have successfully logout as ' + Fore.RED + User.get_current_user_name())
+		print(Back.LIGHTCYAN_EX + 'You have successfully logout as ' + User.get_current_user_name())
 		main()
 
 	@classmethod
@@ -133,11 +133,16 @@ class Process:
 		:parameter 4: user access level
 		:return: null
 		"""
-		name = user_input.split(' ', 5)[2]
-		password = user_input.split(' ', 5)[3]
-		level = user_input.split(' ', 5)[4]
-		User(name, password, level)
-		print('A user has  been added as ' + Fore.RED + name + Style.RESET_ALL + ' with level of access is : ' + Fore.RED + str(level))
+		if User.get_current_user_access_level() == 4:
+			name = user_input.split(' ', 5)[2]
+			password = user_input.split(' ', 5)[3]
+			level = user_input.split(' ', 5)[4]
+			User(name, password, level)
+			msg_1 = Back.LIGHTYELLOW_EX + ' A user has  been added as ' + Back.LIGHTYELLOW_EX + Fore.RED + name
+			msg_2 = Back.LIGHTYELLOW_EX + ' with level of access is : ' + Back.LIGHTYELLOW_EX + Fore.RED + str(level) + ' '
+			print(msg_1 + msg_2)
+		else:
+			raise ValueError('Only admin can add new user')
 
 
 class Command:
@@ -152,7 +157,7 @@ class Command:
 	@classmethod
 	def execute(cls, command):
 		if command == '':
-			raise ValueError('You did not input anything')
+			raise ValueError('You did not input anything. you can type \'help\' for more info')
 		elif command == 'exit':
 			Process.terminate()
 		elif command == 'logout':
@@ -166,14 +171,20 @@ class Command:
 def main():
 	User('admin', 'admin123', 4)
 	Process.login()
-	Print.greeting()
+	# Print.greeting()
 	while True:
 		try:
 			command = Command.read()
 			Command.execute(command)
 		except Exception as e:
-			print(Fore.RED + '>>> Sorry, I could not perform that command. Problem:', e)
+			print(Fore.RED + '>>> ' + Back.YELLOW + Fore.RED + 'Sorry, I could not perform that command.')
+			msg_problem = 'Problem: ' + str(e)
+			msg_len = len(msg_problem)
+			print(Fore.RED + '='*msg_len)
+			print(Fore.RED + msg_problem)
+			print(Fore.RED + '=' *msg_len)
 
 
 if __name__ == '__main__':
 	main()
+
