@@ -3,7 +3,9 @@ import hashlib
 import os
 import sys
 import pyfiglet
-from colorama import init; init(autoreset=True)
+from colorama import init;
+
+init(autoreset=True)
 from colorama import Fore, Back, Style
 
 
@@ -26,7 +28,7 @@ class User:
 	def __init__(self, user_name, password, access_level):
 		self.__user_name = user_name
 		self.__password = Password.hash(password)
-		self.__access_level = access_level
+		self.__access_level = Confirmed.number(access_level)
 		User.__total = User.__total + 1
 		User.__users.append([self.__user_name, self.__password, self.__access_level])
 
@@ -63,10 +65,19 @@ class User:
 
 
 class Password:
+	MINIMUM_LENGTH = 6
+
+	@staticmethod
+	def check_minimum_length(password):
+		if len(password) >= Password.MINIMUM_LENGTH:
+			return True
+		else:
+			raise ValueError('Minimum length of password should be 6. ')
 
 	@classmethod
 	def hash(cls, password):
 		"""Hash a password for storing."""
+		cls.password = cls.check_minimum_length(password)
 		salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
 		password_hash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), salt, 100000)
 		password_hash = binascii.hexlify(password_hash)
@@ -83,6 +94,17 @@ class Password:
 		return password_hash == stored_password
 
 
+class Confirmed:
+
+	@classmethod
+	def number(cls, number):
+		try:
+			number = int(number)
+			return number
+		except ValueError:
+			raise ValueError(str(number) + ' not a number')
+
+
 class Print:
 
 	@classmethod
@@ -93,12 +115,13 @@ class Print:
 	@classmethod
 	def help(cls):
 		pass
-		# TODO: add all command instruction with example
+
+	# TODO: add all command instruction with example
 
 	@classmethod
 	def users(cls):
 		pass
-		# TODO: add functionality to print user info
+	# TODO: add functionality to print user info
 
 
 class Process:
@@ -140,11 +163,7 @@ class Process:
 	@classmethod
 	def add_user(cls, user_input):
 		"""
-		:param user_input:
-		parameter 0 and 1: command
-			:parameter: 2 user name
-			:parameter 3: user password
-			:parameter 4: user access level
+		:param user_input: add user [user_name] [user_password] [user_access_level]
 		:return: null
 		"""
 		if User.get_current_user_access_level() == 4:
@@ -154,7 +173,8 @@ class Process:
 				level = user_input.split(' ', 5)[4]
 				User(name, password, level)
 				msg_1 = Back.LIGHTYELLOW_EX + ' A user has  been added as ' + Back.LIGHTYELLOW_EX + Fore.RED + name
-				msg_2 = Back.LIGHTYELLOW_EX + ' with level of access is : ' + Back.LIGHTYELLOW_EX + Fore.RED + str(level) + ' '
+				msg_2 = Back.LIGHTYELLOW_EX + ' with level of access is : ' + Back.LIGHTYELLOW_EX + Fore.RED + str(
+					level) + ' '
 				print(msg_1 + msg_2)
 			except IndexError:
 				raise IndexError('Invalid input...!!!. Please use AMYCA CLI.')
@@ -204,13 +224,13 @@ class Command:
 		else:
 			raise ValueError('command not recognized')
 
-		# TODO: add all command to be execute on amyca_v1.0
+	# TODO: add all command to be execute on amyca_v1.0
 
 
 def main():
 	User('admin', 'admin123', 4)
-	#Process.login()
-	#Print.greeting()
+	Process.login()
+	Print.greeting()
 	while True:
 		try:
 			command = Command.read()
@@ -223,12 +243,11 @@ def main():
 				msg_len = len(msg_problem)
 			else:
 				msg_len = len(msg_info)
-			print(Fore.RED + '='*msg_len)
+			print(Fore.RED + '=' * msg_len)
 			print(Fore.RED + msg_problem)
 			print(Fore.MAGENTA + msg_info)
-			print(Fore.RED + '='*msg_len)
+			print(Fore.RED + '=' * msg_len)
 
 
 if __name__ == '__main__':
 	main()
-
