@@ -53,13 +53,13 @@ def check_pw_length(user_input):
         password = user_input
         return password
     else:
-        raise ValueError('Minimum password length is 6.')
+        raise ValueError('Minimum pwd length is 6.')
 
 
 def add_user():
     try:
         new_user_id = input('Please enter new user id: ')
-        new_user_pw = check_pw_length(input('Please enter new password with minimum length (6): '))
+        new_user_pw = check_pw_length(input('Please enter new pwd with minimum length (6): '))
         new_user_level = confirm_is_number(input('Please enter access level: '))
         users.append([new_user_id, new_user_pw, new_user_level])
         print('>>> You have added ' + new_user_id + ' as user and his/her access level is ' + str(new_user_level))
@@ -90,9 +90,9 @@ def remove_user():
 
 
 def change_password():
-    user_input = confirm_is_number(input('Enter index to change password: '))
+    user_input = confirm_is_number(input('Enter index to change pwd: '))
     input_index = user_input - INDEX_OFFSET
-    new_password = check_pw_length(input('Please enter new password with minimum length(6)'))
+    new_password = check_pw_length(input('Please enter new pwd with minimum length(6)'))
     users[input_index][INDEX_USER_PW] = new_password
 
 
@@ -104,7 +104,7 @@ Welcome to you in admin panel..............!!!!!!!
 Please select your index form the list.:
     1. Add new user <add user>
     2. Delete user <del user>
-    3. Change user password  <cp user>
+    3. Change user pwd  <cp user>
     4. View user index <show user>
     5. To exit admin panel <exit admin>
 -------------------------------------------------------------------------''')
@@ -451,7 +451,7 @@ def terminate():
 def log_out():
     """
     This function is called when user command logout. Amyca will resume function main.
-    user have to login with user ID and password in order to continue.
+    user have to login with user ID and pwd in order to continue.
     :return:
     """
     main()
@@ -513,7 +513,7 @@ def print_greeting():
 
 def access_control():
     """ Access control function to control access into Amyca. The function only allow authorize user with
-    with right password. Without
+    with right pwd. Without
     """
     while True:
         try:
