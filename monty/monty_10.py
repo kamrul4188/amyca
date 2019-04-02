@@ -1,6 +1,7 @@
 # **************************************************
 # Monty weekly project | MD KAMRUZZAMAN | A0107851H
 # *************************************************
+
 import os
 import csv
 import sys
@@ -88,25 +89,77 @@ class StorageManager:
 		self.file_path = file_path
 
 
-
 class TaskManager:
 	"""this class is hold the list of Task/Deadline objects and will execute commands"""
-	pass
 
+	def remove_from_word(self, text, word):
+		tail_start_position = text.find(word)
+		if tail_start_position != -1:
+			text = text[:tail_start_position]
+			text = text.strip()
+			return text
+		else:
+			raise ValueError('Your command not in correct format')
 
-def add_item(user_input):
-	action = user_input.split(" ", 1)[0]  # First part of the command
-	command_parts = user_input.split(" ", 1)[1]  # Second part of the command
+	def remove_to_word(self, text, word):
+		word_size = len(word) + 1  # world length + a space after word
+		word_start_position = text.find(word)
 
-	if action == 'todo':
-		description = command_parts
-		items.append(ToDo(description, False))
-		print('>>> Task added to the list')
-	elif action == 'deadline':
-		description = remove_from_word(command_parts, 'by:')
-		deadline = remove_to_word(command_parts, 'by:')
-		items.append(Deadline(description, False, deadline))
-		print('>>> Task added to the list')
+		if word_start_position != -1:
+			word_tail_position = word_start_position + word_size
+			return text[word_tail_position:]
+		else:
+			raise ValueError('Your command not in correct format')
+
+	def add_item(self, user_input):
+		action = user_input.split(" ", 1)[0]  # First part of the command
+		command_parts = user_input.split(" ", 1)[1]  # Second part of the command
+
+		if action == 'todo':
+			description = command_parts
+			items.append(ToDo(description, False))
+			print('>>> Task added to the list')
+		elif action == 'deadline':
+			description = self.remove_from_word(command_parts, 'by:')
+			deadline = self.remove_to_word(command_parts, 'by:')
+			items.append(Deadline(description, False, deadline))
+			print('>>> Task added to the list')
+
+	def delete_item(self, user_input):
+		new_input = user_input.split(' ', 1)[1]
+		index = confirm_is_number(new_input) - 1
+		if index >= 0:
+			del items[index]
+			print('>>> Task deleted from the list')
+		else:
+			raise ValueError('Invalid index')
+
+	def done_item(self, user_input):
+		new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
+		new_input = confirm_is_number(new_input)  # Return as integer
+		new_input = new_input - 1
+		if new_input < 0:
+			raise ValueError('Index must be grater than 0')
+		else:
+			try:
+				items[new_input].mark_as_done()  # Task complited
+				print('>>> Congrats on completing a task! :-)')
+			except IndexError:
+				raise IndexError('No item at index ' + str(new_input + 1))
+
+	def pending_item(self, user_input):
+		new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
+		new_input = confirm_is_number(new_input)  # Return as integer
+		new_input = new_input - 1
+		if new_input < 0:
+			raise ValueError('Index must be greather than 0')
+		else:
+			try:
+				items[new_input].mark_as_pending()  # Task pending
+				print('>>> OK, I have marked that item as pending')
+			except IndexError:
+				raise IndexError('No item at index ' + str(new_input + 1))
+
 
 
 def print_items():
@@ -126,65 +179,6 @@ INDEX | STATUS | DESCRIPTION                    | DEADLINE
 				print(str(i+1).center(6) + '|' + item.as_string())
 
 		print('------------------------------------------------------------------')
-
-
-def remove_from_word(text, word):
-	tail_start_position = text.find(word)
-	if tail_start_position != -1:
-		text = text[:tail_start_position]
-		text = text.strip()
-		return text
-	else:
-		raise ValueError('Your command not in correct format')
-
-
-def remove_to_word(text, word):
-	word_size = len(word) + 1 # world length + a space after word
-	word_start_position = text.find(word)
-
-	if word_start_position != -1:
-		word_tail_position = word_start_position + word_size
-		return text[word_tail_position:]
-	else:
-		raise ValueError('Your command not in correct format')
-
-
-def delete_item(user_input):
-	new_input = user_input.split(' ', 1)[1]
-	index = confirm_is_number(new_input) - 1
-	if index >= 0:
-		del items[index]
-		print('>>> Task deleted from the list')
-	else:
-		raise ValueError('Invalid index')
-
-
-def done_item(user_input):
-	new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-	new_input = confirm_is_number(new_input)  # Return as integer
-	new_input = new_input - 1
-	if new_input < 0:
-		raise ValueError('Index must be grater than 0')
-	else:
-		try:
-			items[new_input].mark_as_done()  # Task complited
-			print('>>> Congrats on completing a task! :-)')
-		except IndexError:
-			raise IndexError('No item at index ' + str(new_input + 1))
-
-
-def pending_item(user_input):
-	new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-	new_input = confirm_is_number(new_input)  # Return as integer
-	new_input = new_input - 1
-	if new_input < 0:
-		raise ValueError('Index must be greather than 0')
-	else:
-		try:
-			items[new_input].mark_as_pending()  # Task pending
-			print('>>> OK, I have marked that item as pending')
-		except IndexError:
-			raise IndexError('No item at index ' + str(new_input + 1))
 
 
 def confirm_is_number(number):
@@ -244,13 +238,13 @@ def execute_command(command):
 	elif command == 'list':
 		print_items()
 	elif command.startswith('todo') or command.startswith('deadline '):
-		add_item(command)
+		pass # add_item(command)
 	elif command.startswith('delete '):
-		delete_item(command)
+		pass # delete_item(command)
 	elif command.startswith('done '):
-		done_item(command)
+		pass # done_item(command)
 	elif command.startswith('pending '):
-		pending_item(command)
+		pass # pending_item(command)
 	elif command.startswith('help'):
 		help_monty()
 	else:

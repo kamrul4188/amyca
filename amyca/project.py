@@ -1,6 +1,3 @@
-
-
-
 class Project:
 	__total = 0
 
@@ -19,12 +16,12 @@ class Project:
 		pass
 
 
-
 class Task:
 	tasks = []
 
 	def __init__(self, activity):
 		self.activity = activity
+
 
 if __name__ == '__main__':
 	p1 = Project('project_1')
