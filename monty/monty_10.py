@@ -82,34 +82,32 @@ class UserInterface:
 		'''
 		print(banner.strip(), '\n')
 
+	@staticmethod
+	def read_command():
+		print(">>> What can I do for you?\n")
+		read = input()
+		read = read.lower()
+		read = read.strip()
+		read = ' '.join(read.split())
+		return read
+
+	def display(self):
+
 
 class StorageManager:
 	"""this class used to read data from the data file and write data back to the data file."""
 	def __init__(self, file_path):
 		self.file_path = file_path
 
+	def __str__(self):
+		return self.file_path
+
 
 class TaskManager:
 	"""this class is hold the list of Task/Deadline objects and will execute commands"""
 
-	def remove_from_word(self, text, word):
-		tail_start_position = text.find(word)
-		if tail_start_position != -1:
-			text = text[:tail_start_position]
-			text = text.strip()
-			return text
-		else:
-			raise ValueError('Your command not in correct format')
-
-	def remove_to_word(self, text, word):
-		word_size = len(word) + 1  # world length + a space after word
-		word_start_position = text.find(word)
-
-		if word_start_position != -1:
-			word_tail_position = word_start_position + word_size
-			return text[word_tail_position:]
-		else:
-			raise ValueError('Your command not in correct format')
+	def __init__(self, storage):
+		self.storage = storage
 
 	def add_item(self, user_input):
 		action = user_input.split(" ", 1)[0]  # First part of the command
@@ -120,8 +118,8 @@ class TaskManager:
 			items.append(ToDo(description, False))
 			print('>>> Task added to the list')
 		elif action == 'deadline':
-			description = self.remove_from_word(command_parts, 'by:')
-			deadline = self.remove_to_word(command_parts, 'by:')
+			description = remove_from_word(command_parts, 'by:')
+			deadline = remove_to_word(command_parts, 'by:')
 			items.append(Deadline(description, False, deadline))
 			print('>>> Task added to the list')
 
@@ -160,6 +158,22 @@ class TaskManager:
 			except IndexError:
 				raise IndexError('No item at index ' + str(new_input + 1))
 
+	def load_data(self, filename):
+		data_file = open(filename)
+		deliveries_reader = csv.reader(data_file)
+		for row in deliveries_reader:
+			if row[0] == 'T':
+				items.append(ToDo(row[1], True if row[2] == 'done' else False))
+			elif row[0] == 'D':
+				items.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
+		data_file.close()
+
+	def save_data(self, filename, items_to_save):
+		output_file = open(filename, 'w', newline='')
+		output_writer = csv.writer(output_file)
+		for item in items_to_save:
+			output_writer.writerow(item.as_csv())
+		output_file.close()
 
 
 def print_items():
@@ -232,9 +246,50 @@ list
 	print(need_help.strip(), '\n')
 
 
+def remove_from_word(self, text, word):
+	tail_start_position = text.find(word)
+	if tail_start_position != -1:
+		text = text[:tail_start_position]
+		text = text.strip()
+		return text
+	else:
+		raise ValueError('Your command not in correct format')
+
+
+def remove_to_word(self, text, word):
+	word_size = len(word) + 1  # world length + a space after word
+	word_start_position = text.find(word)
+
+	if word_start_position != -1:
+		word_tail_position = word_start_position + word_size
+		return text[word_tail_position:]
+	else:
+		raise ValueError('Your command not in correct format')
+
+
+def execute_command(command_parts, task_manager, ui):
+	action = command_parts.split(" ", 1)[0]  # First part of the command
+	message = command_parts.split(" ", 1)[1]  # Second part of the command
+
+	if action == 'exit':
+		ui.display('Bye!')
+		sys.exit()
+	elif action == 'list':
+		message = task_manager.get_items_as_table()
+		ui.display(message)
+	elif action == 'todo':
+		message = task_manager.add_item(ToDo(command_parts[1], False))
+		ui.display(message)
+	else:
+		pass
+
+
+'''
 def execute_command(command):
 	if command == 'exit':
-		terminate()
+		ui.display('Bye!')
+		sys.exit()
+		
 	elif command == 'list':
 		print_items()
 	elif command.startswith('todo') or command.startswith('deadline '):
@@ -249,34 +304,7 @@ def execute_command(command):
 		help_monty()
 	else:
 		raise ValueError('command not recognized')
-
-
-def read_command():
-	print(">>> What can I do for you?\n")
-	read = input()
-	read = read.lower()
-	read = read.strip()
-	read = ' '.join(read.split())
-	return read
-
-
-def load_data(filename):
-	data_file = open(filename)
-	deliveries_reader = csv.reader(data_file)
-	for row in deliveries_reader:
-		if row[0] == 'T':
-			items.append(ToDo(row[1], True if row[2] == 'done' else False))
-		elif row[0] == 'D':
-			items.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
-	data_file.close()
-
-
-def save_data(filename, items_to_save):
-	output_file = open(filename, 'w', newline='')
-	output_writer = csv.writer(output_file)
-	for item in items_to_save:
-		output_writer.writerow(item.as_csv())
-	output_file.close()
+'''
 
 
 def main():
@@ -286,17 +314,18 @@ def main():
 
 	# create a StorageManager object
 	storage = StorageManager('data.csv')
-	load_data(DATA_FILE)  # load task data from the file
+
+	# create a TaskManager object and load data
+	task_manager = TaskManager(storage)
+	task_manager.load_data()
 
 	while True:
 		try:
-			command = read_command()
-			execute_command(command)
-			save_data(DATA_FILE, items)  # save all tasks in the file
+			command = ui.read_command()
+			execute_command(command, task_manager, ui)
+			task_manager.save_data()
 		except Exception as e:
-			print('>>> SORRY, I could not perform that command. Problem:', e)
+			ui.display('SORRY, I could not perform that command. Problem:' + str(e))
 
 
 main()
-
-
