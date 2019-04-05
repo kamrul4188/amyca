@@ -91,8 +91,44 @@ class UserInterface:
 		read = ' '.join(read.split())
 		return read
 
-	def display(self, user_input):
+	@staticmethod
+	def display(user_input):
 		print(user_input)
+
+	@staticmethod
+	def help():
+		need_help = '''
+	>>> I'm glad you asked. Here it is:
+	==================================================
+	Monty can understand the following commands:
+
+	todo DESCRIPTION 
+		Adds a task to the list
+		Example: todo read book
+
+	deadline DESCRIPTION by: DEADLINE
+		Adds a task to the list
+		Example: deadline read book by: tomorrow
+
+	done INDEX
+		Marks the task at INDEX as 'done'
+		Example: done 1
+
+	pending INDEX
+		Marks the task at INDEX as 'pending'
+		Example: pending 1
+
+	exit
+		Exits the application
+
+	help_info
+		Shows the help_info information
+
+	list
+		 Lists the tasks in the list
+	-------------------------------------------------- 
+	'''
+		print(need_help.strip(), '\n')
 
 
 class StorageManager:
@@ -116,17 +152,17 @@ class TaskManager:
 		return '>>> Task added to the list'
 
 	@staticmethod
-	def delete_item(self, user_input):
+	def delete_item(user_input):
 		new_input = user_input.split(' ', 1)[1]
 		index = confirm_is_number(new_input) - 1
 		if index >= 0:
 			del items[index]
-			print('>>> Task deleted from the list')
+			return '>>> Task deleted from the list'
 		else:
 			raise ValueError('Invalid index')
 
 	@staticmethod
-	def done_item(self, user_input):
+	def done_item(user_input):
 		new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
 		new_input = confirm_is_number(new_input)  # Return as integer
 		new_input = new_input - 1
@@ -135,12 +171,12 @@ class TaskManager:
 		else:
 			try:
 				items[new_input].mark_as_done()  # Task complited
-				print('>>> Congrats on completing a task! :-)')
+				return '>>> Congrats on completing a task! :-)'
 			except IndexError:
 				raise IndexError('No item at index ' + str(new_input + 1))
 
 	@staticmethod
-	def pending_item(self, user_input):
+	def pending_item(user_input):
 		new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
 		new_input = confirm_is_number(new_input)  # Return as integer
 		new_input = new_input - 1
@@ -149,7 +185,7 @@ class TaskManager:
 		else:
 			try:
 				items[new_input].mark_as_pending()  # Task pending
-				print('>>> OK, I have marked that item as pending')
+				return '>>> OK, I have marked that item as pending'
 			except IndexError:
 				raise IndexError('No item at index ' + str(new_input + 1))
 
@@ -181,15 +217,12 @@ class TaskManager:
 				items.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
 		data_file.close()
 
-	@staticmethod
-	def save_data(self, filename, items_to_save):
-		output_file = open(filename, 'w', newline='')
+	def save_data(self):
+		output_file = open(self.storage, 'w', newline='')
 		output_writer = csv.writer(output_file)
-		for item in items_to_save:
+		for item in items:
 			output_writer.writerow(item.as_csv())
 		output_file.close()
-
-
 
 
 def confirm_is_number(number):
@@ -198,49 +231,6 @@ def confirm_is_number(number):
 		return number
 	except ValueError:
 		raise ValueError((str(number) + ' is not a number'))
-
-
-def terminate():
-	print('>>> Are you sure? y/n')
-	response = input()
-	if response == 'y':
-		print(">>> Bye!")
-		sys.exit()
-
-
-def help_monty():
-	need_help = '''
->>> I'm glad you asked. Here it is:
-==================================================
-Monty can understand the following commands:
-
-todo DESCRIPTION 
-	Adds a task to the list
-	Example: todo read book
-	
-deadline DESCRIPTION by: DEADLINE
-	Adds a task to the list
-	Example: deadline read book by: tomorrow
-	
-done INDEX
-	Marks the task at INDEX as 'done'
-	Example: done 1
-
-pending INDEX
-	Marks the task at INDEX as 'pending'
-	Example: pending 1
-	
-exit
-	Exits the application
-	
-help_info
-	Shows the help_info information
-	
-list
-	 Lists the tasks in the list
--------------------------------------------------- 
-'''
-	print(need_help.strip(), '\n')
 
 
 def remove_from_word(text, word):
@@ -269,6 +259,8 @@ def execute_command(command, task_manager, ui):
 	if command == 'exit':
 		ui.display('Bye!')
 		sys.exit()
+	elif command == 'help':
+		ui.help()
 	elif command == 'list':
 		message = task_manager.get_items_as_table()
 		ui.display(message)
@@ -281,31 +273,17 @@ def execute_command(command, task_manager, ui):
 		deadline = remove_to_word(command, 'by:')
 		message = task_manager.add_item(Deadline(description, False, deadline))
 		ui.display(message)
+	elif command.startswith('done '):
+		message = task_manager.done_item(command)
+		ui.display(message)
+	elif command.startswith('pending '):
+		message = task_manager.pending_item(command)
+		ui.display(message)
+	elif command.startswith('delete '):
+		message = task_manager.delete_item(command)
+		ui.display(message)
 	else:
 		ui.display('Invalid command')
-
-
-'''
-def execute_command(command):
-	if command == 'exit':
-		ui.display('Bye!')
-		sys.exit()
-		
-	elif command == 'list':
-		print_items()
-	elif command.startswith('todo') or command.startswith('deadline '):
-		pass # add_item(command)
-	elif command.startswith('delete '):
-		pass # delete_item(command)
-	elif command.startswith('done '):
-		pass # done_item(command)
-	elif command.startswith('pending '):
-		pass # pending_item(command)
-	elif command.startswith('help'):
-		help_monty()
-	else:
-		raise ValueError('command not recognized')
-'''
 
 
 def main():
@@ -320,13 +298,12 @@ def main():
 	task_manager = TaskManager(storage)
 	task_manager.load_data()
 
-
 	while True:
 		try:
 
 			command = ui.read_command()
 			execute_command(command, task_manager, ui)
-			#task_manager.save_data()
+			task_manager.save_data()
 		except Exception as e:
 			ui.display('SORRY, I could not perform that command. Problem:' + str(e))
 
