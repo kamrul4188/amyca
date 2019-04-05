@@ -91,7 +91,8 @@ class UserInterface:
 		read = ' '.join(read.split())
 		return read
 
-	def display(self):
+	def display(self, user_input):
+		print(user_input)
 
 
 class StorageManager:
@@ -107,22 +108,14 @@ class TaskManager:
 	"""this class is hold the list of Task/Deadline objects and will execute commands"""
 
 	def __init__(self, storage):
-		self.storage = storage
+		self.storage = str(storage)
 
-	def add_item(self, user_input):
-		action = user_input.split(" ", 1)[0]  # First part of the command
-		command_parts = user_input.split(" ", 1)[1]  # Second part of the command
+	@staticmethod
+	def add_item(user_input):
+		items.append(user_input)
+		return '>>> Task added to the list'
 
-		if action == 'todo':
-			description = command_parts
-			items.append(ToDo(description, False))
-			print('>>> Task added to the list')
-		elif action == 'deadline':
-			description = remove_from_word(command_parts, 'by:')
-			deadline = remove_to_word(command_parts, 'by:')
-			items.append(Deadline(description, False, deadline))
-			print('>>> Task added to the list')
-
+	@staticmethod
 	def delete_item(self, user_input):
 		new_input = user_input.split(' ', 1)[1]
 		index = confirm_is_number(new_input) - 1
@@ -132,6 +125,7 @@ class TaskManager:
 		else:
 			raise ValueError('Invalid index')
 
+	@staticmethod
 	def done_item(self, user_input):
 		new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
 		new_input = confirm_is_number(new_input)  # Return as integer
@@ -145,6 +139,7 @@ class TaskManager:
 			except IndexError:
 				raise IndexError('No item at index ' + str(new_input + 1))
 
+	@staticmethod
 	def pending_item(self, user_input):
 		new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
 		new_input = confirm_is_number(new_input)  # Return as integer
@@ -158,8 +153,26 @@ class TaskManager:
 			except IndexError:
 				raise IndexError('No item at index ' + str(new_input + 1))
 
-	def load_data(self, filename):
-		data_file = open(filename)
+	@staticmethod
+	def get_items_as_table():
+		if len(items) == 0:
+			return '>>> Nothing to list'
+		else:
+
+			print(">>> Here is the list of tasks:")
+			print('==================================================================')
+			print('INDEX | STATUS | DESCRIPTION                    | DEADLINE')
+			print('------------------------------------------------------------------')
+			for i, item in enumerate(items):
+				if type(item) == ToDo:
+					print(str(i + 1).center(6) + '|' + item.as_string())
+				elif type(item) == Deadline:
+					print(str(i + 1).center(6) + '|' + item.as_string())
+			print('------------------------------------------------------------------')
+			return '>>> You can use INDEX as ID to farther operation on particular task'
+
+	def load_data(self):
+		data_file = open(self.storage)
 		deliveries_reader = csv.reader(data_file)
 		for row in deliveries_reader:
 			if row[0] == 'T':
@@ -168,6 +181,7 @@ class TaskManager:
 				items.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
 		data_file.close()
 
+	@staticmethod
 	def save_data(self, filename, items_to_save):
 		output_file = open(filename, 'w', newline='')
 		output_writer = csv.writer(output_file)
@@ -176,23 +190,6 @@ class TaskManager:
 		output_file.close()
 
 
-def print_items():
-	if len(items) == 0:
-		print('>>> Nothing to list')
-	else:
-		print(">>> Here is the list of tasks:")
-		print('''
-==================================================================
-INDEX | STATUS | DESCRIPTION                    | DEADLINE               
------------------------------------------------------------------- ''')
-		for i, item in enumerate(items):
-
-			if type(item) == ToDo:
-				print(str(i+1).center(6) + '|' + item.as_string())
-			elif type(item) == Deadline:
-				print(str(i+1).center(6) + '|' + item.as_string())
-
-		print('------------------------------------------------------------------')
 
 
 def confirm_is_number(number):
@@ -246,7 +243,7 @@ list
 	print(need_help.strip(), '\n')
 
 
-def remove_from_word(self, text, word):
+def remove_from_word(text, word):
 	tail_start_position = text.find(word)
 	if tail_start_position != -1:
 		text = text[:tail_start_position]
@@ -256,7 +253,7 @@ def remove_from_word(self, text, word):
 		raise ValueError('Your command not in correct format')
 
 
-def remove_to_word(self, text, word):
+def remove_to_word(text, word):
 	word_size = len(word) + 1  # world length + a space after word
 	word_start_position = text.find(word)
 
@@ -267,21 +264,25 @@ def remove_to_word(self, text, word):
 		raise ValueError('Your command not in correct format')
 
 
-def execute_command(command_parts, task_manager, ui):
-	action = command_parts.split(" ", 1)[0]  # First part of the command
-	message = command_parts.split(" ", 1)[1]  # Second part of the command
+def execute_command(command, task_manager, ui):
 
-	if action == 'exit':
+	if command == 'exit':
 		ui.display('Bye!')
 		sys.exit()
-	elif action == 'list':
+	elif command == 'list':
 		message = task_manager.get_items_as_table()
 		ui.display(message)
-	elif action == 'todo':
-		message = task_manager.add_item(ToDo(command_parts[1], False))
+	elif command.startswith('todo '):
+		description = command.split(" ", 1)[1]
+		message = task_manager.add_item(ToDo(description, False))
+		ui.display(message)
+	elif command.startswith('deadline '):
+		description = remove_from_word(command, 'by:')
+		deadline = remove_to_word(command, 'by:')
+		message = task_manager.add_item(Deadline(description, False, deadline))
 		ui.display(message)
 	else:
-		pass
+		ui.display('Invalid command')
 
 
 '''
@@ -319,11 +320,13 @@ def main():
 	task_manager = TaskManager(storage)
 	task_manager.load_data()
 
+
 	while True:
 		try:
+
 			command = ui.read_command()
 			execute_command(command, task_manager, ui)
-			task_manager.save_data()
+			#task_manager.save_data()
 		except Exception as e:
 			ui.display('SORRY, I could not perform that command. Problem:' + str(e))
 
