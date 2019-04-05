@@ -1,1 +1,2 @@
-D,deadline return book,pending,tomorrow
+T,read book,pending
+T,return book,done
