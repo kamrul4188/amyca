@@ -5,72 +5,11 @@
 import os
 import csv
 import sys
+import todo
+import deadline
 
 items = []
 DATA_FILE = 'monty10.csv'
-
-
-class ToDo:
-	"""This class add todo objdect into items"""
-
-	TYPE_KEY = 'T'
-
-	def __init__(self, description, status):
-		self.description = description
-		self.is_done = status
-
-	def mark_as_done(self):
-		self.is_done = True
-
-	def mark_as_pending(self):
-		self.is_done = False
-
-	def as_string(self):
-		""" Return the details of todo object as a string"""
-		status = '✓' if self.is_done else '✗'
-		offset = 30 - len(self.description)
-		return status.center(8) + '|'.ljust(3) + self.description + ' '.ljust(offset) + '|'.ljust(3) + '-'
-
-	def __status_as_icon(self):
-		""" Return the details of todo object as a string"""
-		return '✓' if self.is_done else '✗'
-
-	def __str__(self):
-		return '(' + self.__status_as_icon() + ')' + self.description
-
-	@classmethod
-	def get_str(cls):
-		return cls.__str__()
-
-	def as_csv(self):
-		""" Return the details of todo object as a list,
-		suitable to be stored in a csv file.
-		"""
-		return ['T', self.description, 'done' if self.is_done else 'pending']
-
-
-class Deadline (ToDo):
-	"""This class is to add deadline object into items"""
-	TYPE_KEY = 'D'
-
-	def __init__(self, description, status, by):
-		super().__init__(description, status)
-		self.by = by
-
-	def as_string(self):
-		""" Return the details of todo object as a string"""
-		status = '✓' if self.is_done else '✗'
-		offset = 30 - len(self.description)
-		return status.center(8) + '|'.ljust(3) + self.description + ' '.ljust(offset) + '|'.ljust(3) + self.by
-
-	def __str__(self):
-		return super().__str__() + '[by: ' + self.by + ']'
-
-	def as_csv(self):
-		""" Return the details of todo object as a list,
-		suitable to be stored in a csv file.
-		"""
-		return ['D', self.description, 'done' if self.is_done else 'pending', self.by]
 
 
 class UserInterface:
@@ -210,9 +149,9 @@ class TaskManager:
 			print('INDEX | STATUS | DESCRIPTION                    | DEADLINE')
 			print('------------------------------------------------------------------')
 			for i, item in enumerate(items):
-				if type(item) == ToDo:
+				if type(item) == todo.ToDo:
 					print(str(i + 1).center(6) + '|' + item.as_string())
-				elif type(item) == Deadline:
+				elif type(item) == deadline.Deadline:
 					print(str(i + 1).center(6) + '|' + item.as_string())
 			print('------------------------------------------------------------------')
 			return '>>> You can use INDEX as ID to farther operation on particular task'
@@ -222,9 +161,9 @@ class TaskManager:
 		deliveries_reader = csv.reader(data_file)
 		for row in deliveries_reader:
 			if row[0] == 'T':
-				items.append(ToDo(row[1], True if row[2] == 'done' else False))
+				items.append(todo.ToDo(row[1], True if row[2] == 'done' else False))
 			elif row[0] == 'D':
-				items.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
+				items.append(deadline.Deadline(row[1], True if row[2] == 'done' else False, row[3]))
 		data_file.close()
 
 	def save_data(self):
@@ -276,15 +215,13 @@ def execute_command(command, task_manager, ui):
 		ui.display(message)
 	elif command.startswith('todo '):
 		description = command.split(" ", 1)[1]
-		message = task_manager.add_item(ToDo(description, False))
+		message = task_manager.add_item(todo.ToDo(description, False))
 		ui.display(message)
 	elif command.startswith('deadline '):
 		command_part = command.split(" ", 1)[1]
-		print(command_part)
 		description = remove_from_word(command_part, 'by:')
-		deadline = remove_to_word(command_part, 'by:')
-		print(deadline)
-		message = task_manager.add_item(Deadline(description, False, deadline))
+		dl = remove_to_word(command_part, 'by:')
+		message = task_manager.add_item(deadline.Deadline(description, False, dl))
 		ui.display(message)
 	elif command.startswith('done '):
 		message = task_manager.done_item(command)
