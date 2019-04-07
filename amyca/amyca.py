@@ -19,9 +19,9 @@ class GUI:
 		self.nus_blue = '#003D7C'
 
 		self.window = Tk()
-		#self.window.geometry('1600x700')  # set window size
-		self.window.attributes('-fullscreen', True) # create full screen
-		self.window.title('AMYCA - Your Project Management Assistance')  # set window title
+		self.window.geometry('1600x700')  # set window size
+		#self.window.attributes('-fullscreen', True) # create full screen
+		self.window.title('AMYCA - Project Management Assistance')  # set window title
 		#self.window.configure(background=self.nus_blue)
 		self.window.iconphoto(self.window, PhotoImage(file='title_image.png'))
 
@@ -67,8 +67,8 @@ class GUI:
 		self.header_box.pack()
 
 		# add Label as footer box
-		self.footer_box = Label(self.footer, text='Copyright © 2019 Amyca | Develop By: Md Kamruzzaman(A0107851),'
-		 + ' Abdullah-al-mamun(Axxxxx) and Xai (Axxxx) | Project: TE3201-Software Engineering', font=self.footer_font)
+		self.footer_box = Label(self.footer, text='Copyright © 2019 Amyca | Develop By: Md Kamruzzaman (A0107851),'
+		 + ' Abdullah-al-mamun Khan (A0147365Y) and Chia Xiao Hui (A0147375X) | Project: TE3201-Software Engineering | NUS', font=self.footer_font)
 		self.footer_box.pack()
 
 		# add a Entry as input_box to enter command
