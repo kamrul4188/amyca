@@ -12,7 +12,7 @@ class Project:
 	def get_total_project(cls):
 		return Project.__total
 
-	def add_task(self, activity, start_date, end_date,  ):
+	def add_task(self, activity, start_date, end_date):
 		pass
 
 
