@@ -1,5 +1,0 @@
-T,borrow book,done
-T,read book,pending
-D,return book,pending,monday
-T,watch movie,pending
-D,submit assignment,pending,end of may
