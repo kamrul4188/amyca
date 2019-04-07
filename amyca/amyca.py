@@ -1,549 +1,196 @@
-import sys
 import datetime
-import matplotlib.pyplot as plt; plt.rcdefaults()
-import numpy as np
-import matplotlib.pyplot as plt
+from tkinter import *
 from tkinter import messagebox
-
-tasks = []
-
-INDEX_ACTIVITY = 0
-INDEX_START_DATE = 1
-INDEX_END_DATE = 2
-INDEX_MANPOWER = 3
-INDEX_COST = 4
-INDEX_STATUS = 5
-
-DEFAULT_USER_ID = 'admin'
-DEFAULT_USER_PW = 'admin123'
-DEFAULT_USER_LEVEL = 4
-
-users = [[DEFAULT_USER_ID, DEFAULT_USER_PW, DEFAULT_USER_LEVEL]]
-current_user = ['user', 'pw', 0]
-
-USER_LEVEL_1 = 1
-USER_LEVEL_2 = 2
-USER_LEVEL_3 = 3
-USER_LEVEL_4 = 4
-
-INDEX_USER_ID = 0
-INDEX_USER_PW = 1
-INDEX_USER_LEVEL = 2
-
-MINIMUM_PW_LENGTH = 6
-INDEX_OFFSET = 1
-NULL = 0
-
-
-def check_user_level(user_id, user_pw):
-    try:
-        for i, user in enumerate(users):
-            temp_user_id = users[i][INDEX_USER_ID]
-            temp_user_pw = users[i][INDEX_USER_PW]
-            user_level = users[i][INDEX_USER_LEVEL]
-            if temp_user_id == user_id and temp_user_pw == user_pw:
-                return user_level
-
-    except ValueError as e:
-        raise ValueError(e)
-
-
-def check_pw_length(user_input):
-    if len(user_input) >= MINIMUM_PW_LENGTH:
-        password = user_input
-        return password
-    else:
-        raise ValueError('Minimum pwd length is 6.')
-
-
-def add_user():
-    try:
-        new_user_id = input('Please enter new user id: ')
-        new_user_pw = check_pw_length(input('Please enter new pwd with minimum length (6): '))
-        new_user_level = confirm_is_number(input('Please enter access level: '))
-        users.append([new_user_id, new_user_pw, new_user_level])
-        print('>>> You have added ' + new_user_id + ' as user and his/her access level is ' + str(new_user_level))
-
-    except ValueError as e:
-        raise ValueError(e)
-
-
-def print_user():
-    print(">>> Here is the list of your user.")
-    print('==================================================')
-    print(' INDEX | USER ID ')
-    print('--------------------------------------------------')
-    for i, user in enumerate(users):
-        print('   ' + str(i + INDEX_OFFSET) + '   |   ' + str(users[i][INDEX_USER_ID]))
-    print('--------------------------------------------------')
-
-
-def remove_user():
-    user_input = confirm_is_number(input('Enter index to delete user: '))
-    input_index = user_input - INDEX_OFFSET
-    if len(users) < 2:
-        raise ValueError('Minimum user should be one.')
-    elif input_index < 0:
-        raise ValueError('Invalid input !!!')
-    else:
-        del users[input_index]
-
-
-def change_password():
-    user_input = confirm_is_number(input('Enter index to change pwd: '))
-    input_index = user_input - INDEX_OFFSET
-    new_password = check_pw_length(input('Please enter new pwd with minimum length(6)'))
-    users[input_index][INDEX_USER_PW] = new_password
-
-
-def admin_task():
-    if current_user[INDEX_USER_LEVEL] == 4:
-        print('''
-------------------------------------------------------------------------
-Welcome to you in admin panel..............!!!!!!!
-Please select your index form the list.:
-    1. Add new user <add user>
-    2. Delete user <del user>
-    3. Change user pwd  <cp user>
-    4. View user index <show user>
-    5. To exit admin panel <exit admin>
--------------------------------------------------------------------------''')
-        while True:
-            print('>>> Enter your admin command')
-            admin_input = input()
-            if admin_input == 'add user':
-                add_user()
-            elif admin_input == 'del user':
-                remove_user()
-            elif admin_input == 'cp user':
-                change_password()
-            elif admin_input == 'show user':
-                print_user()
-            elif admin_input == 'exit admin':
-                break
-            else:
-                print('You have entered invalid input. Please try again...')
-    else:
-        raise ValueError('You have not authorize to add or remove user')
-
-
-def help_amyca():
-    need_help = '''
->>> I'm glad you asked. Here it is:
-============================================
-Amyca can understand the following commands:
-
-add DESCRIPTION 
-    Adds a task to the list
-    Example: add installation air-con 
-
-list
-    Lists the tasks in the Task
-    
-timeline
-    To display schedule of task
-
-res
-    To display task resource
-
-cost
-    To display cost of task and project
-
-admin
-    Access to admin panel
-
-add DESCRIPTION
-    Add new task/activity 
-    Example: add Install air-con
-
-update INDEX
-    Update/edit task parameter 
-    Example: update 1
-     
-task INDEX 
-    full detail of  INDEX's task
-    Example: task 1
-    
-done INDEX
-    Marks the INDEX's task as 'done'
-    Example: done 1
-    
-logout 
-    Logout from user
-
-exit
-    Exits the application
-============================================
-'''
-    print(need_help.strip(), '\n')
-    massage = need_help
-    messagebox.showinfo('Help', massage)
-
-
-def confirm_is_number(number):
-    try:
-        number = int(number)
-        return number
-
-    except ValueError:
-        raise ValueError((str(number) + ' is not a number'))
-
-
-def format_to_datetime(date):
-    date_format = '%d/%m/%Y'
-    while True:
-        date = date
-        try:
-            date_obj = datetime.datetime.strptime(date, date_format).date()
-            return date_obj
-            break
-        except ValueError:
-            print("Incorrect data format, should be dd/mm/yyyy")
-            date = input('Please enter your date again: ')
-
-
-def datetime_to_print_format(date):
-    try:
-        print_date = date.strftime("%d %b, %Y")
-        return print_date
-    except ValueError:
-        print('Format of your input is not datetime')
-
-
-def duration_datetime(start_date, end_date):
-    try:
-        if end_date >= start_date:
-            duration = end_date - start_date
-            duration = str(duration).split(',', 1)[0]
-            return duration
-        else:
-            print('Your end date ims earlier than start')
-    except ValueError:
-        print('Format of your input ins not detetime')
-
-
-def done_task(user_input):
-    new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-    new_input = confirm_is_number(new_input)  # Return as integer
-    index_input = new_input - INDEX_OFFSET
-    if new_input < 0:
-        raise ValueError('Index must be greater than 0')
-    else:
-        try:
-            tasks[index_input][5] = True
-            print('>>> Congrats on completing a task! :-)')
-        except IndexError:
-            raise IndexError('No item at index ' + str(index_input+INDEX_OFFSET))
-
-
-def print_tasks(user_input):
-    new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-    new_input = int(new_input)
-    task_index = new_input - INDEX_OFFSET
-
-    task_id = new_input
-    activity = tasks[task_index][0]
-    start_date = tasks[task_index][1]
-    end_date = tasks[task_index][2]
-    manpower = tasks[task_index][3]
-    cost = tasks[task_index][4]
-    status = tasks[task_index][5]
-
-    duration = duration_datetime(start_date, end_date)
-    today = datetime.date.today()
-
-    if status:
-        status = 'Completed'
-    elif start_date > today:
-        due_to_start = duration_datetime(today, start_date)
-        status = 'Due to start in ' + str(due_to_start)
-    elif today > end_date:
-        status = 'Task is overdue by ' + duration_datetime(end_date, start_date)
-    else:
-        status = 'Task on progress'
-
-    print('=======================================================')
-    print(' TASK ID      : ' + str(task_id))
-    print(' ACTIVITY     : ' + activity)
-    print(' START DATE   : ' + datetime_to_print_format(start_date))
-    print(' END DATE     : ' + datetime_to_print_format(end_date))
-    print(' Duration     : ' + str(duration))
-    print(' MANPOWER     : ' + str(manpower))
-    print(' COST         : ' + '$' + str(cost))
-    print(' STATUS       : ' + status)
-    print('=======================================================')
-
-
-def print_activity():
-    if len(tasks) == 0:
-        print('>>> Nothing to list')
-    else:
-        print(">>> Here is the list of tasks:")
-        print('==================================================')
-        print('STATUS | TASK ID | ACTIVITY')
-        print('--------------------------------------------------')
-        for i, task in enumerate(tasks):
-            if tasks[i][5]:
-                print('  ✓ ' + '  |    ' + str(i + 1) + '    | ' + tasks[i][0])
-            else:
-                print('  ✗ ' + '  |    ' + str(i + 1) + '    | ' + tasks[i][0])
-        print('--------------------------------------------------')
-
-
-def print_cost():
-    if len(tasks) == 0:
-        print('>>> Nothing to show cost ! Please add your task cost to view.')
-    else:
-        total_cost = 0
-        print('>>> here is your cost details: ')
-        print('==================================================')
-        print(' TASK ID |  Cost($)')
-        print('--------------------------------------------------')
-        for i, task in enumerate(tasks):
-            task_cost = tasks[i][INDEX_COST]
-            total_cost = total_cost + task_cost
-            print('    ' + str(i+INDEX_OFFSET) + '    |  ' + '$' + str(task_cost))
-        print('--------------------------------------------------')
-        print('Total Cost: ' + '$' + str(total_cost))
-        print('==================================================')
-
-
-def print_timeline():
-    task_id = []
-    duration = []
-    if len(tasks) == 0:
-        print('>>> Nothing to show on time-line')
-    else:
-        for i, task in enumerate(tasks):
-            index_id = 'Task ID : ' + str(i + 1)
-            task_id.append(index_id)
-
-            start_date = tasks[i][1]
-            end_date = tasks[i][2]
-            task_duration = duration_datetime(start_date, end_date)
-            task_duration = str(task_duration).split(' ', 1)[0]
-            duration.append(int(task_duration))
-            print(str(index_id) + ' >> Duration: ' + str(task_duration) + ' days')
-
-        x_pos = np.arange(len(task_id))
-        plt.barh(x_pos, duration, align='center', alpha = 0.5)
-        plt.yticks(x_pos, task_id)
-        plt.xlabel('days')
-        plt.title('Tasks Time Line')
-        plt.show()
-
-
-def print_resource():
-
-    if len(tasks) == 0:
-        print('>>> Nothing to show on resource')
-    else:
-        for i, task in enumerate(tasks):
-            index_id = 'Task ID : ' + str(i + 1)
-            manpower = tasks[i][3]
-            print(str(index_id) + '>> Manpower: ' + str(manpower) + ' Pac')
-
-
-def confirm_manpower():
-    try:
-        while True:
-            manpower = input('Manpower: ')
-            if manpower.isnumeric():
-                return manpower
-    except ValueError:
-        raise ValueError((str(manpower) + ' is not a number'))
-
-
-def add_task(user_input):
-    try:
-        if current_user[INDEX_USER_LEVEL] == USER_LEVEL_3 or current_user[INDEX_USER_LEVEL] == USER_LEVEL_2:
-            new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-            # 1.ACTIVITY, 1.START DATE, 2.END DATE, 3.MANPOWER, 4.COST, 5.STATUS
-            print('----------------------------------------------------------')
-            print('You are going to add activity >> ' + new_input + ' >> into to your new task.')
-            print('Please enter following details into your task. ')
-
-            task_activity = new_input
-            task_start_date = format_to_datetime(input('Start Date (dd/mm/yyyy): '))
-            task_end_date = format_to_datetime(input('End Date (dd/mm/yyyy): '))
-            task_manpower = confirm_manpower()
-            if current_user[INDEX_USER_LEVEL] == USER_LEVEL_3:
-                print('enter cost')
-                task_cost = confirm_is_number(input('Cost($): '))
-            else:
-                print('not enter cost')
-                task_cost = NULL
-                print('Task cost only can add by Project Manager')
-        else:
-            raise ValueError('You are not authorize to add task !!! ')
-
-        tasks.append([task_activity, task_start_date, task_end_date, task_manpower, task_cost, False])
-        print('>>> Activity added to the task')
-    except ValueError:
-        raise ValueError('Invalid input')
-
-
-def update_task(user_input):
-    """
-    update/edit/modify task parameter. from user_input can select which parameter of task update.
-    :param user_input: 1.ACTIVITY, 2.START DATE, 3.END DATE, 4.MANPOWER, 5.COST, 6.STATUS
-    :return:
-    """
-    try:
-        if current_user[INDEX_USER_LEVEL] == USER_LEVEL_3 or current_user[INDEX_USER_LEVEL] == USER_LEVEL_2:
-            new_input = user_input.split(" ", 1)[1]  # remove first word 'add' from the input
-            task_index = int(new_input) - 1
-            print('''
-    -----------------------------------------------------------------------
-    please select which following parameter index you would like to update. 
-        1. Activity
-        2. Start date
-        3. End date
-        4. Manpower
-        5. Cost
-        
-    Enter \'0\' for exit update 
-    ------------------------------------------------------------------------
-    ''')
-
-            while True:
-                parameter_input = confirm_is_number(input('Please enter your preference: '))
-                parameter_index = parameter_input - INDEX_OFFSET
-                if parameter_index == INDEX_ACTIVITY:
-                    task_activity = input('Update activity: ')
-                    tasks[task_index][parameter_index] = task_activity
-                elif parameter_index == INDEX_START_DATE:
-                    task_start_date = format_to_datetime(input('Update start date: '))
-                    tasks[task_index][parameter_index] = task_start_date
-                elif parameter_index == INDEX_END_DATE:
-                    task_end_date = format_to_datetime(input('Update end date: '))
-                    tasks[task_index][parameter_index] = task_end_date
-                elif parameter_index == INDEX_MANPOWER:
-                    task_manpower = confirm_manpower()
-                    tasks[task_index][parameter_index] = task_manpower
-                elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] == USER_LEVEL_3:
-                    task_cost = confirm_is_number(input('Update cost($): '))
-                    tasks[task_index][parameter_index] = task_cost
-                elif parameter_index == INDEX_COST and current_user[INDEX_USER_LEVEL] != USER_LEVEL_3:
-                    print(' >> Only manager can update cost ')
-                elif parameter_index < 0:
-                    break
-                else:
-                    print('Invalid input')
-        else:
-            print('You are not authorize to update task')
-    except ValueError:
-        raise ValueError('Invalid input')
-
-
-def terminate():
-    print('>>> Are you sure? y/n')
-    response = input()
-    if response.lower() == 'y':
-        print(">>> Bye!")
-        sys.exit()
-    elif response.lower() == 'n':
-        print('Welcome back !')
-    else:
-        raise ValueError('Invalid input')
-
-
-def log_out():
-    """
-    This function is called when user command logout. Amyca will resume function main.
-    user have to login with user ID and pwd in order to continue.
-    :return:
-    """
-    main()
-
-
-def execute_command(command):
-    if command == '':
-        raise ValueError('You did not input anything')
-    elif command == 'exit' or command == 'end':
-        terminate()
-    elif command == 'help':
-        help_amyca()
-    elif command == 'list':
-        print_activity()
-    elif command == 'timeline':
-        print_timeline()
-    elif command == 'res':
-        print_resource()
-    elif command == 'cost':
-        print_cost()
-    elif command == 'logout':
-        log_out()
-    elif command == 'admin':
-        admin_task()
-    elif command.startswith('add '):
-        add_task(command)
-    elif command.startswith('task '):
-        print_tasks(command)
-    elif command.startswith('done '):
-        done_task(command)
-    elif command.startswith('update '):
-        update_task(command)
-    else:
-        raise ValueError('command not recognized')
-
-
-def read_command():
-    print('----------------------------------------------------------')
-    print(">>> What can I do for you?\n")
-    read = input()
-    return read
-
-
-def print_greeting():
-    banner = '''    
-*****************************************************************************************************
-*  __          __  _                            _              __                      _            * 
-*  \ \        / / | |                          | |            /  \                    | |           *
-*   \ \  /\  / /__| | ___ ___  _ __ ___   ___  | |_ ___      / /\ \    _ __ ___  _   _| |  _  ___   *
-*    \ \/  \/ / _ \ |/ __/ _ \| '_ ' _ \ / _ \ | __/ _ \    / /__\ \  | '_ ' _ \| | | | |/ / /__ \  *
-*     \  /\  /  __/ | (_| (_) | | | | | |  __/ | || (_) |  / /_  _\ \ | | | | | | |_| | | /  _ _) | *
-*      \/  \/ \___|_|\___\___/|_| |_| |_|\___|  \__\___/  /_/      \_\|_| |_| |_|\__, |_|\_\ \___/  *
-*                                                                                 __/ |             *
-*                                                                                |___/              *
-*****************************************************************************************************
-    '''
-    print(banner.strip(), '\n')
-
-
-def access_control():
-    """ Access control function to control access into Amyca. The function only allow authorize user with
-    with right pwd. Without
-    """
-    while True:
-        try:
-            # print('\nCurrent ID: admin, PW: admin123 or ID: kamrul PW: kamrul123\n ')
-            user_id = input('Please Enter User ID: ')
-            user_pw = input('Please Enter Password: ')
-            access_level = check_user_level(user_id, user_pw)
-            current_user[INDEX_USER_ID] = user_id
-            current_user[INDEX_USER_PW] = user_pw
-            current_user[INDEX_USER_LEVEL] = access_level
-            print('Access Level: ', access_level)
-            if access_level > 0:
-                break
-        except TypeError:
-            print('!!! Invalid user ID or Password !!! Tty again......')
-
-
-def main():
-    access_control()
-    print_greeting()
-
-    while True:
-        try:
-            command = read_command()
-            execute_command(command)
-        except Exception as e:
-            print('Sorry, I could not perform that command. Problem:', e)
-            massage = '''Sorry, I could not perform that command.\n\n Problem: ''' + str(e)
-            messagebox.showerror('Error...!!!',  massage)
+from tkinter import PhotoImage
+
+import sys
+
+
+class GUI:
+
+	def __init__(self, tasks):
+		"""Initialize GUI main window"""
+
+		self.tasks = tasks
+		self.resources = [['Manpower', 50], ['Aircon', 2]]  # Todo: Need to add project resource
+		self.cost_list = [['Manpower', 2000], ['Equipment', 5000]]  # Todo: Need to add project cost
+		self.current_time = 0
+		self.nus_orange = '#EF7C00'
+		self.nus_blue = '#003D7C'
+
+		self.window = Tk()
+		#self.window.geometry('1600x700')  # set window size
+		self.window.attributes('-fullscreen', True) # create full screen
+		self.window.title('AMYCA - Your Project Management Assistance')  # set window title
+		#self.window.configure(background=self.nus_blue)
+		self.window.iconphoto(self.window, PhotoImage(file='title_image.png'))
+
+		# Create Frame
+		self.header = Frame(self.window, height=40)
+		self.content= Frame(self.window)
+		self.footer = Frame(self.window, height=20)
+
+		self.header.pack(fill='both')
+		self.content.pack(fill='both', expand=True)
+		self.footer.pack(fill='both')
+
+		'''
+		self.window.columnconfigure(0, weight=1)
+		self.window.rowconfigure(0, weight=1)
+		self.window.rowconfigure(1, weight=25)
+		self.window.rowconfigure(2, weight=1)
+
+		self.header.grid(row=0, sticky='news')
+		self.content.grid(row=1, sticky='news')
+		self.footer.grid(row=2, sticky='news')
+        '''
+
+		# create menu
+		self.menu_bar = Menu(self.window)
+		self.file_menu = Menu(self.menu_bar, tearoff=0) # add file menu
+		self.file_menu.add_command(label='Exit', command=self.window.destroy)
+		self.help_menu = Menu(self.menu_bar, tearoff=0)
+		self.help_menu.add_command(label='Help', command=self.help)
+
+		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
+		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
+		self.window.config(menu=self.menu_bar)
+
+		# create default font
+		self.output_font = ('Courier New', 12)
+		self.header_font = ('Courier New', 30)
+		self.footer_font = ('Courier New', 10)
+
+		# add Label as header box
+		self.header_box = Label(self.header, text='AMYCA - Project Management Assistance',
+		                        font=self.header_font) # ('Helvetica', 30)
+		self.header_box.pack()
+
+		# add Label as footer box
+		self.footer_box = Label(self.footer, text='Copyright © 2019 Amyca | Develop By: Md Kamruzzaman(A0107851),'
+		 + ' Abdullah-al-mamun(Axxxxx) and Xai (Axxxx) | Project: TE3201-Software Engineering', font=self.footer_font)
+		self.footer_box.pack()
+
+		# add a Entry as input_box to enter command
+		self.input_box = Entry(self.content)  # create input box
+		self.input_box.pack(padx=5, pady=5, fill='x')
+		self.input_box.bind('<Return>', self.command_entered)  # bind the command_entered function to the Enter key
+		self.input_box.focus()
+
+		# add a Text area to show chat history
+		self.history_area = Text(self.content, width='50')
+		self.history_area.pack(padx=5, pady=5, side=LEFT, fill='y')
+		self.history_area.tag_configure('normal_format', font=self.output_font)
+		self.history_area.tag_configure('success_format', foreground='green', font=self.output_font)
+		self.history_area.tag_configure('error_format', foreground='red', font=self.output_font)
+
+		# add a Text area to show list of tasks
+		self.list_area = Text(self.content, width='50')
+		self.list_area.pack(padx=5, pady=5, side=LEFT, fill='y')
+		self.list_area.tag_configure('normal_format', font=self.output_font)
+		self.list_area.tag_configure('pending_format', foreground='red', font=self.output_font)
+		self.list_area.tag_configure('done_format', foreground='green', font=self.output_font)
+
+		# add a Text area to show all resources
+		self.resource_area = Text(self.content, width='50')
+		self.resource_area.pack(padx=5, pady=5, side=LEFT, fill='y')
+		self.resource_area.tag_configure('normal_format', font=self.output_font)
+
+		# add a Text area to show all cost
+		self.cost_area = Text(self.content, width='50')
+		self.cost_area.pack(padx=5, pady=5, side=LEFT, fill='both')
+		self.cost_area.tag_configure('normal_format', font=self.output_font)
+		self.cost_area.tag_configure('total_cost_format', foreground='red', font=self.output_font)
+
+		# show the welcome message and the list of tasks
+		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
+		self.update_task_list(self.tasks)
+		self.update_resource_list(self.resources)
+		self.update_cost_list(self.cost_list)
+
+	def start(self):
+		"""This function is for call main loop for starting GUI"""
+		self.window.mainloop()
+
+	def clear_input_box(self):
+		"""This function is for clear input box"""
+		self.input_box.delete(0, END)
+
+	def get_current_time(self):
+		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
+		return self.current_time
+
+	def update_chat_history(self, command, response, status_format):
+		"""
+
+		:param command:
+		:param response:
+		:param status_format: indicates which color to use for the status message. eg 'normal_format', 'error_format' or 'success_format'
+		:return:
+		"""
+		current_time = datetime.datetime.now().strftime('%H:%M:%S')
+		self.history_area.insert(1.0, '-'*40 + '\n', 'normal_format')
+		self.history_area.insert(1.0, '>>> ' + response + '\n', status_format)
+		self.history_area.insert(1.0, 'You said: ' + command + '\n', 'normal_format')
+		self.history_area.insert(1.0, current_time + '\n', 'normal_format')
+
+	def update_task_list(self, tasks):
+		self.list_area.delete('1.0', END)  # Clear the list area
+		for i, task in enumerate(tasks):
+			if task[1]:
+				icon = '✓'
+				output_format = 'done_format'
+			else:
+				icon = '✗'
+				output_format = 'pending_format'
+			self.list_area.insert(END, icon + ' ' + str(i+1) + '. ' + task[0] + '\n', output_format)
+
+	def update_resource_list(self, resources):
+		self.resource_area.delete('1.0', END)
+		for i, resource in enumerate(resources):
+			self.resource_area.insert(END, str(i+1) + '. ' + resource[0] + ' = ' + str(resource[1]) + ' pcs' + '\n', 'normal_format')
+			# Todo: Need to update as per project resource
+
+	def update_cost_list(self, cost_list):
+		self.cost_area.delete('1.0', END) # Todo: Need to ask prof what is mean by '1.0' and END
+		total_cost = 0
+		for i, cost in enumerate(cost_list):
+			total_cost = total_cost + cost[1]
+			self.cost_area.insert(END, str(i+1) + '. ' + cost[0] + ' = $' + str(cost[1]) + '\n', 'normal_format')
+		self.cost_area.insert(END, '-'*25 + '\n', 'normal_format')
+		self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
+
+	def command_entered(self, event):
+		command = None
+		try:
+			command = self.input_box.get()
+			if command.strip().lower() == 'exit':
+				sys.exit()
+			# Todo: Need to complete this [output = self.task_manager.execute.command(command)]
+			self.tasks.append([command, False])
+			output = 'Task added'
+			self.update_chat_history(command, output, 'success_format')
+			self.update_task_list(self.tasks)
+			self.clear_input_box()
+
+		except Exception as e:
+			self.update_chat_history(command, str(e) + '\n', 'error_format')
+			messagebox.showerror('Error...!!!', str(e))
+
+	def help(self):
+		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
 
 
 if __name__ == '__main__':
-    main()
+	tasks = []
+	tasks.append(['read book', False])
+	tasks.append(['Return book', True])
+
+
+	try :
+		GUI(tasks).start()
+	except Exception as e:
+		print('Problem: ', e)
+		messagebox.showerror('Error...!!!', str(e))
+
+

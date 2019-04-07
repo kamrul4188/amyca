@@ -1,11 +1,9 @@
 import sys
 import pyfiglet
 from colorama import init;
-import user
-
-
 init(autoreset=True)
 from colorama import Fore, Back, Style
+import user
 
 
 class Project:
