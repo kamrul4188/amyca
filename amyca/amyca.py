@@ -35,20 +35,11 @@ class MainScreen:
 		self.content.pack(fill='both', expand=True)
 		self.footer.pack(fill='both')
 
-		'''
-		self.window.columnconfigure(0, weight=1)
-		self.window.rowconfigure(0, weight=1)
-		self.window.rowconfigure(1, weight=25)
-		self.window.rowconfigure(2, weight=1)
-
-		self.header.grid(row=0, sticky='news')
-		self.content.grid(row=1, sticky='news')
-		self.footer.grid(row=2, sticky='news')
-        '''
 
 		# create menu
 		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0) # add file menu
+		self.file_menu.add_command(label='Logout', command=self.logout)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu.add_command(label='Help', command=self.help)
@@ -181,10 +172,16 @@ class MainScreen:
 	def help(self):
 		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
 
+	def logout(self):
+		self.main_window.destroy()
+		LoginScreen(User).start()
+
 
 class LoginScreen:
 	def __init__(self, user):
 		self.user = user
+		self.tasks = tasks
+		self.login = False
 
 		self.login_window = Tk()
 		self.login_window.geometry('300x250')
@@ -218,11 +215,14 @@ class LoginScreen:
 		user_password = self.password_login_entry.get()
 		access_login = self.user.verify(user_name, user_password)
 		if access_login:
-			messagebox.showinfo('login', 'Login Successful')
-			self.login_window.destroy()
-			#MainScreen(tasks).start()
+			#messagebox.showinfo('login', 'Login Successful')
+			self.login_success()
 		else:
 			messagebox.showerror('Login', 'Login not successful')
+
+	def login_success(self):
+		self.login_window.destroy()
+		MainScreen(tasks).start()
 
 
 if __name__ == '__main__':
@@ -230,10 +230,9 @@ if __name__ == '__main__':
 	tasks.append(['read book', False])
 	tasks.append(['Return book', True])
 
-	try :
+	try:
 		User('admin', 'admin123', 4)
 		LoginScreen(User).start()
-		#MainScreen(tasks).start()
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))
