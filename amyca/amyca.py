@@ -4,9 +4,10 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 
 import sys
+from user import User
 
 
-class GUI:
+class MainScreen:
 
 	def __init__(self, tasks):
 		"""Initialize GUI main window"""
@@ -18,17 +19,17 @@ class GUI:
 		self.nus_orange = '#EF7C00'
 		self.nus_blue = '#003D7C'
 
-		self.window = Tk()
-		self.window.geometry('1600x700')  # set window size
+		self.main_window = Tk()
+		self.main_window.geometry('1600x700')  # set window size
 		#self.window.attributes('-fullscreen', True) # create full screen
-		self.window.title('AMYCA - Project Management Assistance')  # set window title
+		self.main_window.title('AMYCA - Project Management Assistance')  # set window title
 		#self.window.configure(background=self.nus_blue)
-		self.window.iconphoto(self.window, PhotoImage(file='title_image.png'))
+		self.main_window.iconphoto(self.main_window, PhotoImage(file='title_image.png'))
 
 		# Create Frame
-		self.header = Frame(self.window, height=40)
-		self.content= Frame(self.window)
-		self.footer = Frame(self.window, height=20)
+		self.header = Frame(self.main_window, height=40)
+		self.content= Frame(self.main_window)
+		self.footer = Frame(self.main_window, height=20)
 
 		self.header.pack(fill='both')
 		self.content.pack(fill='both', expand=True)
@@ -46,15 +47,15 @@ class GUI:
         '''
 
 		# create menu
-		self.menu_bar = Menu(self.window)
+		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0) # add file menu
-		self.file_menu.add_command(label='Exit', command=self.window.destroy)
+		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu.add_command(label='Help', command=self.help)
 
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
-		self.window.config(menu=self.menu_bar)
+		self.main_window.config(menu=self.menu_bar)
 
 		# create default font
 		self.output_font = ('Courier New', 12)
@@ -110,7 +111,7 @@ class GUI:
 
 	def start(self):
 		"""This function is for call main loop for starting GUI"""
-		self.window.mainloop()
+		self.main_window.mainloop()
 
 	def clear_input_box(self):
 		"""This function is for clear input box"""
@@ -181,14 +182,58 @@ class GUI:
 		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
 
 
+class LoginScreen:
+	def __init__(self, user):
+		self.user = user
+
+		self.login_window = Tk()
+		self.login_window.geometry('300x250')
+		self.login_window.title('Login to Amyca')
+		self.login_window.iconphoto(self.login_window, PhotoImage(file='title_image.png'))
+
+		# Create a Form label
+		self.label = Label(text='Please enter details below to login')
+		self.label.pack(padx=10, pady=10)
+
+		self.label_user_name = Label(self.login_window, text='Username *')
+		self.label_user_name.pack(padx=5, pady=5)
+
+		self.username_login_entry = Entry(self.login_window)
+		self.username_login_entry.pack(padx=5, pady=5)
+
+		self.label_password = Label(self.login_window, text='Password *')
+		self.label_password.pack(padx=5, pady=5)
+
+		self.password_login_entry = Entry(self.login_window, show='*')
+		self.password_login_entry.pack(padx=5, pady=5)
+
+		self.login_button = Button(self.login_window, text='Login', command=self.verify_user_login)
+		self.login_button.pack(padx=5, pady=5)
+
+	def start(self):
+		return self.login_window.mainloop()
+
+	def verify_user_login(self):
+		user_name = self.username_login_entry.get()
+		user_password = self.password_login_entry.get()
+		access_login = self.user.verify(user_name, user_password)
+		if access_login:
+			messagebox.showinfo('login', 'Login Successful')
+			self.login_window.destroy()
+			#MainScreen(tasks).start()
+		else:
+			messagebox.showerror('Login', 'Login not successful')
+
+
 if __name__ == '__main__':
 	tasks = []
 	tasks.append(['read book', False])
 	tasks.append(['Return book', True])
 
-
 	try :
-		GUI(tasks).start()
+		User('admin', 'admin123', 4)
+		LoginScreen(User).start()
+		#MainScreen(tasks).start()
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))
