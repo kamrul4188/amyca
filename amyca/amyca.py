@@ -4,17 +4,18 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 
 import sys
+
 from user import User
+from todo import ToDo
+from project import Project
 
 
 class MainScreen:
 
-	def __init__(self, tasks):
+	def __init__(self):
 		"""Initialize GUI main window"""
+		self.project = Project('p1')
 
-		self.tasks = tasks
-		self.resources = [['Manpower', 50], ['Aircon', 2]]  # Todo: Need to add project resource
-		self.cost_list = [['Manpower', 2000], ['Equipment', 5000]]  # Todo: Need to add project cost
 		self.current_time = 0
 		self.nus_orange = '#EF7C00'
 		self.nus_blue = '#003D7C'
@@ -96,9 +97,10 @@ class MainScreen:
 
 		# show the welcome message and the list of tasks
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
-		self.update_task_list(self.tasks)
-		self.update_resource_list(self.resources)
-		self.update_cost_list(self.cost_list)
+
+		self.update_task_list(self.project.tasks)
+		self.update_resource_list(self.project.resources)
+		self.update_cost_list(self.project.cost)
 
 	def start(self):
 		"""This function is for call main loop for starting GUI"""
@@ -128,14 +130,13 @@ class MainScreen:
 
 	def update_task_list(self, tasks):
 		self.list_area.delete('1.0', END)  # Clear the list area
+
 		for i, task in enumerate(tasks):
-			if task[1]:
-				icon = '✓'
+			if task.get_status():
 				output_format = 'done_format'
 			else:
-				icon = '✗'
 				output_format = 'pending_format'
-			self.list_area.insert(END, icon + ' ' + str(i+1) + '. ' + task[0] + '\n', output_format)
+			self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
 
 	def update_resource_list(self, resources):
 		self.resource_area.delete('1.0', END)
@@ -154,20 +155,43 @@ class MainScreen:
 
 	def command_entered(self, event):
 		command = None
+
 		try:
 			command = self.input_box.get()
-			if command.strip().lower() == 'exit':
-				sys.exit()
-			# Todo: Need to complete this [output = self.task_manager.execute.command(command)]
-			self.tasks.append([command, False])
-			output = 'Task added'
+			command.strip().lower()
+
+			output = self.execute_command(command)
+			print(output)
 			self.update_chat_history(command, output, 'success_format')
-			self.update_task_list(self.tasks)
+			self.update_task_list(self.project.tasks)
+			self.update_resource_list(self.project.resources)
+			self.update_cost_list(self.project.cost)
 			self.clear_input_box()
 
 		except Exception as e:
 			self.update_chat_history(command, str(e) + '\n', 'error_format')
 			messagebox.showerror('Error...!!!', str(e))
+
+	def execute_command(self, command):
+		if command == 'exit':
+			sys.exit()
+		elif command.startswith('todo '):
+			description = command.split(' ', 1)[1]
+			return self.project.add_task(ToDo(description, False))
+		elif command.startswith('done '):
+			user_index = command.split(' ', 1)[1]
+			index = int(user_index) - 1
+			if index < 0:
+				raise Exception('Index must be grater then 0')
+			else:
+				try:
+					self.project.tasks[index].mark_as_done()
+					return 'Congrats on completing a task ! :-)'
+				except:
+					raise Exception('No item at index ' + str(index + 1))
+		else:
+			raise Exception('Command not recognized')
+
 
 	def help(self):
 		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
@@ -180,7 +204,6 @@ class MainScreen:
 class LoginScreen:
 	def __init__(self, user):
 		self.user = user
-		self.tasks = tasks
 		self.login = False
 
 		self.login_window = Tk()
@@ -215,24 +238,20 @@ class LoginScreen:
 		user_password = self.password_login_entry.get()
 		access_login = self.user.verify(user_name, user_password)
 		if access_login:
-			#messagebox.showinfo('login', 'Login Successful')
 			self.login_success()
 		else:
 			messagebox.showerror('Login', 'Login not successful')
 
 	def login_success(self):
 		self.login_window.destroy()
-		MainScreen(tasks).start()
+		MainScreen().start()
 
 
 if __name__ == '__main__':
-	tasks = []
-	tasks.append(['read book', False])
-	tasks.append(['Return book', True])
-
 	try:
-		User('admin', 'admin123', 4)
-		LoginScreen(User).start()
+		#User('admin', 'admin123', 4)
+		#LoginScreen(User).start()
+		MainScreen().start()
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))

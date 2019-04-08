@@ -1,3 +1,4 @@
+
 class ToDo:
 	"""This class add todo objdect into items"""
 
@@ -17,11 +18,21 @@ class ToDo:
 		""" Return the details of todo object as a string"""
 		status = '✓' if self.is_done else '✗'
 		offset = 30 - len(self.description)
-		return status.center(8) + '|'.ljust(3) + self.description + ' '.ljust(offset) + '|'.ljust(3) + '-'
+		return status.center(8) + '|'.ljust(3) + self.description
 
 	def __status_as_icon(self):
 		""" Return the details of todo object as a string"""
 		return '✓' if self.is_done else '✗'
+
+	def get_status(self):
+		return self.is_done
+
+	def get_status_as_icon(self):
+		""" Return the details of todo object as a string"""
+		return '✓' if self.is_done else '✗'
+
+	def get_as_string(self):
+		return  self.description
 
 	def __str__(self):
 		return '(' + self.__status_as_icon() + ')' + self.description
