@@ -43,5 +43,3 @@ class Project:
 		return 'Project name is: ' + self.name + ' and ID: ' + str(self.id)
 
 
-
-

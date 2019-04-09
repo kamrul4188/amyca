@@ -7,6 +7,7 @@ import sys
 
 from user import User
 from todo import ToDo
+from deadline import Deadline
 from project import Project
 
 
@@ -14,8 +15,8 @@ class MainScreen:
 
 	def __init__(self):
 		"""Initialize GUI main window"""
-		self.project = Project('p1')
 
+		self.project = Project('p1')
 		self.current_time = 0
 		self.nus_orange = '#EF7C00'
 		self.nus_blue = '#003D7C'
@@ -131,12 +132,24 @@ class MainScreen:
 	def update_task_list(self, tasks):
 		self.list_area.delete('1.0', END)  # Clear the list area
 
+		completed_task = 0
+		total_task = 0
+
 		for i, task in enumerate(tasks):
+			total_task = i + 1
 			if task.get_status():
 				output_format = 'done_format'
+				completed_task = completed_task + 1
 			else:
 				output_format = 'pending_format'
-			self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
+			if type(task) == ToDo:
+				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
+			elif type(task) == Deadline:
+				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
+		self.list_area.insert(END, '-'*40 + '\n', 'normal_format')
+		self.list_area.insert(END, 'Total Tasks: ' + str(total_task) + '\n', 'normal_format')
+		self.list_area.insert(END, 'Completed Task: ' + str(completed_task) + '\n', 'done_format')
+		self.list_area.insert(END, 'Pending Task: ' + str(total_task-completed_task) + '\n', 'pending_format')
 
 	def update_resource_list(self, resources):
 		self.resource_area.delete('1.0', END)
@@ -161,7 +174,6 @@ class MainScreen:
 			command.strip().lower()
 
 			output = self.execute_command(command)
-			print(output)
 			self.update_chat_history(command, output, 'success_format')
 			self.update_task_list(self.project.tasks)
 			self.update_resource_list(self.project.resources)
@@ -172,12 +184,39 @@ class MainScreen:
 			self.update_chat_history(command, str(e) + '\n', 'error_format')
 			messagebox.showerror('Error...!!!', str(e))
 
+	def remove_from_word(self, text, word):
+		tail_start_position = text.find(word)
+		if tail_start_position != -1:
+			text = text[:tail_start_position]
+			text = text.strip()
+			return text
+		else:
+			raise ValueError('Your command not in correct format')
+
+	def remove_to_word(self, text, word):
+		word_size = len(word) + 1  # world length + a space after word
+		word_start_position = text.find(word)
+		if word_start_position != -1:
+			word_tail_position = word_start_position + word_size
+			text = text[word_tail_position:]
+			text = text.strip()
+			return text
+		else:
+			raise ValueError('Your command not in correct format')
+
 	def execute_command(self, command):
 		if command == 'exit':
 			sys.exit()
 		elif command.startswith('todo '):
 			description = command.split(' ', 1)[1]
 			return self.project.add_task(ToDo(description, False))
+
+		elif command.startswith('deadline '):
+			command_part = command.split(' ', 1)[1]
+			description = self.remove_from_word(command_part, 'by')
+			by = self.remove_to_word(command_part, 'by')
+			return self.project.add_task(Deadline(description, False, by))
+
 		elif command.startswith('done '):
 			user_index = command.split(' ', 1)[1]
 			index = int(user_index) - 1
@@ -187,11 +226,23 @@ class MainScreen:
 				try:
 					self.project.tasks[index].mark_as_done()
 					return 'Congrats on completing a task ! :-)'
-				except:
+				except Exception:
 					raise Exception('No item at index ' + str(index + 1))
+
+		elif command.startswith('pending '):
+			user_index = command.split(' ', 1)[1]
+			index = int(user_index) - 1
+			if index < 0:
+				raise Exception('Index must be grater than 0')
+			else:
+				try:
+					self.project.tasks[index].mark_as_pending()
+					return 'Task mark as pending'
+				except Exception:
+					raise Exception('No item at index' + str(index + 1))
+
 		else:
 			raise Exception('Command not recognized')
-
 
 	def help(self):
 		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
@@ -244,7 +295,7 @@ class LoginScreen:
 
 	def login_success(self):
 		self.login_window.destroy()
-		MainScreen().start()
+		# MainScreen().start() # Todo: Main Screen
 
 
 if __name__ == '__main__':
