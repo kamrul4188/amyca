@@ -5,56 +5,49 @@ from tkinter import PhotoImage
 
 import sys
 
+from user import User
+from todo import ToDo
+from project import Project
 
-class GUI:
 
-	def __init__(self, tasks):
+class MainScreen:
+
+	def __init__(self):
 		"""Initialize GUI main window"""
+		self.project = Project('p1')
 
-		self.tasks = tasks
-		self.resources = [['Manpower', 50], ['Aircon', 2]]  # Todo: Need to add project resource
-		self.cost_list = [['Manpower', 2000], ['Equipment', 5000]]  # Todo: Need to add project cost
 		self.current_time = 0
 		self.nus_orange = '#EF7C00'
 		self.nus_blue = '#003D7C'
 
-		self.window = Tk()
-		self.window.geometry('1600x700')  # set window size
+		self.main_window = Tk()
+		self.main_window.geometry('1600x700')  # set window size
 		#self.window.attributes('-fullscreen', True) # create full screen
-		self.window.title('AMYCA - Project Management Assistance')  # set window title
+		self.main_window.title('AMYCA - Project Management Assistance')  # set window title
 		#self.window.configure(background=self.nus_blue)
-		self.window.iconphoto(self.window, PhotoImage(file='title_image.png'))
+		self.main_window.iconphoto(self.main_window, PhotoImage(file='title_image.png'))
 
 		# Create Frame
-		self.header = Frame(self.window, height=40)
-		self.content= Frame(self.window)
-		self.footer = Frame(self.window, height=20)
+		self.header = Frame(self.main_window, height=40)
+		self.content= Frame(self.main_window)
+		self.footer = Frame(self.main_window, height=20)
 
 		self.header.pack(fill='both')
 		self.content.pack(fill='both', expand=True)
 		self.footer.pack(fill='both')
 
-		'''
-		self.window.columnconfigure(0, weight=1)
-		self.window.rowconfigure(0, weight=1)
-		self.window.rowconfigure(1, weight=25)
-		self.window.rowconfigure(2, weight=1)
-
-		self.header.grid(row=0, sticky='news')
-		self.content.grid(row=1, sticky='news')
-		self.footer.grid(row=2, sticky='news')
-        '''
 
 		# create menu
-		self.menu_bar = Menu(self.window)
+		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0) # add file menu
-		self.file_menu.add_command(label='Exit', command=self.window.destroy)
+		self.file_menu.add_command(label='Logout', command=self.logout)
+		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu.add_command(label='Help', command=self.help)
 
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
-		self.window.config(menu=self.menu_bar)
+		self.main_window.config(menu=self.menu_bar)
 
 		# create default font
 		self.output_font = ('Courier New', 12)
@@ -104,13 +97,14 @@ class GUI:
 
 		# show the welcome message and the list of tasks
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
-		self.update_task_list(self.tasks)
-		self.update_resource_list(self.resources)
-		self.update_cost_list(self.cost_list)
+
+		self.update_task_list(self.project.tasks)
+		self.update_resource_list(self.project.resources)
+		self.update_cost_list(self.project.cost)
 
 	def start(self):
 		"""This function is for call main loop for starting GUI"""
-		self.window.mainloop()
+		self.main_window.mainloop()
 
 	def clear_input_box(self):
 		"""This function is for clear input box"""
@@ -136,14 +130,13 @@ class GUI:
 
 	def update_task_list(self, tasks):
 		self.list_area.delete('1.0', END)  # Clear the list area
+
 		for i, task in enumerate(tasks):
-			if task[1]:
-				icon = '✓'
+			if task.get_status():
 				output_format = 'done_format'
 			else:
-				icon = '✗'
 				output_format = 'pending_format'
-			self.list_area.insert(END, icon + ' ' + str(i+1) + '. ' + task[0] + '\n', output_format)
+			self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
 
 	def update_resource_list(self, resources):
 		self.resource_area.delete('1.0', END)
@@ -162,33 +155,103 @@ class GUI:
 
 	def command_entered(self, event):
 		command = None
+
 		try:
 			command = self.input_box.get()
-			if command.strip().lower() == 'exit':
-				sys.exit()
-			# Todo: Need to complete this [output = self.task_manager.execute.command(command)]
-			self.tasks.append([command, False])
-			output = 'Task added'
+			command.strip().lower()
+
+			output = self.execute_command(command)
+			print(output)
 			self.update_chat_history(command, output, 'success_format')
-			self.update_task_list(self.tasks)
+			self.update_task_list(self.project.tasks)
+			self.update_resource_list(self.project.resources)
+			self.update_cost_list(self.project.cost)
 			self.clear_input_box()
 
 		except Exception as e:
 			self.update_chat_history(command, str(e) + '\n', 'error_format')
 			messagebox.showerror('Error...!!!', str(e))
 
+	def execute_command(self, command):
+		if command == 'exit':
+			sys.exit()
+		elif command.startswith('todo '):
+			description = command.split(' ', 1)[1]
+			return self.project.add_task(ToDo(description, False))
+		elif command.startswith('done '):
+			user_index = command.split(' ', 1)[1]
+			index = int(user_index) - 1
+			if index < 0:
+				raise Exception('Index must be grater then 0')
+			else:
+				try:
+					self.project.tasks[index].mark_as_done()
+					return 'Congrats on completing a task ! :-)'
+				except:
+					raise Exception('No item at index ' + str(index + 1))
+		else:
+			raise Exception('Command not recognized')
+
+
 	def help(self):
 		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
 
+	def logout(self):
+		self.main_window.destroy()
+		LoginScreen(User).start()
+
+
+class LoginScreen:
+	def __init__(self, user):
+		self.user = user
+		self.login = False
+
+		self.login_window = Tk()
+		self.login_window.geometry('300x250')
+		self.login_window.title('Login to Amyca')
+		self.login_window.iconphoto(self.login_window, PhotoImage(file='title_image.png'))
+
+		# Create a Form label
+		self.label = Label(text='Please enter details below to login')
+		self.label.pack(padx=10, pady=10)
+
+		self.label_user_name = Label(self.login_window, text='Username *')
+		self.label_user_name.pack(padx=5, pady=5)
+
+		self.username_login_entry = Entry(self.login_window)
+		self.username_login_entry.pack(padx=5, pady=5)
+
+		self.label_password = Label(self.login_window, text='Password *')
+		self.label_password.pack(padx=5, pady=5)
+
+		self.password_login_entry = Entry(self.login_window, show='*')
+		self.password_login_entry.pack(padx=5, pady=5)
+
+		self.login_button = Button(self.login_window, text='Login', command=self.verify_user_login)
+		self.login_button.pack(padx=5, pady=5)
+
+	def start(self):
+		return self.login_window.mainloop()
+
+	def verify_user_login(self):
+		user_name = self.username_login_entry.get()
+		user_password = self.password_login_entry.get()
+		access_login = self.user.verify(user_name, user_password)
+		if access_login:
+			self.login_success()
+		else:
+			messagebox.showerror('Login', 'Login not successful')
+
+	def login_success(self):
+		self.login_window.destroy()
+		MainScreen().start()
+
 
 if __name__ == '__main__':
-	tasks = []
-	tasks.append(['read book', False])
-	tasks.append(['Return book', True])
-
-
-	try :
-		GUI(tasks).start()
+	try:
+		#User('admin', 'admin123', 4)
+		#LoginScreen(User).start()
+		MainScreen().start()
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))
