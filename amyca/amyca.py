@@ -84,21 +84,24 @@ class MainScreen:
 		self.list_area.tag_configure('normal_format', font=self.output_font)
 		self.list_area.tag_configure('pending_format', foreground='red', font=self.output_font)
 		self.list_area.tag_configure('done_format', foreground='green', font=self.output_font)
+		self.list_area.tag_configure('title_format', foreground='blue', font=self.output_font)
+		self.list_area.tag_configure('line_format', foreground='blue', font=self.output_font)
 
 		# add a Text area to show all resources
 		self.resource_area = Text(self.content, width='50')
 		self.resource_area.pack(padx=5, pady=5, side=LEFT, fill='y')
 		self.resource_area.tag_configure('normal_format', font=self.output_font)
+		self.resource_area.tag_configure('title_format', foreground='blue', font=self.output_font)
 
 		# add a Text area to show all cost
 		self.cost_area = Text(self.content, width='50')
 		self.cost_area.pack(padx=5, pady=5, side=LEFT, fill='both')
 		self.cost_area.tag_configure('normal_format', font=self.output_font)
 		self.cost_area.tag_configure('total_cost_format', foreground='red', font=self.output_font)
+		self.cost_area.tag_configure('title_format', foreground='blue', font=self.output_font)
 
 		# show the welcome message and the list of tasks
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
-
 		self.update_task_list(self.project.tasks)
 		self.update_resource_list(self.project.resources)
 		self.update_cost_list(self.project.cost)
@@ -117,7 +120,6 @@ class MainScreen:
 
 	def update_chat_history(self, command, response, status_format):
 		"""
-
 		:param command:
 		:param response:
 		:param status_format: indicates which color to use for the status message. eg 'normal_format', 'error_format' or 'success_format'
@@ -134,7 +136,8 @@ class MainScreen:
 
 		completed_task = 0
 		total_task = 0
-
+		self.list_area.insert(END, ' '*12 + 'LIST OF TASKS' + '\n', 'title_format')
+		self.list_area.insert(END, '-'*40 + '\n', 'line_format')
 		for i, task in enumerate(tasks):
 			total_task = i + 1
 			if task.get_status():
@@ -146,25 +149,34 @@ class MainScreen:
 				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
 			elif type(task) == Deadline:
 				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
-		self.list_area.insert(END, '-'*40 + '\n', 'normal_format')
-		self.list_area.insert(END, 'Total Tasks: ' + str(total_task) + '\n', 'normal_format')
-		self.list_area.insert(END, 'Completed Task: ' + str(completed_task) + '\n', 'done_format')
-		self.list_area.insert(END, 'Pending Task: ' + str(total_task-completed_task) + '\n', 'pending_format')
+		self.list_area.insert(END, '-'*40 + '\n', 'line_format')
+		self.list_area.insert(END, 'Total Tasks    : ' + str(total_task) + '\n', 'normal_format')
+		self.list_area.insert(END, 'Completed Task : ' + str(completed_task) + '\n', 'done_format')
+		self.list_area.insert(END, 'Pending Task   : ' + str(total_task-completed_task) + '\n', 'pending_format')
+		self.list_area.insert(END, '-' * 40 + '\n', 'line_format')
 
 	def update_resource_list(self, resources):
 		self.resource_area.delete('1.0', END)
+		self.resource_area.insert(END, ' ' * 11 + 'LIST OF RESOURCES' + '\n', 'title_format')
+		self.resource_area.insert(END, '-' * 40 + '\n', 'title_format')
 		for i, resource in enumerate(resources):
 			self.resource_area.insert(END, str(i+1) + '. ' + resource[0] + ' = ' + str(resource[1]) + ' pcs' + '\n', 'normal_format')
 			# Todo: Need to update as per project resource
+		self.resource_area.insert(END, '-' * 40 + '\n', 'title_format')
+
 
 	def update_cost_list(self, cost_list):
-		self.cost_area.delete('1.0', END) # Todo: Need to ask prof what is mean by '1.0' and END
+		self.cost_area.delete('1.0', END)
+		self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
+		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+
 		total_cost = 0
 		for i, cost in enumerate(cost_list):
 			total_cost = total_cost + cost[1]
 			self.cost_area.insert(END, str(i+1) + '. ' + cost[0] + ' = $' + str(cost[1]) + '\n', 'normal_format')
-		self.cost_area.insert(END, '-'*25 + '\n', 'normal_format')
+		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
 		self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
+		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
 
 	def command_entered(self, event):
 		command = None
@@ -240,6 +252,9 @@ class MainScreen:
 					return 'Task mark as pending'
 				except Exception:
 					raise Exception('No item at index' + str(index + 1))
+
+		elif command.startswith('resource '):
+			pass
 
 		else:
 			raise Exception('Command not recognized')

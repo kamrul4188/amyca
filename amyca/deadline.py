@@ -16,7 +16,7 @@ class Deadline (todo.ToDo):
 		return status.center(8) + '|'.ljust(3) + self.description + ' '.ljust(offset) + '|'.ljust(3) + self.by
 
 	def get_as_string(self):
-		return  self.description + '. ' + 'Deadline: ' + self.by
+		return self.description + '. ' + 'Due: ' + self.by
 
 	def __str__(self):
 		return super().__str__() + '[by: ' + self.by + ']'
