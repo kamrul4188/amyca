@@ -5,10 +5,13 @@ from tkinter import PhotoImage
 
 import sys
 
+"""Import Local Module"""
 from user import User
 from todo import ToDo
 from deadline import Deadline
 from project import Project
+from resource import Resource
+from cost import Cost
 
 
 class MainScreen:
@@ -17,6 +20,8 @@ class MainScreen:
 		"""Initialize GUI main window"""
 
 		self.project = Project('p1')
+		self.current_user_name = User.get_current_user_name()
+		self.current_user_level = User.get_current_user_access_level()
 		self.current_time = 0
 		self.nus_orange = '#EF7C00'
 		self.nus_blue = '#003D7C'
@@ -24,7 +29,8 @@ class MainScreen:
 		self.main_window = Tk()
 		self.main_window.geometry('1600x700')  # set window size
 		#self.window.attributes('-fullscreen', True) # create full screen
-		self.main_window.title('AMYCA - Project Management Assistance')  # set window title
+		print(self.current_user_name)
+		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' @ ' + self.get_current_time() + ' ]')  # set window title
 		#self.window.configure(background=self.nus_blue)
 		self.main_window.iconphoto(self.main_window, PhotoImage(file='title_image.png'))
 
@@ -37,18 +43,46 @@ class MainScreen:
 		self.content.pack(fill='both', expand=True)
 		self.footer.pack(fill='both')
 
-
-		# create menu
+		# create menus
 		self.menu_bar = Menu(self.main_window)
-		self.file_menu = Menu(self.menu_bar, tearoff=0) # add file menu
-		self.file_menu.add_command(label='Logout', command=self.logout)
-		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
+		self.file_menu = Menu(self.menu_bar, tearoff=0)
+		self.user_menu = Menu(self.menu_bar, tearoff=0)
+		self.task_menu = Menu(self.menu_bar, tearoff=0)
+		self.resource_menu = Menu(self.menu_bar, tearoff=0)
+		self.cost_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
-		self.help_menu.add_command(label='Help', command=self.help)
 
+
+		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
+		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
+		self.menu_bar.add_cascade(label='Task', menu=self.task_menu)
+		self.menu_bar.add_cascade(label='Resource', menu=self.resource_menu)
+		self.menu_bar.add_cascade(label='Cost', menu=self.cost_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
 		self.main_window.config(menu=self.menu_bar)
+
+		# add command to menus	- TODO: need to add commad for fucntioning
+		self.file_menu.add_command(label='save')
+		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
+		self.user_menu.add_command(label='Add User')
+		self.user_menu.add_command(label='Remove User')
+		self.user_menu.add_command(label='Change Passowrd')
+		self.user_menu.add_command(label='Change Level')
+		self.user_menu.add_command(label='Logout', command=self.logout)
+		self.task_menu.add_command(label='Add ToDo')
+		self.task_menu.add_command(label='Add Deadline')
+		self.task_menu.add_command(label='Add Timeline')
+		self.task_menu.add_command(label='Update Status')
+		self.task_menu.add_command(label='View Timelne')
+		self.task_menu.add_command(label='Delete')
+		self.resource_menu.add_command(label='Add Resource')
+		self.resource_menu.add_command(label='Remove Resource')
+		self.cost_menu.add_command(label='Add cost')
+		self.cost_menu.add_command(label='Remove Cost')
+		self.help_menu.add_command(label='Help', command=self.help)
+
+
 
 		# create default font
 		self.output_font = ('Courier New', 12)
@@ -160,10 +194,8 @@ class MainScreen:
 		self.resource_area.insert(END, ' ' * 11 + 'LIST OF RESOURCES' + '\n', 'title_format')
 		self.resource_area.insert(END, '-' * 40 + '\n', 'title_format')
 		for i, resource in enumerate(resources):
-			self.resource_area.insert(END, str(i+1) + '. ' + resource[0] + ' = ' + str(resource[1]) + ' pcs' + '\n', 'normal_format')
-			# Todo: Need to update as per project resource
+			self.resource_area.insert(END, str(i+1) + '. ' + resource.get_description() + ': ' + resource.get_quantity() + '\n', 'normal_format')
 		self.resource_area.insert(END, '-' * 40 + '\n', 'title_format')
-
 
 	def update_cost_list(self, cost_list):
 		self.cost_area.delete('1.0', END)
@@ -172,8 +204,9 @@ class MainScreen:
 
 		total_cost = 0
 		for i, cost in enumerate(cost_list):
-			total_cost = total_cost + cost[1]
-			self.cost_area.insert(END, str(i+1) + '. ' + cost[0] + ' = $' + str(cost[1]) + '\n', 'normal_format')
+			total_cost = total_cost + int(cost.get_cost())
+			#offset = 34 - (len(cost.get_description() + len(cost.get_cost())))
+			self.cost_area.insert(END, str(i+1) + '. ' + cost.get_description() + ': ' + '$' + str(cost.get_cost()) + '\n', 'normal_format')
 		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
 		self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
 		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
@@ -254,7 +287,16 @@ class MainScreen:
 					raise Exception('No item at index' + str(index + 1))
 
 		elif command.startswith('resource '):
-			pass
+			command_part = command.split(' ', 1)[1]
+			description = self.remove_from_word(command_part, 'is')
+			quantity = self.remove_to_word(command_part, 'is')
+			return self.project.add_resources(Resource(description, quantity))
+
+		elif command.startswith('cost '):
+			command_part = command.split(' ', 2)[2]
+			description = self.remove_from_word(command_part, 'is')
+			cost = self.remove_to_word(command_part, 'is')
+			return self.project.add_cost(Cost(description, cost))
 
 		else:
 			raise Exception('Command not recognized')
@@ -310,14 +352,14 @@ class LoginScreen:
 
 	def login_success(self):
 		self.login_window.destroy()
-		# MainScreen().start() # Todo: Main Screen
+		MainScreen().start() # Todo: Main Screen
 
 
 if __name__ == '__main__':
 	try:
 		#User('admin', 'admin123', 4)
-		#LoginScreen(User).start()
-		MainScreen().start()
+		LoginScreen(User('admin', 'admin123', 4)).start()
+		#MainScreen().start()
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))

@@ -32,7 +32,7 @@ class User:
 		except IndexError:
 			raise IndexError('Index is our of range')
 
-	@classmethod
+
 	def remove(cls, name):
 		# Todo: add functionality to remove user
 		pass
