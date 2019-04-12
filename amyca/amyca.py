@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 
 import sys
+from threading import Timer
 
 """Import Local Module"""
 from user import User
@@ -22,15 +23,17 @@ class MainScreen:
 		self.project = Project('p1')
 		self.current_user_name = User.get_current_user_name()
 		self.current_user_level = User.get_current_user_access_level()
-		self.current_time = 0
-		self.nus_orange = '#EF7C00'
-		self.nus_blue = '#003D7C'
+		self.current_time = self.get_current_time()
+
+		# self.nus_orange = '#EF7C00'
+		# self.nus_blue = '#003D7C'
 
 		self.main_window = Tk()
 		self.main_window.geometry('1600x700')  # set window size
 		#self.window.attributes('-fullscreen', True) # create full screen
 		print(self.current_user_name)
-		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' @ ' + self.get_current_time() + ' ]')  # set window title
+		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' ]')  # set window title
+
 		#self.window.configure(background=self.nus_blue)
 		self.main_window.iconphoto(self.main_window, PhotoImage(file='title_image.png'))
 
@@ -65,7 +68,7 @@ class MainScreen:
 		# add command to menus	- TODO: need to add commad for fucntioning
 		self.file_menu.add_command(label='save')
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
-		self.user_menu.add_command(label='Add User')
+		self.user_menu.add_command(label='Add User', command=self.add_user)
 		self.user_menu.add_command(label='Remove User')
 		self.user_menu.add_command(label='Change Passowrd')
 		self.user_menu.add_command(label='Change Level')
@@ -74,7 +77,7 @@ class MainScreen:
 		self.task_menu.add_command(label='Add Deadline')
 		self.task_menu.add_command(label='Add Timeline')
 		self.task_menu.add_command(label='Update Status')
-		self.task_menu.add_command(label='View Timelne')
+		self.task_menu.add_command(label='View Timeline')
 		self.task_menu.add_command(label='Delete')
 		self.resource_menu.add_command(label='Add Resource')
 		self.resource_menu.add_command(label='Remove Resource')
@@ -144,13 +147,25 @@ class MainScreen:
 		"""This function is for call main loop for starting GUI"""
 		self.main_window.mainloop()
 
-	def clear_input_box(self):
-		"""This function is for clear input box"""
-		self.input_box.delete(0, END)
+	def add_user(self):
+		AddUserScreen().start()
+
+	def logout(self):
+		self.main_window.destroy()
+		LoginScreen().start()
+
+	def help(self):
+		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
+
 
 	def get_current_time(self):
 		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
 		return self.current_time
+
+	def clear_input_box(self):
+		"""This function is for clear input box"""
+		self.input_box.delete(0, END)
+
 
 	def update_chat_history(self, command, response, status_format):
 		"""
@@ -301,17 +316,10 @@ class MainScreen:
 		else:
 			raise Exception('Command not recognized')
 
-	def help(self):
-		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
-
-	def logout(self):
-		self.main_window.destroy()
-		LoginScreen(User).start()
-
 
 class LoginScreen:
-	def __init__(self, user):
-		self.user = user
+	def __init__(self):
+		self.user = User
 		self.login = False
 
 		self.login_window = Tk()
@@ -355,11 +363,35 @@ class LoginScreen:
 		MainScreen().start() # Todo: Main Screen
 
 
+class AddUserScreen:
+	def __init__(self):
+		self.user = User
+
+		self.add_user_window = Toplevel()
+		self.add_user_window.geometry('300x250')
+		self.add_user_window.title('Add New User')
+		self.add_user_window.iconphoto(self.add_user_window, PhotoImage(file='title_image.png'))
+
+		self.label = Label(text='Please enter details below to login')
+		self.label.pack(padx=10, pady=10)
+
+		self.label_user_name = Label(self.add_user_window, text='New User Name *')
+		self.label_user_name.pack(padx=5, pady=5)
+		self.entry_user_name = Entry(self.add_user_window)
+		self.entry_user_name.pack(padx=5, pady=5)
+
+
+	def start(self):
+		return self.add_user_window.mainloop()
+
+
 if __name__ == '__main__':
 	try:
 		#User('admin', 'admin123', 4)
-		LoginScreen(User('admin', 'admin123', 4)).start()
-		#MainScreen().start()
+		#User('kamrul', 'kamrul123', 3)
+		#LoginScreen().start()
+		MainScreen().start()
+		#AddUserScreen().start()
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))

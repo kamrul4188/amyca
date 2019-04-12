@@ -32,7 +32,6 @@ class User:
 		except IndexError:
 			raise IndexError('Index is our of range')
 
-
 	def remove(cls, name):
 		# Todo: add functionality to remove user
 		pass
@@ -49,3 +48,6 @@ class User:
 	def get_current_user_access_level(cls):
 		return cls.__current_user_level
 
+	@classmethod
+	def get_users(cls):
+		return User.__users

@@ -36,7 +36,8 @@ class Project:
 	def get_cost(self):
 		return self.cost
 
-	def get_total(self):
+	@classmethod
+	def get_total(cls):
 		return Project.__total
 
 	def __str__(self):
