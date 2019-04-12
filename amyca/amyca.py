@@ -13,6 +13,7 @@ from deadline import Deadline
 from project import Project
 from resource import Resource
 from cost import Cost
+from display import GreetingScreen
 
 
 class MainScreen:
@@ -35,7 +36,7 @@ class MainScreen:
 		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' ]')  # set window title
 
 		#self.window.configure(background=self.nus_blue)
-		self.main_window.iconphoto(self.main_window, PhotoImage(file='title_image.png'))
+		self.main_window.iconphoto(self.main_window, PhotoImage(file='img_title.png'))
 
 		# Create Frame
 		self.header = Frame(self.main_window, height=40)
@@ -328,7 +329,7 @@ class LoginScreen:
 		self.login_window = Tk()
 		self.login_window.geometry('300x250')
 		self.login_window.title('Login to Amyca')
-		self.login_window.iconphoto(self.login_window, PhotoImage(file='title_image.png'))
+		self.login_window.iconphoto(self.login_window, PhotoImage(file='img_title.png'))
 
 		# Create a Form label
 		self.label = Label(text='Please enter details below to login')
@@ -361,7 +362,9 @@ class LoginScreen:
 
 	def login_success(self):
 		self.login_window.destroy()
-		MainScreen().start() # Todo: Main Screen
+		greeting = GreetingScreen().start()
+		if greeting:
+			MainScreen().start() # Todo: Main Screen
 
 
 class AddUserScreen:
@@ -371,7 +374,7 @@ class AddUserScreen:
 		self.add_user_window = Toplevel()
 		self.add_user_window.geometry('300x300')
 		self.add_user_window.title('Add New User')
-		self.add_user_window.iconphoto(self.add_user_window, PhotoImage(file='title_image.png'))
+		self.add_user_window.iconphoto(self.add_user_window, PhotoImage(file='img_title.png'))
 
 		self.label = Label(self.add_user_window, text='Please enter details below to add new user')
 		self.label.pack(padx=10, pady=10)
@@ -416,7 +419,7 @@ class Display:
 		self.display_window = Toplevel()
 		#self.display_window.geometry('700x400')
 		self.display_window.title = self.title
-		self.display_window.iconphoto(self.display_window, PhotoImage(file='title_image.png'))
+		self.display_window.iconphoto(self.display_window, PhotoImage(file='img_title.png'))
 
 
 		# Create Menu
@@ -435,13 +438,13 @@ class Display:
 
 if __name__ == '__main__':
 	try:
-		#User('admin', 'admin123', 4)
+		User('admin', 'admin123', 4)
 		#User('kamrul', 'kamrul123', 3)
-		#LoginScreen().start()
+		#GreetingScreen().start()
+		LoginScreen().start()
 		#MainScreen().start()
 		#AddUserScreen().start()
-		img = PhotoImage(file='title_image.png')
-		Display('Welcom', img)
+
 
 	except Exception as e:
 		print('Problem: ', e)
