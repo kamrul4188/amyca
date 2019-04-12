@@ -147,6 +147,7 @@ class MainScreen:
 		"""This function is for call main loop for starting GUI"""
 		self.main_window.mainloop()
 
+
 	def add_user(self):
 		AddUserScreen().start()
 
@@ -155,7 +156,10 @@ class MainScreen:
 		LoginScreen().start()
 
 	def help(self):
-		messagebox.showinfo('Help', 'I am amyca to help you')  # Todo: Need to impliment help function
+		msg = self.execute_command.__doc__
+		#messagebox.showinfo('Help', msg)  # Todo: Need to impliment help function
+		Display('Help', msg)
+
 
 
 	def get_current_time(self):
@@ -165,7 +169,6 @@ class MainScreen:
 	def clear_input_box(self):
 		"""This function is for clear input box"""
 		self.input_box.delete(0, END)
-
 
 	def update_chat_history(self, command, response, status_format):
 		"""
@@ -220,7 +223,6 @@ class MainScreen:
 		total_cost = 0
 		for i, cost in enumerate(cost_list):
 			total_cost = total_cost + int(cost.get_cost())
-			#offset = 34 - (len(cost.get_description() + len(cost.get_cost())))
 			self.cost_area.insert(END, str(i+1) + '. ' + cost.get_description() + ': ' + '$' + str(cost.get_cost()) + '\n', 'normal_format')
 		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
 		self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
@@ -265,6 +267,7 @@ class MainScreen:
 			raise ValueError('Your command not in correct format')
 
 	def execute_command(self, command):
+		"""Amyca only accept following command"""
 		if command == 'exit':
 			sys.exit()
 		elif command.startswith('todo '):
@@ -333,13 +336,11 @@ class LoginScreen:
 
 		self.label_user_name = Label(self.login_window, text='Username *')
 		self.label_user_name.pack(padx=5, pady=5)
-
 		self.username_login_entry = Entry(self.login_window)
 		self.username_login_entry.pack(padx=5, pady=5)
 
 		self.label_password = Label(self.login_window, text='Password *')
 		self.label_password.pack(padx=5, pady=5)
-
 		self.password_login_entry = Entry(self.login_window, show='*')
 		self.password_login_entry.pack(padx=5, pady=5)
 
@@ -368,21 +369,68 @@ class AddUserScreen:
 		self.user = User
 
 		self.add_user_window = Toplevel()
-		self.add_user_window.geometry('300x250')
+		self.add_user_window.geometry('300x300')
 		self.add_user_window.title('Add New User')
 		self.add_user_window.iconphoto(self.add_user_window, PhotoImage(file='title_image.png'))
 
-		self.label = Label(text='Please enter details below to login')
+		self.label = Label(self.add_user_window, text='Please enter details below to add new user')
 		self.label.pack(padx=10, pady=10)
 
-		self.label_user_name = Label(self.add_user_window, text='New User Name *')
+		self.label_user_name = Label(self.add_user_window, text='Username *')
 		self.label_user_name.pack(padx=5, pady=5)
 		self.entry_user_name = Entry(self.add_user_window)
 		self.entry_user_name.pack(padx=5, pady=5)
 
+		self.label_user_password = Label(self.add_user_window, text='Password *')
+		self.label_user_password.pack(padx=5, pady=5)
+		self.entry_user_password = Entry(self.add_user_window, show='*')
+		self.entry_user_password.pack(padx=5, pady=5)
+
+		self.label_user_access_level = Label(self.add_user_window, text='Access Level *')
+		self.label_user_access_level.pack(padx=5, pady=5)
+		self.entry_user_access_level = Entry(self.add_user_window)
+		self.entry_user_access_level.pack(padx=5, pady=5)
+
+		self.add_user_button = Button(self.add_user_window, text='Add User', command=self.add_user)
+		self.add_user_button.pack(padx=5, pady=5)
+
+
+	def add_user(self):
+		user_name = self.entry_user_name.get()
+		password = self.entry_user_password.get()
+		access_level = self.entry_user_access_level.get()
+		message = User(user_name, password, access_level)
+		self.add_user_window.destroy()
+		messagebox.showinfo('User', message)
 
 	def start(self):
 		return self.add_user_window.mainloop()
+
+
+class Display:
+	def __init__(self, title, message):
+		self.title = title
+		self.message = message
+		self.output_font = ('Courier New', 12)
+
+		self.display_window = Toplevel()
+		#self.display_window.geometry('700x400')
+		self.display_window.title = self.title
+		self.display_window.iconphoto(self.display_window, PhotoImage(file='title_image.png'))
+
+
+		# Create Menu
+
+
+		self.message_area = Text(self.display_window)
+		self.message_area.pack(padx=5, pady=5, fill='both')
+		self.message_area.tag_config('normal_format', font=self.output_font)
+		self.update_message_area(self.message)
+
+	def update_message_area(self, message):
+		self.message_area.delete('1.0', END)
+		self.message_area.insert(END, message + '\n', 'normal_format')
+
 
 
 if __name__ == '__main__':
@@ -390,8 +438,11 @@ if __name__ == '__main__':
 		#User('admin', 'admin123', 4)
 		#User('kamrul', 'kamrul123', 3)
 		#LoginScreen().start()
-		MainScreen().start()
+		#MainScreen().start()
 		#AddUserScreen().start()
+		img = PhotoImage(file='title_image.png')
+		Display('Welcom', img)
+
 	except Exception as e:
 		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))

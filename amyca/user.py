@@ -51,3 +51,6 @@ class User:
 	@classmethod
 	def get_users(cls):
 		return User.__users
+
+	def __str__(self):
+		return 'New User added'
