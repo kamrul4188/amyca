@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import PhotoImage
-import time
 
 
 class GreetingScreen:
@@ -28,6 +27,31 @@ class GreetingScreen:
 		return self.greeting_window.destroy()
 
 
+class MessageScreen:
+	def __init__(self, title, message):
+		self.title = title
+		self.message = message
+		self.output_font = ('Courier New', 12)
+
+		self.message_window = Toplevel()
+		self.message_window.title = self.title
+		self.message_window.iconphoto(self.message_window, PhotoImage(file='img_title.png'))
+
+		# Create Menu
+		self.message_area = Text(self.message_window)
+		self.message_area.pack(padx=5, pady=5, fill='both')
+		self.message_area.tag_config('normal_format', font=self.output_font)
+		self.update_message_area(self.message)
+
+	def update_message_area(self, message):
+		self.message_area.delete('1.0', END)
+		self.message_area.insert(END, message + '\n', 'normal_format')
+
+	def start(self):
+		return self.message_window.mainloop()
+
+
 
 if __name__ == '__main__':
 	GreetingScreen().start()
+	MessageScreen('Help', 'Hello world' )

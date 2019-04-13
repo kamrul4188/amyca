@@ -11,6 +11,9 @@ class Cost:
 	def get_cost(self):
 		return self.cost
 
+	def as_csv(self):
+		return ['C', self.description, self.cost]
+
 	def __str__(self):
 		return 'Cost is added to project'
 

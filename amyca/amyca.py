@@ -14,6 +14,7 @@ from project import Project
 from resource import Resource
 from cost import Cost
 from display import GreetingScreen
+from display import MessageScreen
 
 
 class MainScreen:
@@ -159,7 +160,7 @@ class MainScreen:
 	def help(self):
 		msg = self.execute_command.__doc__
 		#messagebox.showinfo('Help', msg)  # Todo: Need to impliment help function
-		Display('Help', msg)
+		MessageScreen('Help', msg).start()
 
 
 
@@ -268,8 +269,12 @@ class MainScreen:
 			raise ValueError('Your command not in correct format')
 
 	def execute_command(self, command):
-		"""Amyca only accept following command"""
+		"""
+		Amyca only accept following command
+		Enter [exit] to terminate from Amyca
+		"""
 		if command == 'exit':
+			
 			sys.exit()
 		elif command.startswith('todo '):
 			description = command.split(' ', 1)[1]
@@ -410,29 +415,6 @@ class AddUserScreen:
 		return self.add_user_window.mainloop()
 
 
-class Display:
-	def __init__(self, title, message):
-		self.title = title
-		self.message = message
-		self.output_font = ('Courier New', 12)
-
-		self.display_window = Toplevel()
-		#self.display_window.geometry('700x400')
-		self.display_window.title = self.title
-		self.display_window.iconphoto(self.display_window, PhotoImage(file='img_title.png'))
-
-
-		# Create Menu
-
-
-		self.message_area = Text(self.display_window)
-		self.message_area.pack(padx=5, pady=5, fill='both')
-		self.message_area.tag_config('normal_format', font=self.output_font)
-		self.update_message_area(self.message)
-
-	def update_message_area(self, message):
-		self.message_area.delete('1.0', END)
-		self.message_area.insert(END, message + '\n', 'normal_format')
 
 
 
@@ -441,8 +423,8 @@ if __name__ == '__main__':
 		User('admin', 'admin123', 4)
 		#User('kamrul', 'kamrul123', 3)
 		#GreetingScreen().start()
-		LoginScreen().start()
-		#MainScreen().start()
+		#LoginScreen().start()
+		MainScreen().start()
 		#AddUserScreen().start()
 
 
