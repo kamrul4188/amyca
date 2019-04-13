@@ -1,17 +1,18 @@
-class Human:
-	def __init__(self, name):
-		self.name = name
+from tkinter import *
+from tkinter import PhotoImage
+import time
 
 
-	def get_name(self):
-		return 'my name is : ' + str(self.name)
+root = Tk()
+root.geometry('600x600')
+img = PhotoImage(file='img_title.png')
 
+img_amyca = Label(root, image = img)
+img_amyca.pack(padx=5, pady=5,  fill='x')
+time.sleep(5)
+#header_font = ('Courier New', 30)
+#welcome_text = Label(root, text='WELCOME TO AMYCA', font=header_font)
+#welcome_text.pack(padx=10, pady=10)
 
-class Man(Human):
+#body_font = ('Courier New', 16)
 
-		def __init__(self, name, hand):
-			self.hand = hand
-			super().__init__(name)
-
-kamru = Man('Kamrul', 'Myhad')
-print(kamru.get_name())

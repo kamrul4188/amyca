@@ -32,7 +32,7 @@ class ToDo:
 		return '✓' if self.is_done else '✗'
 
 	def get_as_string(self):
-		return  self.description
+		return  self.description + '.'
 
 	def __str__(self):
 		return '(' + self.__status_as_icon() + ')' + self.description
