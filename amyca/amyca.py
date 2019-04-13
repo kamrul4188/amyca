@@ -3,14 +3,11 @@ Amyca is a software is software enginnering project
 """
 
 import datetime
+import logging
 from tkinter import *
 from tkinter import messagebox
 from tkinter import PhotoImage
-
 import sys
-from threading import Timer
-
-"""Import Local Module"""
 from user import User
 from todo import ToDo
 from deadline import Deadline
@@ -31,6 +28,8 @@ class MainScreen:
 		self.current_user_name = User.get_current_user_name()
 		self.current_user_level = User.get_current_user_access_level()
 		self.current_time = self.get_current_time()
+		self.log_file = 'program_data/amyca.log'
+
 
 		# self.nus_orange = '#EF7C00'
 		# self.nus_blue = '#003D7C'
@@ -90,7 +89,8 @@ class MainScreen:
 		self.resource_menu.add_command(label='Remove Resource')
 		self.cost_menu.add_command(label='Add cost')
 		self.cost_menu.add_command(label='Remove Cost')
-		self.help_menu.add_command(label='Help', command=self.help)
+		self.help_menu.add_command(label='? Help', command=self.help)
+		self.help_menu.add_command(label= 'Log', command=self.get_log)
 
 
 
@@ -145,6 +145,7 @@ class MainScreen:
 		self.cost_area.tag_configure('title_format', foreground='blue', font=self.output_font)
 
 		# show the welcome message and the list of tasks
+		self.start_logging()
 		self.load_data()
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
 		self.update_task_list(self.project.tasks)
@@ -155,18 +156,29 @@ class MainScreen:
 		"""This function is for call main loop for starting GUI"""
 		self.main_window.mainloop()
 
+	def start_logging(self):
+		logging.basicConfig(filename=self.log_file,
+		                    format='%(asctime)s %(levelname)-8s %(message)s',
+		                    datefmt='%d/%m/%Y %I:%M:%S %p',
+		                    filemode='w',
+		                    level=logging.INFO)
+		logging.info('Start Amyca...')
+
 	def load_data(self):
 		self.project.tasks = StorageManager('data/tasks.csv').load_tasks()
 		self.project.resources = StorageManager('data/resources.csv').load_resource()
 		self.project.cost = StorageManager('data/cost.csv').load_cost()
+		logging.info('Load Data')
 
 	def save_data(self):
 		StorageManager('data/tasks.csv').save_data(self.project.tasks)
 		StorageManager('data/resources.csv').save_data(self.project.resources)
 		StorageManager('data/cost.csv').save_data(self.project.cost)
 		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
+		logging.info('Save Data')
 
 	def add_user(self):
+		logging.warning('New User Added')
 		AddUserScreen().start()
 
 	def logout(self):
@@ -175,8 +187,14 @@ class MainScreen:
 
 	def help(self):
 		#msg = self.execute_command.__doc__
+		logging.info('Help Wanted')
 		msg = help(Project)
 		MessageScreen('Help', msg).start()
+
+
+	def get_log(self):
+		file = open(self.log_file, 'r').read()
+		MessageScreen('Log', file)
 
 	def get_current_time(self):
 		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -250,7 +268,7 @@ class MainScreen:
 		try:
 			command = self.input_box.get()
 			command.strip().lower()
-
+			logging.info('Command Entered: ' + str(command))
 			output = self.execute_command(command)
 
 			self.update_chat_history(command, output, 'success_format')
@@ -289,8 +307,8 @@ class MainScreen:
 		Amyca only accept following command
 		Enter [exit] to terminate from Amyca
 		"""
+
 		if command == 'exit':
-			
 			sys.exit()
 		elif command.startswith('todo '):
 			description = command.split(' ', 1)[1]
@@ -350,9 +368,9 @@ class MainScreen:
 				elif command_part == 'cost':
 					return self.project.remove_cost(index)
 			except Exception:
-
 				raise ValueError('Command format not recognize.\n Command: >>> remove [task/resource/cost] [index]')
 		else:
+			logging.warning('Command not recognized. Command Entered: %', command)
 			raise Exception('Command not recognized')
 
 
