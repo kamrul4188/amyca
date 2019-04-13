@@ -10,15 +10,17 @@ class StorageManager:
 	def __init__(self, file_path):
 		self.storage = file_path
 
-	def load_todo(self):
-		data_todo = []
+	def load_tasks(self):
+		data_task = []
 		data_file = open(self.storage)
 		deliveries_reader = csv.reader(data_file)
 		for row in deliveries_reader:
 			if row[0] == 'T':
-				data_todo.append(ToDo(row[1], True if row[2] == 'done' else False))
+				data_task.append(ToDo(row[1], True if row[2] == 'done' else False))
+			elif row[0] == 'D':
+				data_task.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
 		data_file.close()
-		return data_todo
+		return data_task
 
 	def load_deadline(self):
 		data_deadline = []

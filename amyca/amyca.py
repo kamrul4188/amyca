@@ -1,3 +1,7 @@
+"""
+Amyca is a software is software enginnering project
+"""
+
 import datetime
 from tkinter import *
 from tkinter import messagebox
@@ -15,10 +19,11 @@ from resource import Resource
 from cost import Cost
 from display import GreetingScreen
 from display import MessageScreen
+from storage import StorageManager
 
 
 class MainScreen:
-
+	"""Main screen display"""
 	def __init__(self):
 		"""Initialize GUI main window"""
 
@@ -68,7 +73,7 @@ class MainScreen:
 		self.main_window.config(menu=self.menu_bar)
 
 		# add command to menus	- TODO: need to add commad for fucntioning
-		self.file_menu.add_command(label='save')
+		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.user_menu.add_command(label='Add User', command=self.add_user)
 		self.user_menu.add_command(label='Remove User')
@@ -140,6 +145,7 @@ class MainScreen:
 		self.cost_area.tag_configure('title_format', foreground='blue', font=self.output_font)
 
 		# show the welcome message and the list of tasks
+		self.load_data()
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
 		self.update_task_list(self.project.tasks)
 		self.update_resource_list(self.project.resources)
@@ -149,6 +155,16 @@ class MainScreen:
 		"""This function is for call main loop for starting GUI"""
 		self.main_window.mainloop()
 
+	def load_data(self):
+		self.project.tasks = StorageManager('data/tasks.csv').load_tasks()
+		self.project.resources = StorageManager('data/resources.csv').load_resource()
+		self.project.cost = StorageManager('data/cost.csv').load_cost()
+
+	def save_data(self):
+		StorageManager('data/tasks.csv').save_data(self.project.tasks)
+		StorageManager('data/resources.csv').save_data(self.project.resources)
+		StorageManager('data/cost.csv').save_data(self.project.cost)
+		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
 
 	def add_user(self):
 		AddUserScreen().start()
@@ -158,11 +174,9 @@ class MainScreen:
 		LoginScreen().start()
 
 	def help(self):
-		msg = self.execute_command.__doc__
-		#messagebox.showinfo('Help', msg)  # Todo: Need to impliment help function
+		#msg = self.execute_command.__doc__
+		msg = help(Project)
 		MessageScreen('Help', msg).start()
-
-
 
 	def get_current_time(self):
 		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -238,7 +252,9 @@ class MainScreen:
 			command.strip().lower()
 
 			output = self.execute_command(command)
+
 			self.update_chat_history(command, output, 'success_format')
+			print('print update history')
 			self.update_task_list(self.project.tasks)
 			self.update_resource_list(self.project.resources)
 			self.update_cost_list(self.project.cost)
@@ -316,12 +332,26 @@ class MainScreen:
 			quantity = self.remove_to_word(command_part, 'is')
 			return self.project.add_resources(Resource(description, quantity))
 
-		elif command.startswith('cost '):
+		elif command.startswith('cost of '):
 			command_part = command.split(' ', 2)[2]
 			description = self.remove_from_word(command_part, 'is')
 			cost = self.remove_to_word(command_part, 'is')
 			return self.project.add_cost(Cost(description, cost))
 
+		elif command.startswith('remove '):
+			try:
+				command_part = command.split(' ', 2)[1]
+				command_index = command.split(' ', 2)[2]
+				index = int(command_index) - 1
+				if 	command_part == 'task':
+					return  self.project.remove_task(index)
+				elif command_part == 'resource':
+					return self.project.remove_resource(index)
+				elif command_part == 'cost':
+					return self.project.remove_cost(index)
+			except Exception:
+
+				raise ValueError('Command format not recognize.\n Command: >>> remove [task/resource/cost] [index]')
 		else:
 			raise Exception('Command not recognized')
 
@@ -420,12 +450,13 @@ class AddUserScreen:
 
 if __name__ == '__main__':
 	try:
-		User('admin', 'admin123', 4)
+		#User('admin', 'admin123', 4)
 		#User('kamrul', 'kamrul123', 3)
 		#GreetingScreen().start()
 		#LoginScreen().start()
 		MainScreen().start()
 		#AddUserScreen().start()
+
 
 
 	except Exception as e:
