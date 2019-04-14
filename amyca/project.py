@@ -1,3 +1,7 @@
+from todo import ToDo
+from deadline import Deadline
+
+
 class Project:
 	__total = 0
 
@@ -36,6 +40,18 @@ class Project:
 	def get_cost(self):
 		return self.cost
 
+	def remove_task(self, index):
+		del self.tasks[index]
+		return 'A task with index ' + str(index + 1) + ' is removed.'
+
+	def remove_resource(self, index):
+		del self.resources[index]
+		return 'A resource with index ' + str(index + 1) + ' is removed.'
+
+	def remove_cost(self, index):
+		del self.cost[index]
+		return 'A cost with index ' + str(index+1) + ' is removed.'
+
 	@classmethod
 	def get_total(cls):
 		return Project.__total
@@ -43,4 +59,14 @@ class Project:
 	def __str__(self):
 		return 'Project name is: ' + self.name + ' and ID: ' + str(self.id)
 
+
+if __name__ == '__main__':
+	p1 = Project('p1')
+	task_1 = ToDo('read book', False)
+	task_2 = ToDo('return book', False)
+	p1.add_task(task_1)
+	p1.add_task(task_2)
+	print(p1.tasks)
+	del p1.tasks[0]
+	print(p1.tasks)
 

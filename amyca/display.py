@@ -53,5 +53,8 @@ class MessageScreen:
 
 
 if __name__ == '__main__':
-	GreetingScreen().start()
-	MessageScreen('Help', 'Hello world' )
+	file_name = 'program_data/amyca.program_data'
+	file = open(file_name, 'r').read()
+	#GreetingScreen().start()
+	#print(file)
+	MessageScreen('Help', file).start()
