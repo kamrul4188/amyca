@@ -32,9 +32,27 @@ class User:
 		except IndexError:
 			raise IndexError('Index is our of range')
 
-	def remove(cls, name):
-		# Todo: add functionality to remove user
-		pass
+	@classmethod
+	def remove(cls, name, password):
+		user_name = name
+		user_password = password
+		for i, user in enumerate(cls.__users):
+			if cls.verify(user_name, user_password):
+				del cls.__users[i]
+				return '[' + user_name + '] has been remove from user.'
+
+		return '[' + user_name + '] Not exit in user list'
+
+	@classmethod
+	def change_password(cls, name, current_password, new_password):
+		user_name = name
+		current_password = current_password
+		new_password = pw.Password.hash(new_password)
+		for i, user in enumerate(cls.__users):
+			if cls.verify(user_name, current_password):
+				cls.__users[i][1] = new_password
+				return 'Password Change for user [ ' + user_name + ' ]'
+		return 'Username or password not match'
 
 	@classmethod
 	def get_total(cls):
@@ -53,4 +71,14 @@ class User:
 		return User.__users
 
 	def __str__(self):
-		return 'New User added'
+		return 'New User added. [' + self.__user_name + ']'
+
+
+if __name__ == '__main__':
+	User('admin', 'admin123', 4)
+	User('kamrul', 'kamrul123', 3)
+	print(User.get_users())
+	#User.remove('admin', 'admin123')
+	User.change_password('admin', 'admin123', '123456')
+	print('After: ', User.get_users())
+

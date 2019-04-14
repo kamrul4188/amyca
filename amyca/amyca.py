@@ -1,5 +1,5 @@
 """
-Amyca is a software is software enginnering project
+Amyca is a software is software engineering project
 """
 
 import datetime
@@ -29,14 +29,18 @@ class MainScreen:
 		self.current_user_level = User.get_current_user_access_level()
 		self.current_time = self.get_current_time()
 		self.log_file = 'program_data/amyca.log'
+		self.help_file = 'program_data/help.txt'
 
 
 		# self.nus_orange = '#EF7C00'
 		# self.nus_blue = '#003D7C'
 
 		self.main_window = Tk()
-		self.main_window.geometry('1600x700')  # set window size
+		#self.main_window.geometry('1600x700')  # set window size
 		#self.window.attributes('-fullscreen', True) # create full screen
+		self.width = self.main_window.winfo_screenwidth()
+		self.height = self.main_window.winfo_screenheight()
+		self.main_window.geometry(('%dx%d')%((self.width, self.height)))
 		print(self.current_user_name)
 		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' ]')  # set window title
 
@@ -56,18 +60,12 @@ class MainScreen:
 		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0)
 		self.user_menu = Menu(self.menu_bar, tearoff=0)
-		self.task_menu = Menu(self.menu_bar, tearoff=0)
-		self.resource_menu = Menu(self.menu_bar, tearoff=0)
-		self.cost_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 
 
 		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
-		self.menu_bar.add_cascade(label='Task', menu=self.task_menu)
-		self.menu_bar.add_cascade(label='Resource', menu=self.resource_menu)
-		self.menu_bar.add_cascade(label='Cost', menu=self.cost_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
 		self.main_window.config(menu=self.menu_bar)
 
@@ -75,20 +73,9 @@ class MainScreen:
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.user_menu.add_command(label='Add User', command=self.add_user)
-		self.user_menu.add_command(label='Remove User')
-		self.user_menu.add_command(label='Change Passowrd')
-		self.user_menu.add_command(label='Change Level')
+		self.user_menu.add_command(label='Remove User', command=self.remove_user)
+		self.user_menu.add_command(label='Change Passowrd', command=self.change_password)
 		self.user_menu.add_command(label='Logout', command=self.logout)
-		self.task_menu.add_command(label='Add ToDo')
-		self.task_menu.add_command(label='Add Deadline')
-		self.task_menu.add_command(label='Add Timeline')
-		self.task_menu.add_command(label='Update Status')
-		self.task_menu.add_command(label='View Timeline')
-		self.task_menu.add_command(label='Delete')
-		self.resource_menu.add_command(label='Add Resource')
-		self.resource_menu.add_command(label='Remove Resource')
-		self.cost_menu.add_command(label='Add cost')
-		self.cost_menu.add_command(label='Remove Cost')
 		self.help_menu.add_command(label='? Help', command=self.help)
 		self.help_menu.add_command(label= 'Log', command=self.get_log)
 
@@ -177,24 +164,31 @@ class MainScreen:
 		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
 		logging.info('Save Data')
 
-	def add_user(self):
-		logging.warning('New User Added')
+	@staticmethod
+	def add_user():
 		AddUserScreen().start()
+
+	@staticmethod
+	def remove_user():
+		RemoveUserScreen().start()
+
+	@staticmethod
+	def change_password():
+		ChangePasswordScreen().start()
+
 
 	def logout(self):
 		self.main_window.destroy()
 		LoginScreen().start()
 
 	def help(self):
-		#msg = self.execute_command.__doc__
-		logging.info('Help Wanted')
-		msg = help(Project)
-		MessageScreen('Help', msg).start()
+		file = open(self.help_file, 'r').read()
+		MessageScreen('Help', file).start()
 
 
 	def get_log(self):
 		file = open(self.log_file, 'r').read()
-		MessageScreen('Log', file)
+		MessageScreen('Log', file).start()
 
 	def get_current_time(self):
 		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -370,7 +364,7 @@ class MainScreen:
 			except Exception:
 				raise ValueError('Command format not recognize.\n Command: >>> remove [task/resource/cost] [index]')
 		else:
-			logging.warning('Command not recognized. Command Entered: %', command)
+			logging.error('Command not recognized.')
 			raise Exception('Command not recognized')
 
 
@@ -450,20 +444,95 @@ class AddUserScreen:
 		self.add_user_button = Button(self.add_user_window, text='Add User', command=self.add_user)
 		self.add_user_button.pack(padx=5, pady=5)
 
-
 	def add_user(self):
 		user_name = self.entry_user_name.get()
 		password = self.entry_user_password.get()
 		access_level = self.entry_user_access_level.get()
 		message = User(user_name, password, access_level)
 		self.add_user_window.destroy()
-		messagebox.showinfo('User', message)
+		logging.warning(message)
+		messagebox.showwarning('User', message)
 
 	def start(self):
 		return self.add_user_window.mainloop()
 
 
+class RemoveUserScreen:
+	def __init__(self):
+		self.user = User
 
+		self.remove_user_window = Toplevel()
+		self.remove_user_window.geometry('300x230')
+		self.remove_user_window.title('Remove User')
+		self.remove_user_window.iconphoto(self.remove_user_window, PhotoImage(file='img_title.png'))
+
+		self.label = Label(self.remove_user_window, text='Please enter details below to remove user')
+		self.label.pack(padx=5, pady=5)
+
+		self.label_user_name = Label(self.remove_user_window, text='Username *')
+		self.label_user_name.pack(padx=5, pady=5)
+		self.entry_user_name = Entry(self.remove_user_window)
+		self.entry_user_name.pack(padx=5, pady=5)
+
+		self.label_user_password = Label(self.remove_user_window, text='Password *')
+		self.label_user_password.pack(padx=5, pady=5)
+		self.entry_user_password = Entry(self.remove_user_window, show='*')
+		self.entry_user_password.pack(padx=5, pady=5)
+
+		self.remove_user_button = Button(self.remove_user_window, text=' Remove User ', command=self.remove_user)
+		self.remove_user_button.pack(padx=10, pady=10)
+
+	def remove_user(self):
+		user_name = self.entry_user_name.get()
+		user_password = self.entry_user_password.get()
+		message = User.remove(user_name, user_password)
+		logging.warning(message)
+		messagebox.showwarning('User', message)
+
+	def start(self):
+		return self.remove_user_window.mainloop()
+
+
+class ChangePasswordScreen:
+	def __init__(self):
+		self.user = User
+
+		self.change_password_window = Toplevel()
+		self.change_password_window.geometry('300x300')
+		self.change_password_window.title('Change Password')
+		self.change_password_window.iconphoto(self.change_password_window, PhotoImage(file='img_title.png'))
+
+		self.label = Label(self.change_password_window, text='Please enter details below to change password')
+		self.label.pack(padx=5, pady=5)
+
+		self.label_user_name = Label(self.change_password_window, text='Username *')
+		self.label_user_name.pack(padx=5, pady=5)
+		self.entry_user_name = Entry(self.change_password_window)
+		self.entry_user_name.pack(padx=5, pady=5)
+
+		self.label_user_password = Label(self.change_password_window, text='Password *')
+		self.label_user_password.pack(padx=5, pady=5)
+		self.entry_user_password = Entry(self.change_password_window, show='*')
+		self.entry_user_password.pack(padx=5, pady=5)
+
+		self.label_new_password = Label(self.change_password_window, text='New Password *')
+		self.label_new_password.pack(padx=5, pady=5)
+		self.entry_new_password = Entry(self.change_password_window, show='*')
+		self.entry_new_password.pack(padx=5, pady=5)
+
+		self.change_password_button = Button(self.change_password_window, text=' Change Password ', command=self.change_password)
+		self.change_password_button.pack(padx=10, pady=10)
+
+	def change_password(self):
+		user_name = self.entry_user_name.get()
+		current_password = self.entry_user_password.get()
+		new_password = self.entry_new_password.get()
+		message = User.change_password(user_name, current_password, new_password)
+		logging.warning(message)
+		messagebox.showwarning('User', message)
+
+	def start(self):
+		return self.change_password_window.mainloop()
 
 
 if __name__ == '__main__':
@@ -474,8 +543,6 @@ if __name__ == '__main__':
 		#LoginScreen().start()
 		MainScreen().start()
 		#AddUserScreen().start()
-
-
 
 	except Exception as e:
 		print('Problem: ', e)
