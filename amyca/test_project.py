@@ -67,7 +67,5 @@ class TestProject(unittest.TestCase):
 		self.assertNotEquals(TestProject.p3.get_total(), 2)
 
 
-
-
 if __name__ == '__name__':
 	unittest.main()
