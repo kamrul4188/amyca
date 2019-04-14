@@ -1,0 +1,23 @@
+I'm glad you asked. Here it is:
+==================================================
+Monty can understand the following commands:
+
+todo DESCRIPTION
+    Adds a task to the list
+    Example: todo read book
+
+deadline DESCRIPTION by DEADLINE
+    Adds a task to the list
+    Example: deadline read book by tomorrow
+
+done INDEX
+    Marks the task at INDEX as 'done'
+    Example: done 1
+
+pending INDEX
+    Marks the task at INDEX as 'pending'
+    Example: pending 1
+
+exit
+    Exits the application
+--------------------------------------------------

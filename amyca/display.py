@@ -37,7 +37,7 @@ class MessageScreen:
 		self.message_window.title = self.title
 		self.message_window.iconphoto(self.message_window, PhotoImage(file='img_title.png'))
 
-		# Create Menu
+
 		self.message_area = Text(self.message_window)
 		self.message_area.pack(padx=5, pady=5, fill='both')
 		self.message_area.tag_config('normal_format', font=self.output_font)
