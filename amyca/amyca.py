@@ -75,7 +75,7 @@ class MainScreen:
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.user_menu.add_command(label='Add User', command=self.add_user)
-		self.user_menu.add_command(label='Remove User')
+		self.user_menu.add_command(label='Remove User', command=self.remove_user)
 		self.user_menu.add_command(label='Change Passowrd')
 		self.user_menu.add_command(label='Change Level')
 		self.user_menu.add_command(label='Logout', command=self.logout)
@@ -177,9 +177,14 @@ class MainScreen:
 		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
 		logging.info('Save Data')
 
-	def add_user(self):
-		logging.warning('New User Added')
+	@staticmethod
+	def add_user():
 		AddUserScreen().start()
+
+	@staticmethod
+	def remove_user():
+		RemoveUserScreen().start()
+
 
 	def logout(self):
 		self.main_window.destroy()
@@ -450,17 +455,53 @@ class AddUserScreen:
 		self.add_user_button = Button(self.add_user_window, text='Add User', command=self.add_user)
 		self.add_user_button.pack(padx=5, pady=5)
 
-
 	def add_user(self):
 		user_name = self.entry_user_name.get()
 		password = self.entry_user_password.get()
 		access_level = self.entry_user_access_level.get()
 		message = User(user_name, password, access_level)
 		self.add_user_window.destroy()
-		messagebox.showinfo('User', message)
+		logging.warning(message)
+		messagebox.showwarning('User', message)
 
 	def start(self):
 		return self.add_user_window.mainloop()
+
+
+class RemoveUserScreen:
+	def __init__(self):
+		self.user = User
+
+		self.remove_user_window = Toplevel()
+		self.remove_user_window.geometry('300x230')
+		self.remove_user_window.title('Remove User')
+		self.remove_user_window.iconphoto(self.remove_user_window, PhotoImage(file='img_title.png'))
+
+		self.label = Label(self.remove_user_window, text='Please enter details below to remove user')
+		self.label.pack(padx=5, pady=5)
+
+		self.label_user_name = Label(self.remove_user_window, text='Username *')
+		self.label_user_name.pack(padx=5, pady=5)
+		self.entry_user_name = Entry(self.remove_user_window)
+		self.entry_user_name.pack(padx=5, pady=5)
+
+		self.label_user_password = Label(self.remove_user_window, text='Password *')
+		self.label_user_password.pack(padx=5, pady=5)
+		self.entry_user_password = Entry(self.remove_user_window)
+		self.entry_user_password.pack(padx=5, pady=5)
+
+		self.remove_user_button = Button(self.remove_user_window, text=' Remove User ', command=self.remove_user)
+		self.remove_user_button.pack(padx=10, pady=10)
+
+	def remove_user(self):
+		user_name = self.entry_user_name.get()
+		user_password = self.entry_user_password.get()
+		message = User.remove(user_name, user_password)
+		logging.warning(message)
+		messagebox.showwarning('User', message)
+
+	def start(self):
+		return self.remove_user_window.mainloop()
 
 
 
