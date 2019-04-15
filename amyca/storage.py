@@ -1,6 +1,7 @@
 import csv
 from todo import ToDo
 from deadline import Deadline
+from timeline import TimeLine
 from resource import Resource
 from cost import Cost
 
@@ -19,6 +20,8 @@ class StorageManager:
 				data_task.append(ToDo(row[1], True if row[2] == 'done' else False))
 			elif row[0] == 'D':
 				data_task.append(Deadline(row[1], True if row[2] == 'done' else False, row[3]))
+			elif row[0] == 'TL':
+				data_task.append(TimeLine(row[1], True if row[2] == 'done' else False, row[3], row[4]))
 		data_file.close()
 		return data_task
 
@@ -41,6 +44,7 @@ class StorageManager:
 				data_resource.append(Resource(row[1], row[2]))
 		data_file.close()
 		return data_resource
+
 
 	def load_cost(self):
 		data_cost = []
