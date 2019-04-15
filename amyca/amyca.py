@@ -17,6 +17,8 @@ from cost import Cost
 from display import GreetingScreen
 from display import MessageScreen
 from storage import StorageManager
+from timeline import TimeLineScreen
+from my_calendare import CalendarScreen
 
 
 class MainScreen:
@@ -64,6 +66,8 @@ class MainScreen:
 		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0)
 		self.user_menu = Menu(self.menu_bar, tearoff=0)
+		self.task_menu = Menu(self.menu_bar, tearoff=0)
+		self.calendar_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.amyca_menu = Menu(self.menu_bar, tearoff=0)
 
@@ -71,6 +75,8 @@ class MainScreen:
 		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
+		self.menu_bar.add_cascade(label='Task', menu=self.task_menu)
+		self.menu_bar.add_cascade(label='Calendar', menu=self.calendar_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
 		self.menu_bar.add_cascade(label='Amyca', menu=self.amyca_menu)
 		self.main_window.config(menu=self.menu_bar)
@@ -78,14 +84,22 @@ class MainScreen:
 		# add command to menus	- TODO: need to add commad for fucntioning
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
+
 		self.user_menu.add_command(label='Add User', command=self.add_user)
 		self.user_menu.add_command(label='Remove User', command=self.remove_user)
 		self.user_menu.add_command(label='Change Passowrd', command=self.change_password)
 		self.user_menu.add_command(label='Logout', command=self.logout)
+
+		self.task_menu.add_command(label='Timeline', command=self.add_timeline_task)
+
+		self.calendar_menu.add_command(label='Calendar(month)', command=self.get_calendar)
+
 		self.help_menu.add_command(label='? Help', command=self.help)
 		self.help_menu.add_command(label= 'Log', command=self.get_log)
+
 		self.amyca_menu.add_command(label='About developer', command=self.get_about_developer)
 		self.amyca_menu.add_command(label='About Amyca', command=self.get_about_amyca)
+
 
 
 
@@ -189,6 +203,13 @@ class MainScreen:
 	def logout(self):
 		self.main_window.destroy()
 		LoginScreen().start()
+
+	def add_timeline_task(self):
+		TimeLineScreen().start()
+
+	def get_calendar(self):
+		CalendarScreen().start()
+
 
 	def help(self):
 		file = open(self.help_file, 'r').read()

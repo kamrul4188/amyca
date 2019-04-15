@@ -19,10 +19,15 @@ class Deadline (todo.ToDo):
 		return self.description + '. ' + 'Due: ' + self.by
 
 	def __str__(self):
-		return super().__str__() + '[by: ' + self.by + ']'
+		return super().__str__() + '[by ' + self.by + ']'
 
 	def as_csv(self):
 		""" Return the details of todo object as a list,
 		suitable to be stored in a csv file.
 		"""
 		return ['D', self.description, 'done' if self.is_done else 'pending', self.by]
+
+
+if __name__ == '__main__':
+	x = Deadline('read book', False, 'tomorrow')
+	print(x)
