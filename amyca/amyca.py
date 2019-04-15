@@ -7,6 +7,9 @@ import logging
 from tkinter import *
 from tkinter import messagebox
 from tkinter import PhotoImage
+import matplotlib.pyplot as plt; plt.rcdefaults()
+import numpy as np
+import matplotlib.pyplot as plt
 import sys
 from user import User
 from todo import ToDo
@@ -17,7 +20,7 @@ from cost import Cost
 from display import GreetingScreen
 from display import MessageScreen
 from storage import StorageManager
-from timeline import TimeLineScreen
+from timeline import TimeLine
 from my_calendare import CalendarScreen
 
 
@@ -37,20 +40,11 @@ class MainScreen:
 		self.about_amyca_file = 'program_data/about_amyca.txt'
 		self.users_file = 'program_data/users.csv'
 
-
-		# self.nus_orange = '#EF7C00'
-		# self.nus_blue = '#003D7C'
-
 		self.main_window = Tk()
-		#self.main_window.geometry('1600x700')  # set window size
-		#self.window.attributes('-fullscreen', True) # create full screen
 		self.width = self.main_window.winfo_screenwidth()
 		self.height = self.main_window.winfo_screenheight()
 		self.main_window.geometry(('%dx%d')%((self.width, self.height)))
-		print(self.current_user_name)
-		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' ]')  # set window title
-
-		#self.window.configure(background=self.nus_blue)
+		self.main_window.title('AMYCA - Project Management Assistance' + ' [ Login as : ' + self.current_user_name + ' ]')
 		self.main_window.iconphoto(self.main_window, PhotoImage(file='img_title.png'))
 
 		# Create Frame
@@ -66,8 +60,8 @@ class MainScreen:
 		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0)
 		self.user_menu = Menu(self.menu_bar, tearoff=0)
-		self.task_menu = Menu(self.menu_bar, tearoff=0)
 		self.calendar_menu = Menu(self.menu_bar, tearoff=0)
+		self.timeline_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.amyca_menu = Menu(self.menu_bar, tearoff=0)
 
@@ -75,13 +69,13 @@ class MainScreen:
 		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
-		self.menu_bar.add_cascade(label='Task', menu=self.task_menu)
+		self.menu_bar.add_cascade(label='TimeLine', menu=self.timeline_menu)
 		self.menu_bar.add_cascade(label='Calendar', menu=self.calendar_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
 		self.menu_bar.add_cascade(label='Amyca', menu=self.amyca_menu)
 		self.main_window.config(menu=self.menu_bar)
 
-		# add command to menus	- TODO: need to add commad for fucntioning
+
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 
@@ -89,9 +83,7 @@ class MainScreen:
 		self.user_menu.add_command(label='Remove User', command=self.remove_user)
 		self.user_menu.add_command(label='Change Passowrd', command=self.change_password)
 		self.user_menu.add_command(label='Logout', command=self.logout)
-
-		self.task_menu.add_command(label='Timeline', command=self.add_timeline_task)
-
+		self.timeline_menu.add_command(label='Show Graph', command=self.get_timeline_graph)
 		self.calendar_menu.add_command(label='Calendar(month)', command=self.get_calendar)
 
 		self.help_menu.add_command(label='? Help', command=self.help)
@@ -99,8 +91,6 @@ class MainScreen:
 
 		self.amyca_menu.add_command(label='About developer', command=self.get_about_developer)
 		self.amyca_menu.add_command(label='About Amyca', command=self.get_about_amyca)
-
-
 
 
 		# create default font
@@ -155,7 +145,6 @@ class MainScreen:
 
 		# show the welcome message and the list of tasks
 		self.start_logging()
-
 		self.load_data()
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
 		self.update_task_list(self.project.tasks)
@@ -175,7 +164,7 @@ class MainScreen:
 		logging.info('Start Amyca...')
 
 	def load_data(self):
-		User.load_form_csv(self.users_file)
+		#User.load_form_csv(self.users_file)
 		self.project.tasks = StorageManager('data/tasks.csv').load_tasks()
 		self.project.resources = StorageManager('data/resources.csv').load_resource()
 		self.project.cost = StorageManager('data/cost.csv').load_cost()
@@ -199,17 +188,55 @@ class MainScreen:
 	def change_password():
 		ChangePasswordScreen().start()
 
-
 	def logout(self):
 		self.main_window.destroy()
 		LoginScreen().start()
 
-	def add_timeline_task(self):
-		TimeLineScreen().start()
-
 	def get_calendar(self):
 		CalendarScreen().start()
 
+	def get_timeline_graph(self):
+		task_id = []
+		duration = []
+		timeline_task = []
+
+		def duration_datetime(start_date, end_date):
+			try:
+				if end_date >= start_date:
+					duration = end_date - start_date
+					duration = str(duration).split(',', 1)[0]
+					return duration
+				else:
+					return 'Your end date ims earlier than start'
+			except ValueError:
+				raise ValueError('Format of your input ins not detetime')
+
+		for i, task in enumerate(self.project.tasks):
+			if type(task) == TimeLine:
+				timeline_task.append(task)
+
+		if len(timeline_task) == 0:
+			messagebox.showinfo('Timeline',  'Nothing to show on time-line')
+		else:
+			for i, task in enumerate(timeline_task):
+				index_id = 'Task ID : ' + str(i + 1)
+				task_id.append(index_id)
+
+				#start_date = timeline_task[i][2]
+				#end_date = timeline_task[i][3]
+				start_date = task.get_start_date()
+				end_date = task.get_end_date()
+
+				task_duration = duration_datetime(start_date, end_date)
+				task_duration = str(task_duration).split(' ', 1)[0]
+				duration.append(int(task_duration))
+
+			x_pos = np.arange(len(task_id))
+			plt.barh(x_pos, duration, align='center', alpha=0.5)
+			plt.yticks(x_pos, task_id)
+			plt.xlabel('days')
+			plt.title('Tasks Time Line')
+			plt.show()
 
 	def help(self):
 		file = open(self.help_file, 'r').read()
@@ -265,6 +292,8 @@ class MainScreen:
 			if type(task) == ToDo:
 				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
 			elif type(task) == Deadline:
+				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
+			elif type(task) == TimeLine:
 				self.list_area.insert(END, task.get_status_as_icon() + ' ' + str(i+1) + '. ' + task.get_as_string() + '\n', output_format)
 		self.list_area.insert(END, '-'*40 + '\n', 'line_format')
 		self.list_area.insert(END, 'Total Tasks    : ' + str(total_task) + '\n', 'normal_format')
@@ -350,6 +379,15 @@ class MainScreen:
 			description = self.remove_from_word(command_part, 'by')
 			by = self.remove_to_word(command_part, 'by')
 			return self.project.add_task(Deadline(description, False, by))
+
+		elif command.startswith('timeline '):
+			command_part = command.split(' ', 1)[1]
+			print(command_part)
+			description = self.remove_from_word(command_part, 'from')
+			date = self.remove_to_word(command_part, 'from')
+			start_date = self.remove_from_word(date, 'to')
+			end_date = self.remove_to_word(date, 'to')
+			return self.project.add_task(TimeLine(description, False, start_date, end_date))
 
 		elif command.startswith('done '):
 			user_index = command.split(' ', 1)[1]
@@ -577,10 +615,11 @@ class ChangePasswordScreen:
 if __name__ == '__main__':
 	try:
 		#User('admin', 'admin123', 4)
-		#User('kamrul', 'kamrul123', 3)
+		user_file = 'program_data/users.csv'
+		User.load_form_csv(user_file)
 		#GreetingScreen().start()
-		#LoginScreen().start()
-		MainScreen().start()
+		LoginScreen().start()
+		#MainScreen().start()
 		#AddUserScreen().start()
 
 	except Exception as e:
