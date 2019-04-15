@@ -1,4 +1,6 @@
 import password as pw
+import csv
+
 
 
 class User:
@@ -70,15 +72,41 @@ class User:
 	def get_users(cls):
 		return User.__users
 
+	@classmethod
+	def save_as_csv(cls, storage):
+		output_file = open(storage, 'w', newline='')
+		output_writer = csv.writer(output_file)
+		for user in User.__users:
+			print(user)
+			output_writer.writerow(user)
+		output_file.close()
+		return 'User info save'
+
+	@classmethod
+	def load_form_csv(cls, storage):
+		file = open(storage)
+		deliveries_reader = csv.reader(file)
+		for row in deliveries_reader:
+			User.__users.append([row[0], row[1], row[2]])
+		file.close()
+
+		return 'User is loaded'
+
+
 	def __str__(self):
 		return 'New User added. [' + self.__user_name + ']'
 
 
 if __name__ == '__main__':
-	User('admin', 'admin123', 4)
-	User('kamrul', 'kamrul123', 3)
-	print(User.get_users())
+	#User('admin', 'admin123', 4)
+	#User('kamrul', 'kamrul123', 3)
+	#print(User.get_users())
 	#User.remove('admin', 'admin123')
-	User.change_password('admin', 'admin123', '123456')
-	print('After: ', User.get_users())
+	#User.change_password('admin', 'admin123', '123456')
+	#print('After: ', User.get_users())
+	#User.save_as_csv('program_data/users.csv')
+	print('befour load', User.get_users())
+	User.load_form_csv('program_data/users.csv')
+	print('After load', User.get_users())
+
 

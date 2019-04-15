@@ -17,6 +17,8 @@ from cost import Cost
 from display import GreetingScreen
 from display import MessageScreen
 from storage import StorageManager
+from timeline import TimeLineScreen
+from my_calendare import CalendarScreen
 
 
 class MainScreen:
@@ -25,11 +27,15 @@ class MainScreen:
 		"""Initialize GUI main window"""
 
 		self.project = Project('p1')
+		self.users_list = User.get_users()
 		self.current_user_name = User.get_current_user_name()
 		self.current_user_level = User.get_current_user_access_level()
 		self.current_time = self.get_current_time()
 		self.log_file = 'program_data/amyca.log'
 		self.help_file = 'program_data/help.txt'
+		self.about_developer_file = 'program_data/about_developer.txt'
+		self.about_amyca_file = 'program_data/about_amyca.txt'
+		self.users_file = 'program_data/users.csv'
 
 
 		# self.nus_orange = '#EF7C00'
@@ -60,24 +66,40 @@ class MainScreen:
 		self.menu_bar = Menu(self.main_window)
 		self.file_menu = Menu(self.menu_bar, tearoff=0)
 		self.user_menu = Menu(self.menu_bar, tearoff=0)
+		self.task_menu = Menu(self.menu_bar, tearoff=0)
+		self.calendar_menu = Menu(self.menu_bar, tearoff=0)
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
+		self.amyca_menu = Menu(self.menu_bar, tearoff=0)
 
 
 		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
+		self.menu_bar.add_cascade(label='Task', menu=self.task_menu)
+		self.menu_bar.add_cascade(label='Calendar', menu=self.calendar_menu)
 		self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
+		self.menu_bar.add_cascade(label='Amyca', menu=self.amyca_menu)
 		self.main_window.config(menu=self.menu_bar)
 
 		# add command to menus	- TODO: need to add commad for fucntioning
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
+
 		self.user_menu.add_command(label='Add User', command=self.add_user)
 		self.user_menu.add_command(label='Remove User', command=self.remove_user)
 		self.user_menu.add_command(label='Change Passowrd', command=self.change_password)
 		self.user_menu.add_command(label='Logout', command=self.logout)
+
+		self.task_menu.add_command(label='Timeline', command=self.add_timeline_task)
+
+		self.calendar_menu.add_command(label='Calendar(month)', command=self.get_calendar)
+
 		self.help_menu.add_command(label='? Help', command=self.help)
 		self.help_menu.add_command(label= 'Log', command=self.get_log)
+
+		self.amyca_menu.add_command(label='About developer', command=self.get_about_developer)
+		self.amyca_menu.add_command(label='About Amyca', command=self.get_about_amyca)
+
 
 
 
@@ -133,6 +155,7 @@ class MainScreen:
 
 		# show the welcome message and the list of tasks
 		self.start_logging()
+
 		self.load_data()
 		self.update_chat_history('start', 'Welcome to AMYCA ! Your project management assistance.', 'success_format')
 		self.update_task_list(self.project.tasks)
@@ -152,6 +175,7 @@ class MainScreen:
 		logging.info('Start Amyca...')
 
 	def load_data(self):
+		User.load_form_csv(self.users_file)
 		self.project.tasks = StorageManager('data/tasks.csv').load_tasks()
 		self.project.resources = StorageManager('data/resources.csv').load_resource()
 		self.project.cost = StorageManager('data/cost.csv').load_cost()
@@ -161,15 +185,14 @@ class MainScreen:
 		StorageManager('data/tasks.csv').save_data(self.project.tasks)
 		StorageManager('data/resources.csv').save_data(self.project.resources)
 		StorageManager('data/cost.csv').save_data(self.project.cost)
+		User.save_as_csv(self.users_file)
 		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
 		logging.info('Save Data')
 
-	@staticmethod
-	def add_user():
-		AddUserScreen().start()
+	def add_user(self):
+		AddUserScreen(self.project).start()
 
-	@staticmethod
-	def remove_user():
+	def remove_user(self):
 		RemoveUserScreen().start()
 
 	@staticmethod
@@ -181,14 +204,28 @@ class MainScreen:
 		self.main_window.destroy()
 		LoginScreen().start()
 
+	def add_timeline_task(self):
+		TimeLineScreen().start()
+
+	def get_calendar(self):
+		CalendarScreen().start()
+
+
 	def help(self):
 		file = open(self.help_file, 'r').read()
 		MessageScreen('Help', file).start()
 
-
 	def get_log(self):
 		file = open(self.log_file, 'r').read()
 		MessageScreen('Log', file).start()
+
+	def get_about_developer(self):
+		file = open(self.about_developer_file, 'r').read()
+		MessageScreen('About Developer', file)
+
+	def get_about_amyca(self):
+		file = open(self.about_amyca_file, 'r').read()
+		MessageScreen('About Amyca', file)
 
 	def get_current_time(self):
 		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -415,8 +452,9 @@ class LoginScreen:
 
 
 class AddUserScreen:
-	def __init__(self):
+	def __init__(self, project):
 		self.user = User
+		self.project = project
 
 		self.add_user_window = Toplevel()
 		self.add_user_window.geometry('300x300')
@@ -448,6 +486,7 @@ class AddUserScreen:
 		user_name = self.entry_user_name.get()
 		password = self.entry_user_password.get()
 		access_level = self.entry_user_access_level.get()
+		#message = User(user_name, password, access_level)
 		message = User(user_name, password, access_level)
 		self.add_user_window.destroy()
 		logging.warning(message)

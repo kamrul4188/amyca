@@ -1,0 +1,3 @@
+AMYCA can assist to manage Project activities in an efficient way. Can add project task,
+can add cost, can add user.
+User be able to view list of task, list of resource, list of cost.
