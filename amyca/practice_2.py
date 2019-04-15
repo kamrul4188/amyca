@@ -1,28 +1,17 @@
-import turtle
-import time
+from tkinter import *
+from tkinter import ttk
 
-font = ('arial','18','bold')
-turtle.ht()
-for count in range(5):
-    text = str(count)
+root = Tk()
 
-    # Clear text
-    turtle.setpos(0,0)
-    turtle.color(turtle.bgcolor())
-    turtle.begin_fill()
-    turtle.fd(100)
-    turtle.setheading(90)
-    turtle.fd(30)
-    turtle.setheading(180)
-    turtle.fd(110)
-    turtle.setheading(270)
-    turtle.fd(30)
-    turtle.setheading(0)
-    turtle.fd(10)
-    turtle.end_fill()
+textbox = Text(root, width=60, height=3)
+textbox.grid(sticky=(N, S, E, W))
 
-    # Write text
-    turtle.color("blue")
-    turtle.write(text,font=font,move=False)
-
-    time.sleep(1)
+def KeyboardEvent(event):
+    if event.keysym_num > 0 and event.keysym_num < 60000:
+        print('This is a printable key. The character is: %r keysym: %r' % \
+            (event.char, event.keysym_num))
+    else:
+        print('This key is unprintable. The character is: %r keysym: %r' % \
+            (event.char, event.keysym_num))
+textbox.bind('<KeyPress>', KeyboardEvent)
+root.mainloop()
