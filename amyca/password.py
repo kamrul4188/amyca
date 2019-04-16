@@ -1,3 +1,4 @@
+"""This module is for create password as hash"""
 import os
 import binascii
 import hashlib

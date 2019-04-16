@@ -3,48 +3,42 @@
 The software is named 'Amyca' is a Project Management Assistance
 It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
 ==============================================================================================================
-Project Naming:
-==============
 
+Project Naming:
+===============
+The software to help the project team to run the project smoothly.
+As our software is part of the project team as assistance, So we get a lovely Name.
+The latin female form of Amicus of Latin Origin: Meaning: Female friend or Friendly, Loving Woman
+Form latin Amicus to English Amyca. We have selected name of our software is Amyca
+[Amyca - Project Management Assistance]
 
 Basic Functionality:
 ====================
 1. Initially Amyca interface build in text-base than updated Graphical User Interface (GUI).
 2. Amyca and storing and retrieving various data type is require to project management. following are:
 	eg: todo, deadline, timeline, resource, cost
-
-
-
-There is no need for Monty to be able to understand natural language sentences.
-It is fine for the user requests to need to follow a strict format.
- Defining the request format is part of the project. The example interaction given above is just an example only. Hint: try to design a request format that is easy to remember and type.
-
-Monty should support adding, deleting, listing, searching (by keyword) of data items.
-
-Persistence: The data should be stored in the hard disk so that restarting Monty should not cause a loss of data entered in a previous session.
-
-The data files should be in a human-readable format such as .csv (recommended), xml, json, plain text, etc.
-
-Basic functionality given above counts as 2 units of functionality. On top of that, you are required to add some more additional functionality (of your own choice). The total amount of functionality required is given below.
+3. Amyca is not understand natural language but command format most likely as natural and user friendly.
+	but user require to follow those strict format. more information you can found on help menu.
+	Example: cost of DESCRIPTION is AMOUNT
+4. Data stored into hard disk.
+	a. Project and user data stored as .csv
+	2. Logging data stored as .log
+	3. Documentation data stored as .txt
 
 Additional Functionality:
 =========================
-Some suggestions for additional functionality:
+1. Timeline as graph: User can view all of there timeline task as graph
+2. View Calender: from menu bar > Calendar user can view calender in monthly view
+3. Multiple Users: Multiple users is support by Amyca. Amyca has four user access levels
+	a. Team Member: Access Level = 1
+	b. Team Leader: Access Level = 2
+	c. Project Manager: Access Level = 3
+	d. System Admin: Access Level = 4
+4. Password:
+	a. Minimum length of password is 6. Amyca not add user with below minimum length.
+	b. Stored user particular into hard disk with password as hash (encrypted)
 
-More attributes for data items e.g., priorities, tags, birthdays
-Multiple data item types e.g., support saving TODOs, appointments, and deadlines
-Support connections between data items e.g., ability to assign a TODO to a contact
-Multi-user support e.g., assume the software is installed in a common computer in your office and allow multiple users to interact with it
-More ways to query data e.g., find contacts that has a birthday in next 2 days, find all TODOs with high priority, etc.
-Any other feature (get approval from prof before implementing)
-
-Constraints
-===========
-You should not use relational/SQL databases e.g., MySQL
-The software should work in a Windows computer that has the latest releases of Java, .NET, and Python 3.
-If your software needs other software to be installed (e.g., third-party libraries), please get prof's permission first.
 """
-
 import datetime
 import logging
 from tkinter import *
@@ -68,10 +62,14 @@ from my_calendare import CalendarScreen
 
 
 class MainScreen:
-	"""Main screen display"""
+	"""
+	The class MainScreen si Main user interface.
+	All project tasks, resources and cost viable as main screen.
+	Added menu bar with addition functionality as require by project
+		eg:  file, user, TimeLine, Calender, Help, and Amyca
+	"""
 	def __init__(self):
 		"""Initialize GUI main window"""
-
 		self.project = Project('p1')
 		self.users_list = User.get_users()
 		self.current_user_name = User.get_current_user_name()
@@ -83,6 +81,7 @@ class MainScreen:
 		self.about_amyca_file = 'program_data/about_amyca.txt'
 		self.users_file = 'program_data/users.csv'
 
+		# Create root window
 		self.main_window = Tk()
 		self.width = self.main_window.winfo_screenwidth()
 		self.height = self.main_window.winfo_screenheight()
@@ -193,6 +192,7 @@ class MainScreen:
 		self.main_window.mainloop()
 
 	def start_logging(self):
+		"""This function is initial configuration of logging module"""
 		logging.basicConfig(filename=self.log_file,
 		                    format='%(asctime)s %(levelname)-8s %(message)s',
 		                    datefmt='%d/%m/%Y %I:%M:%S %p',
@@ -208,10 +208,7 @@ class MainScreen:
 		logging.info('Data loaded')
 
 	def save_data(self):
-		"""
-
-		:return:
-		"""
+		"""This function to save project data form project list to hard dive"""
 		StorageManager('data/tasks.csv').save_data(self.project.tasks)
 		StorageManager('data/resources.csv').save_data(self.project.resources)
 		StorageManager('data/cost.csv').save_data(self.project.cost)
@@ -220,8 +217,9 @@ class MainScreen:
 		logging.info('Save data to hard disk to back up')
 
 	def add_user(self):
+		"""This function to add user to amyca"""
 		if self.current_user_level == 4:
-			"""Only Admin to add user"""
+			"""condition: Admin to add user"""
 			AddUserScreen(self.project).start()
 		else:
 			messagebox.showwarning('Add User', 'Only admin can add user')
@@ -251,6 +249,7 @@ class MainScreen:
 		LoginScreen().start()
 
 	def get_calendar(self):
+		"""This function is to view calendar"""
 		CalendarScreen().start()
 
 	def get_timeline_graph(self):
@@ -364,7 +363,6 @@ class MainScreen:
 
 	def update_cost_list(self, cost_list):
 		self.cost_area.delete('1.0', END)
-		print(self.current_user_level)
 		if self.current_user_level >= 3:
 			self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
 			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')

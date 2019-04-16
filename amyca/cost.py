@@ -1,3 +1,6 @@
+"""This module is for create cost object for project costing"""
+
+
 class Cost:
 	TYPE_KEY = 'C'
 

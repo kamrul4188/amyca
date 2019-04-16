@@ -58,15 +58,3 @@ class Project:
 
 	def __str__(self):
 		return 'Project name is: ' + self.name + ' and ID: ' + str(self.id)
-
-
-if __name__ == '__main__':
-	p1 = Project('p1')
-	task_1 = ToDo('read book', False)
-	task_2 = ToDo('return book', False)
-	p1.add_task(task_1)
-	p1.add_task(task_2)
-	print(p1.tasks)
-	del p1.tasks[0]
-	print(p1.tasks)
-
