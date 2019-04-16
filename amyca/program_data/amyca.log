@@ -87,3 +87,30 @@
 16/04/2019 08:02:40 PM INFO     Save data to hard disk to back up
 16/04/2019 08:03:12 PM WARNING  [kamrul] has been remove from user.
 16/04/2019 08:03:32 PM INFO     Save data to hard disk to back up
+16/04/2019 08:16:32 PM INFO     Amyca Start
+16/04/2019 08:16:32 PM INFO     Data loaded
+16/04/2019 08:16:48 PM INFO     Command Entered: todo read book
+16/04/2019 08:17:00 PM INFO     Command Entered: deadline install aircon by tomorrow
+16/04/2019 08:17:23 PM INFO     Command Entered: resource manpower is 10
+16/04/2019 08:17:35 PM INFO     Command Entered: cost of manpower is 500
+16/04/2019 08:17:58 PM WARNING  New User added. [foo]
+16/04/2019 08:18:17 PM WARNING  New User added. [mamun]
+16/04/2019 08:18:33 PM WARNING  New User added. [kamrul]
+16/04/2019 08:18:45 PM INFO     Save data to hard disk to back up
+16/04/2019 08:18:45 PM WARNING  User [admin] logout
+16/04/2019 08:18:58 PM INFO     Amyca Start
+16/04/2019 08:18:59 PM INFO     Data loaded
+16/04/2019 08:19:20 PM INFO     Command Entered: todo read book
+16/04/2019 08:19:49 PM INFO     Command Entered: resource lorry 1
+16/04/2019 08:19:58 PM INFO     Save data to hard disk to back up
+16/04/2019 08:19:58 PM WARNING  User [foo] logout
+16/04/2019 08:20:11 PM INFO     Amyca Start
+16/04/2019 08:20:11 PM INFO     Data loaded
+16/04/2019 08:20:34 PM INFO     Command Entered: todo read book
+16/04/2019 08:20:53 PM INFO     Command Entered: resource boooks is 10 pcs
+16/04/2019 08:21:03 PM INFO     Save data to hard disk to back up
+16/04/2019 08:21:03 PM WARNING  User [mamun] logout
+16/04/2019 08:21:13 PM INFO     Amyca Start
+16/04/2019 08:21:13 PM INFO     Data loaded
+16/04/2019 08:22:34 PM INFO     Command Entered: 
+16/04/2019 08:22:34 PM ERROR    Command not recognized.
