@@ -65,7 +65,6 @@ class MainScreen:
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.amyca_menu = Menu(self.menu_bar, tearoff=0)
 
-
 		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
@@ -75,23 +74,18 @@ class MainScreen:
 		self.menu_bar.add_cascade(label='Amyca', menu=self.amyca_menu)
 		self.main_window.config(menu=self.menu_bar)
 
-
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
-
 		self.user_menu.add_command(label='Add User', command=self.add_user)
 		self.user_menu.add_command(label='Remove User', command=self.remove_user)
 		self.user_menu.add_command(label='Change Passowrd', command=self.change_password)
 		self.user_menu.add_command(label='Logout', command=self.logout)
 		self.timeline_menu.add_command(label='Show Graph', command=self.get_timeline_graph)
 		self.calendar_menu.add_command(label='Calendar(month)', command=self.get_calendar)
-
 		self.help_menu.add_command(label='? Help', command=self.help)
 		self.help_menu.add_command(label= 'Log', command=self.get_log)
-
 		self.amyca_menu.add_command(label='About developer', command=self.get_about_developer)
 		self.amyca_menu.add_command(label='About Amyca', command=self.get_about_amyca)
-
 
 		# create default font
 		self.output_font = ('Courier New', 12)
@@ -159,7 +153,7 @@ class MainScreen:
 		logging.basicConfig(filename=self.log_file,
 		                    format='%(asctime)s %(levelname)-8s %(message)s',
 		                    datefmt='%d/%m/%Y %I:%M:%S %p',
-		                    filemode='w',
+		                    filemode='a',
 		                    level=logging.INFO)
 		logging.info('Start Amyca...')
 
@@ -221,16 +215,11 @@ class MainScreen:
 			for i, task in enumerate(timeline_task):
 				index_id = 'Task ID : ' + str(i + 1)
 				task_id.append(index_id)
-
-				#start_date = timeline_task[i][2]
-				#end_date = timeline_task[i][3]
 				start_date = task.get_start_date()
 				end_date = task.get_end_date()
-
 				task_duration = duration_datetime(start_date, end_date)
 				task_duration = str(task_duration).split(' ', 1)[0]
 				duration.append(int(task_duration))
-
 			x_pos = np.arange(len(task_id))
 			plt.barh(x_pos, duration, align='center', alpha=0.5)
 			plt.yticks(x_pos, task_id)
@@ -332,7 +321,6 @@ class MainScreen:
 			output = self.execute_command(command)
 
 			self.update_chat_history(command, output, 'success_format')
-			print('print update history')
 			self.update_task_list(self.project.tasks)
 			self.update_resource_list(self.project.resources)
 			self.update_cost_list(self.project.cost)
@@ -382,7 +370,6 @@ class MainScreen:
 
 		elif command.startswith('timeline '):
 			command_part = command.split(' ', 1)[1]
-			print(command_part)
 			description = self.remove_from_word(command_part, 'from')
 			date = self.remove_to_word(command_part, 'from')
 			start_date = self.remove_from_word(date, 'to')
@@ -486,7 +473,7 @@ class LoginScreen:
 		self.login_window.destroy()
 		greeting = GreetingScreen().start()
 		if greeting:
-			MainScreen().start() # Todo: Main Screen
+			MainScreen().start()
 
 
 class AddUserScreen:
@@ -524,7 +511,6 @@ class AddUserScreen:
 		user_name = self.entry_user_name.get()
 		password = self.entry_user_password.get()
 		access_level = self.entry_user_access_level.get()
-		#message = User(user_name, password, access_level)
 		message = User(user_name, password, access_level)
 		self.add_user_window.destroy()
 		logging.warning(message)
@@ -568,7 +554,6 @@ class RemoveUserScreen:
 
 	def start(self):
 		return self.remove_user_window.mainloop()
-
 
 class ChangePasswordScreen:
 	def __init__(self):
@@ -614,16 +599,11 @@ class ChangePasswordScreen:
 
 if __name__ == '__main__':
 	try:
-		#User('admin', 'admin123', 4)
 		user_file = 'program_data/users.csv'
 		User.load_form_csv(user_file)
-		#GreetingScreen().start()
 		LoginScreen().start()
-		#MainScreen().start()
-		#AddUserScreen().start()
 
 	except Exception as e:
-		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))
 
 

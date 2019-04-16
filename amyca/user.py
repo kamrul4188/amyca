@@ -2,7 +2,6 @@ import password as pw
 import csv
 
 
-
 class User:
 	__users = []
 	__total = 0
@@ -77,7 +76,6 @@ class User:
 		output_file = open(storage, 'w', newline='')
 		output_writer = csv.writer(output_file)
 		for user in User.__users:
-			print(user)
 			output_writer.writerow(user)
 		output_file.close()
 		return 'User info save'
