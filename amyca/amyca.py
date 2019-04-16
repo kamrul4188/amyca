@@ -1,5 +1,48 @@
 """
-Amyca is a software is software engineering project
+==============================================================================================================
+The software is named 'Amyca' is a Project Management Assistance
+It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
+==============================================================================================================
+Project Naming:
+==============
+
+
+Basic Functionality:
+====================
+1. Initially Amyca interface build in text-base than updated Graphical User Interface (GUI).
+2. Amyca and storing and retrieving various data type is require to project management. following are:
+	eg: todo, deadline, timeline, resource, cost
+
+
+
+There is no need for Monty to be able to understand natural language sentences.
+It is fine for the user requests to need to follow a strict format.
+ Defining the request format is part of the project. The example interaction given above is just an example only. Hint: try to design a request format that is easy to remember and type.
+
+Monty should support adding, deleting, listing, searching (by keyword) of data items.
+
+Persistence: The data should be stored in the hard disk so that restarting Monty should not cause a loss of data entered in a previous session.
+
+The data files should be in a human-readable format such as .csv (recommended), xml, json, plain text, etc.
+
+Basic functionality given above counts as 2 units of functionality. On top of that, you are required to add some more additional functionality (of your own choice). The total amount of functionality required is given below.
+
+Additional Functionality:
+=========================
+Some suggestions for additional functionality:
+
+More attributes for data items e.g., priorities, tags, birthdays
+Multiple data item types e.g., support saving TODOs, appointments, and deadlines
+Support connections between data items e.g., ability to assign a TODO to a contact
+Multi-user support e.g., assume the software is installed in a common computer in your office and allow multiple users to interact with it
+More ways to query data e.g., find contacts that has a birthday in next 2 days, find all TODOs with high priority, etc.
+Any other feature (get approval from prof before implementing)
+
+Constraints
+===========
+You should not use relational/SQL databases e.g., MySQL
+The software should work in a Windows computer that has the latest releases of Java, .NET, and Python 3.
+If your software needs other software to be installed (e.g., third-party libraries), please get prof's permission first.
 """
 
 import datetime
@@ -32,7 +75,7 @@ class MainScreen:
 		self.project = Project('p1')
 		self.users_list = User.get_users()
 		self.current_user_name = User.get_current_user_name()
-		self.current_user_level = User.get_current_user_access_level()
+		self.current_user_level = int(User.get_current_user_access_level())
 		self.current_time = self.get_current_time()
 		self.log_file = 'program_data/amyca.log'
 		self.help_file = 'program_data/help.txt'
@@ -155,34 +198,55 @@ class MainScreen:
 		                    datefmt='%d/%m/%Y %I:%M:%S %p',
 		                    filemode='a',
 		                    level=logging.INFO)
-		logging.info('Start Amyca...')
+		logging.info('Amyca Start')
 
 	def load_data(self):
-		#User.load_form_csv(self.users_file)
+		"""This function called during runtime to load project date from hard disk to project list """
 		self.project.tasks = StorageManager('data/tasks.csv').load_tasks()
 		self.project.resources = StorageManager('data/resources.csv').load_resource()
 		self.project.cost = StorageManager('data/cost.csv').load_cost()
-		logging.info('Load Data')
+		logging.info('Data loaded')
 
 	def save_data(self):
+		"""
+
+		:return:
+		"""
 		StorageManager('data/tasks.csv').save_data(self.project.tasks)
 		StorageManager('data/resources.csv').save_data(self.project.resources)
 		StorageManager('data/cost.csv').save_data(self.project.cost)
 		User.save_as_csv(self.users_file)
 		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
-		logging.info('Save Data')
+		logging.info('Save data to hard disk to back up')
 
 	def add_user(self):
-		AddUserScreen(self.project).start()
+		if self.current_user_level == 4:
+			"""Only Admin to add user"""
+			AddUserScreen(self.project).start()
+		else:
+			messagebox.showwarning('Add User', 'Only admin can add user')
 
 	def remove_user(self):
-		RemoveUserScreen().start()
+		if self.current_user_level == 4:
+			RemoveUserScreen().start()
+		else:
+			messagebox.showwarning('Remove User','Only admin can add user')
 
-	@staticmethod
-	def change_password():
-		ChangePasswordScreen().start()
+	def change_password(self):
+		if self.current_user_level == 4:
+			"""Admin is to access to change password"""
+			ChangePasswordScreen().start()
+		else:
+			messagebox.showwarning('Change Password', 'Only Admin can password')
 
 	def logout(self):
+		"""
+		This function is called at Menu bar>User>Logout button click
+		To execute: destroy current and window and pop up login window
+		Registered user only can login to access Amyca
+		"""
+		self.save_data()
+		logging.warning('User [' + str(self.current_user_name) + '] logout')
 		self.main_window.destroy()
 		LoginScreen().start()
 
@@ -300,16 +364,20 @@ class MainScreen:
 
 	def update_cost_list(self, cost_list):
 		self.cost_area.delete('1.0', END)
-		self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
-		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+		print(self.current_user_level)
+		if self.current_user_level >= 3:
+			self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
+			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
 
-		total_cost = 0
-		for i, cost in enumerate(cost_list):
-			total_cost = total_cost + int(cost.get_cost())
-			self.cost_area.insert(END, str(i+1) + '. ' + cost.get_description() + ': ' + '$' + str(cost.get_cost()) + '\n', 'normal_format')
-		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
-		self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
-		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+			total_cost = 0
+			for i, cost in enumerate(cost_list):
+				total_cost = total_cost + int(cost.get_cost())
+				self.cost_area.insert(END, str(i+1) + '. ' + cost.get_description() + ': ' + '$' + str(cost.get_cost()) + '\n', 'normal_format')
+			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+			self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
+			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+		else:
+			self.cost_area.insert(END, 'Only Manager and above can view and update cost', '\n')
 
 	def command_entered(self, event):
 		command = None
@@ -359,58 +427,86 @@ class MainScreen:
 		if command == 'exit':
 			sys.exit()
 		elif command.startswith('todo '):
-			description = command.split(' ', 1)[1]
-			return self.project.add_task(ToDo(description, False))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add task"""
+				description = command.split(' ', 1)[1]
+				return self.project.add_task(ToDo(description, False))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('deadline '):
-			command_part = command.split(' ', 1)[1]
-			description = self.remove_from_word(command_part, 'by')
-			by = self.remove_to_word(command_part, 'by')
-			return self.project.add_task(Deadline(description, False, by))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add task"""
+				command_part = command.split(' ', 1)[1]
+				description = self.remove_from_word(command_part, 'by')
+				by = self.remove_to_word(command_part, 'by')
+				return self.project.add_task(Deadline(description, False, by))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('timeline '):
-			command_part = command.split(' ', 1)[1]
-			description = self.remove_from_word(command_part, 'from')
-			date = self.remove_to_word(command_part, 'from')
-			start_date = self.remove_from_word(date, 'to')
-			end_date = self.remove_to_word(date, 'to')
-			return self.project.add_task(TimeLine(description, False, start_date, end_date))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add task"""
+				command_part = command.split(' ', 1)[1]
+				description = self.remove_from_word(command_part, 'from')
+				date = self.remove_to_word(command_part, 'from')
+				start_date = self.remove_from_word(date, 'to')
+				end_date = self.remove_to_word(date, 'to')
+				return self.project.add_task(TimeLine(description, False, start_date, end_date))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('done '):
-			user_index = command.split(' ', 1)[1]
-			index = int(user_index) - 1
-			if index < 0:
-				raise Exception('Index must be grater then 0')
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to update task"""
+				user_index = command.split(' ', 1)[1]
+				index = int(user_index) - 1
+				if index < 0:
+					raise Exception('Index must be grater then 0')
+				else:
+					try:
+						self.project.tasks[index].mark_as_done()
+						return 'Congrats on completing a task ! :-)'
+					except Exception:
+						raise Exception('No item at index ' + str(index + 1))
 			else:
-				try:
-					self.project.tasks[index].mark_as_done()
-					return 'Congrats on completing a task ! :-)'
-				except Exception:
-					raise Exception('No item at index ' + str(index + 1))
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('pending '):
-			user_index = command.split(' ', 1)[1]
-			index = int(user_index) - 1
-			if index < 0:
-				raise Exception('Index must be grater than 0')
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to update task"""
+				user_index = command.split(' ', 1)[1]
+				index = int(user_index) - 1
+				if index < 0:
+					raise Exception('Index must be grater than 0')
+				else:
+					try:
+						self.project.tasks[index].mark_as_pending()
+						return 'Task mark as pending'
+					except Exception:
+						raise Exception('No item at index' + str(index + 1))
 			else:
-				try:
-					self.project.tasks[index].mark_as_pending()
-					return 'Task mark as pending'
-				except Exception:
-					raise Exception('No item at index' + str(index + 1))
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('resource '):
-			command_part = command.split(' ', 1)[1]
-			description = self.remove_from_word(command_part, 'is')
-			quantity = self.remove_to_word(command_part, 'is')
-			return self.project.add_resources(Resource(description, quantity))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add resource"""
+				command_part = command.split(' ', 1)[1]
+				description = self.remove_from_word(command_part, 'is')
+				quantity = self.remove_to_word(command_part, 'is')
+				return self.project.add_resources(Resource(description, quantity))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('cost of '):
-			command_part = command.split(' ', 2)[2]
-			description = self.remove_from_word(command_part, 'is')
-			cost = self.remove_to_word(command_part, 'is')
-			return self.project.add_cost(Cost(description, cost))
+			if self.current_user_level >= 3:
+				"""Manager and above is access to add cost"""
+				command_part = command.split(' ', 2)[2]
+				description = self.remove_from_word(command_part, 'is')
+				cost = self.remove_to_word(command_part, 'is')
+				return self.project.add_cost(Cost(description, cost))
+			else:
+				raise ValueError('Manager and above only can add cost')
 
 		elif command.startswith('remove '):
 			try:
@@ -418,11 +514,23 @@ class MainScreen:
 				command_index = command.split(' ', 2)[2]
 				index = int(command_index) - 1
 				if 	command_part == 'task':
-					return  self.project.remove_task(index)
+					if self.current_user_level >= 2:
+						"""Team leader and above to access to remove task"""
+						return self.project.remove_task(index)
+					else:
+						raise ValueError('Team leader and above only can remove task')
 				elif command_part == 'resource':
-					return self.project.remove_resource(index)
+					if self.current_user_level >= 2:
+						"""Team Leader and above to access to remove resource"""
+						return self.project.remove_resource(index)
+					else:
+						raise ValueError('Team leader and above only can remove resource')
 				elif command_part == 'cost':
-					return self.project.remove_cost(index)
+					if self.current_user_level >= 3:
+						"""Manager and above to access to remove cost"""
+						return self.project.remove_cost(index)
+					else:
+						raise ValueError('Manager adn above only remove cost')
 			except Exception:
 				raise ValueError('Command format not recognize.\n Command: >>> remove [task/resource/cost] [index]')
 		else:
