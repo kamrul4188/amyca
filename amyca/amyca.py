@@ -1,7 +1,44 @@
 """
-Amyca is a software is software engineering project
-"""
+==============================================================================================================
+The software is named 'Amyca' is a Project Management Assistance
+It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
+==============================================================================================================
 
+Project Naming:
+===============
+The software to help the project team to run the project smoothly.
+As our software is part of the project team as assistance, So we get a lovely Name.
+The latin female form of Amicus of Latin Origin: Meaning: Female friend or Friendly, Loving Woman
+Form latin Amicus to English Amyca. We have selected name of our software is Amyca
+[Amyca - Project Management Assistance]
+
+Basic Functionality:
+====================
+1. Initially Amyca interface build in text-base than updated Graphical User Interface (GUI).
+2. Amyca and storing and retrieving various data type is require to project management. following are:
+	eg: todo, deadline, timeline, resource, cost
+3. Amyca is not understand natural language but command format most likely as natural and user friendly.
+	but user require to follow those strict format. more information you can found on help menu.
+	Example: cost of DESCRIPTION is AMOUNT
+4. Data stored into hard disk.
+	a. Project and user data stored as .csv
+	2. Logging data stored as .log
+	3. Documentation data stored as .txt
+
+Additional Functionality:
+=========================
+1. Timeline as graph: User can view all of there timeline task as graph
+2. View Calender: from menu bar > Calendar user can view calender in monthly view
+3. Multiple Users: Multiple users is support by Amyca. Amyca has four user access levels
+	a. Team Member: Access Level = 1
+	b. Team Leader: Access Level = 2
+	c. Project Manager: Access Level = 3
+	d. System Admin: Access Level = 4
+4. Password:
+	a. Minimum length of password is 6. Amyca not add user with below minimum length.
+	b. Stored user particular into hard disk with password as hash (encrypted)
+
+"""
 import datetime
 import logging
 from tkinter import *
@@ -25,14 +62,18 @@ from my_calendare import CalendarScreen
 
 
 class MainScreen:
-	"""Main screen display"""
+	"""
+	The class MainScreen si Main user interface.
+	All project tasks, resources and cost viable as main screen.
+	Added menu bar with addition functionality as require by project
+		eg:  file, user, TimeLine, Calender, Help, and Amyca
+	"""
 	def __init__(self):
 		"""Initialize GUI main window"""
-
 		self.project = Project('p1')
 		self.users_list = User.get_users()
 		self.current_user_name = User.get_current_user_name()
-		self.current_user_level = User.get_current_user_access_level()
+		self.current_user_level = int(User.get_current_user_access_level())
 		self.current_time = self.get_current_time()
 		self.log_file = 'program_data/amyca.log'
 		self.help_file = 'program_data/help.txt'
@@ -40,6 +81,7 @@ class MainScreen:
 		self.about_amyca_file = 'program_data/about_amyca.txt'
 		self.users_file = 'program_data/users.csv'
 
+		# Create root window
 		self.main_window = Tk()
 		self.width = self.main_window.winfo_screenwidth()
 		self.height = self.main_window.winfo_screenheight()
@@ -65,7 +107,6 @@ class MainScreen:
 		self.help_menu = Menu(self.menu_bar, tearoff=0)
 		self.amyca_menu = Menu(self.menu_bar, tearoff=0)
 
-
 		# Configuration and cascade of menus
 		self.menu_bar.add_cascade(label='File', menu=self.file_menu)
 		self.menu_bar.add_cascade(label='User', menu=self.user_menu)
@@ -75,23 +116,18 @@ class MainScreen:
 		self.menu_bar.add_cascade(label='Amyca', menu=self.amyca_menu)
 		self.main_window.config(menu=self.menu_bar)
 
-
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
-
 		self.user_menu.add_command(label='Add User', command=self.add_user)
 		self.user_menu.add_command(label='Remove User', command=self.remove_user)
 		self.user_menu.add_command(label='Change Passowrd', command=self.change_password)
 		self.user_menu.add_command(label='Logout', command=self.logout)
 		self.timeline_menu.add_command(label='Show Graph', command=self.get_timeline_graph)
 		self.calendar_menu.add_command(label='Calendar(month)', command=self.get_calendar)
-
 		self.help_menu.add_command(label='? Help', command=self.help)
 		self.help_menu.add_command(label= 'Log', command=self.get_log)
-
 		self.amyca_menu.add_command(label='About developer', command=self.get_about_developer)
 		self.amyca_menu.add_command(label='About Amyca', command=self.get_about_amyca)
-
 
 		# create default font
 		self.output_font = ('Courier New', 12)
@@ -156,43 +192,64 @@ class MainScreen:
 		self.main_window.mainloop()
 
 	def start_logging(self):
+		"""This function is initial configuration of logging module"""
 		logging.basicConfig(filename=self.log_file,
 		                    format='%(asctime)s %(levelname)-8s %(message)s',
 		                    datefmt='%d/%m/%Y %I:%M:%S %p',
-		                    filemode='w',
+		                    filemode='a',
 		                    level=logging.INFO)
-		logging.info('Start Amyca...')
+		logging.info('Amyca Start')
 
 	def load_data(self):
-		#User.load_form_csv(self.users_file)
+		"""This function called during runtime to load project date from hard disk to project list """
 		self.project.tasks = StorageManager('data/tasks.csv').load_tasks()
 		self.project.resources = StorageManager('data/resources.csv').load_resource()
 		self.project.cost = StorageManager('data/cost.csv').load_cost()
-		logging.info('Load Data')
+		logging.info('Data loaded')
 
 	def save_data(self):
+		"""This function to save project data form project list to hard dive"""
 		StorageManager('data/tasks.csv').save_data(self.project.tasks)
 		StorageManager('data/resources.csv').save_data(self.project.resources)
 		StorageManager('data/cost.csv').save_data(self.project.cost)
 		User.save_as_csv(self.users_file)
 		messagebox.showinfo('Save', 'All data save to directory [ Amyca/Data ]')
-		logging.info('Save Data')
+		logging.info('Save data to hard disk to back up')
 
 	def add_user(self):
-		AddUserScreen(self.project).start()
+		"""This function to add user to amyca"""
+		if self.current_user_level == 4:
+			"""condition: Admin to add user"""
+			AddUserScreen(self.project).start()
+		else:
+			messagebox.showwarning('Add User', 'Only admin can add user')
 
 	def remove_user(self):
-		RemoveUserScreen().start()
+		if self.current_user_level == 4:
+			RemoveUserScreen().start()
+		else:
+			messagebox.showwarning('Remove User','Only admin can add user')
 
-	@staticmethod
-	def change_password():
-		ChangePasswordScreen().start()
+	def change_password(self):
+		if self.current_user_level == 4:
+			"""Admin is to access to change password"""
+			ChangePasswordScreen().start()
+		else:
+			messagebox.showwarning('Change Password', 'Only Admin can password')
 
 	def logout(self):
+		"""
+		This function is called at Menu bar>User>Logout button click
+		To execute: destroy current and window and pop up login window
+		Registered user only can login to access Amyca
+		"""
+		self.save_data()
+		logging.warning('User [' + str(self.current_user_name) + '] logout')
 		self.main_window.destroy()
 		LoginScreen().start()
 
 	def get_calendar(self):
+		"""This function is to view calendar"""
 		CalendarScreen().start()
 
 	def get_timeline_graph(self):
@@ -221,16 +278,11 @@ class MainScreen:
 			for i, task in enumerate(timeline_task):
 				index_id = 'Task ID : ' + str(i + 1)
 				task_id.append(index_id)
-
-				#start_date = timeline_task[i][2]
-				#end_date = timeline_task[i][3]
 				start_date = task.get_start_date()
 				end_date = task.get_end_date()
-
 				task_duration = duration_datetime(start_date, end_date)
 				task_duration = str(task_duration).split(' ', 1)[0]
 				duration.append(int(task_duration))
-
 			x_pos = np.arange(len(task_id))
 			plt.barh(x_pos, duration, align='center', alpha=0.5)
 			plt.yticks(x_pos, task_id)
@@ -311,16 +363,19 @@ class MainScreen:
 
 	def update_cost_list(self, cost_list):
 		self.cost_area.delete('1.0', END)
-		self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
-		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+		if self.current_user_level >= 3:
+			self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
+			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
 
-		total_cost = 0
-		for i, cost in enumerate(cost_list):
-			total_cost = total_cost + int(cost.get_cost())
-			self.cost_area.insert(END, str(i+1) + '. ' + cost.get_description() + ': ' + '$' + str(cost.get_cost()) + '\n', 'normal_format')
-		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
-		self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
-		self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+			total_cost = 0
+			for i, cost in enumerate(cost_list):
+				total_cost = total_cost + int(cost.get_cost())
+				self.cost_area.insert(END, str(i+1) + '. ' + cost.get_description() + ': ' + '$' + str(cost.get_cost()) + '\n', 'normal_format')
+			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+			self.cost_area.insert(END, 'Total cost = $' + str(total_cost) + '\n', 'total_cost_format')
+			self.cost_area.insert(END, '-' * 34 + '\n', 'title_format')
+		else:
+			self.cost_area.insert(END, 'Only Manager and above can view and update cost', '\n')
 
 	def command_entered(self, event):
 		command = None
@@ -332,7 +387,6 @@ class MainScreen:
 			output = self.execute_command(command)
 
 			self.update_chat_history(command, output, 'success_format')
-			print('print update history')
 			self.update_task_list(self.project.tasks)
 			self.update_resource_list(self.project.resources)
 			self.update_cost_list(self.project.cost)
@@ -371,59 +425,86 @@ class MainScreen:
 		if command == 'exit':
 			sys.exit()
 		elif command.startswith('todo '):
-			description = command.split(' ', 1)[1]
-			return self.project.add_task(ToDo(description, False))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add task"""
+				description = command.split(' ', 1)[1]
+				return self.project.add_task(ToDo(description, False))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('deadline '):
-			command_part = command.split(' ', 1)[1]
-			description = self.remove_from_word(command_part, 'by')
-			by = self.remove_to_word(command_part, 'by')
-			return self.project.add_task(Deadline(description, False, by))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add task"""
+				command_part = command.split(' ', 1)[1]
+				description = self.remove_from_word(command_part, 'by')
+				by = self.remove_to_word(command_part, 'by')
+				return self.project.add_task(Deadline(description, False, by))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('timeline '):
-			command_part = command.split(' ', 1)[1]
-			print(command_part)
-			description = self.remove_from_word(command_part, 'from')
-			date = self.remove_to_word(command_part, 'from')
-			start_date = self.remove_from_word(date, 'to')
-			end_date = self.remove_to_word(date, 'to')
-			return self.project.add_task(TimeLine(description, False, start_date, end_date))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add task"""
+				command_part = command.split(' ', 1)[1]
+				description = self.remove_from_word(command_part, 'from')
+				date = self.remove_to_word(command_part, 'from')
+				start_date = self.remove_from_word(date, 'to')
+				end_date = self.remove_to_word(date, 'to')
+				return self.project.add_task(TimeLine(description, False, start_date, end_date))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('done '):
-			user_index = command.split(' ', 1)[1]
-			index = int(user_index) - 1
-			if index < 0:
-				raise Exception('Index must be grater then 0')
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to update task"""
+				user_index = command.split(' ', 1)[1]
+				index = int(user_index) - 1
+				if index < 0:
+					raise Exception('Index must be grater then 0')
+				else:
+					try:
+						self.project.tasks[index].mark_as_done()
+						return 'Congrats on completing a task ! :-)'
+					except Exception:
+						raise Exception('No item at index ' + str(index + 1))
 			else:
-				try:
-					self.project.tasks[index].mark_as_done()
-					return 'Congrats on completing a task ! :-)'
-				except Exception:
-					raise Exception('No item at index ' + str(index + 1))
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('pending '):
-			user_index = command.split(' ', 1)[1]
-			index = int(user_index) - 1
-			if index < 0:
-				raise Exception('Index must be grater than 0')
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to update task"""
+				user_index = command.split(' ', 1)[1]
+				index = int(user_index) - 1
+				if index < 0:
+					raise Exception('Index must be grater than 0')
+				else:
+					try:
+						self.project.tasks[index].mark_as_pending()
+						return 'Task mark as pending'
+					except Exception:
+						raise Exception('No item at index' + str(index + 1))
 			else:
-				try:
-					self.project.tasks[index].mark_as_pending()
-					return 'Task mark as pending'
-				except Exception:
-					raise Exception('No item at index' + str(index + 1))
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('resource '):
-			command_part = command.split(' ', 1)[1]
-			description = self.remove_from_word(command_part, 'is')
-			quantity = self.remove_to_word(command_part, 'is')
-			return self.project.add_resources(Resource(description, quantity))
+			if self.current_user_level >= 2:
+				"""Team leader and above is access to add resource"""
+				command_part = command.split(' ', 1)[1]
+				description = self.remove_from_word(command_part, 'is')
+				quantity = self.remove_to_word(command_part, 'is')
+				return self.project.add_resources(Resource(description, quantity))
+			else:
+				raise ValueError('Team leader or above only can add task')
 
 		elif command.startswith('cost of '):
-			command_part = command.split(' ', 2)[2]
-			description = self.remove_from_word(command_part, 'is')
-			cost = self.remove_to_word(command_part, 'is')
-			return self.project.add_cost(Cost(description, cost))
+			if self.current_user_level >= 3:
+				"""Manager and above is access to add cost"""
+				command_part = command.split(' ', 2)[2]
+				description = self.remove_from_word(command_part, 'is')
+				cost = self.remove_to_word(command_part, 'is')
+				return self.project.add_cost(Cost(description, cost))
+			else:
+				raise ValueError('Manager and above only can add cost')
 
 		elif command.startswith('remove '):
 			try:
@@ -431,11 +512,23 @@ class MainScreen:
 				command_index = command.split(' ', 2)[2]
 				index = int(command_index) - 1
 				if 	command_part == 'task':
-					return  self.project.remove_task(index)
+					if self.current_user_level >= 2:
+						"""Team leader and above to access to remove task"""
+						return self.project.remove_task(index)
+					else:
+						raise ValueError('Team leader and above only can remove task')
 				elif command_part == 'resource':
-					return self.project.remove_resource(index)
+					if self.current_user_level >= 2:
+						"""Team Leader and above to access to remove resource"""
+						return self.project.remove_resource(index)
+					else:
+						raise ValueError('Team leader and above only can remove resource')
 				elif command_part == 'cost':
-					return self.project.remove_cost(index)
+					if self.current_user_level >= 3:
+						"""Manager and above to access to remove cost"""
+						return self.project.remove_cost(index)
+					else:
+						raise ValueError('Manager adn above only remove cost')
 			except Exception:
 				raise ValueError('Command format not recognize.\n Command: >>> remove [task/resource/cost] [index]')
 		else:
@@ -486,7 +579,7 @@ class LoginScreen:
 		self.login_window.destroy()
 		greeting = GreetingScreen().start()
 		if greeting:
-			MainScreen().start() # Todo: Main Screen
+			MainScreen().start()
 
 
 class AddUserScreen:
@@ -524,7 +617,6 @@ class AddUserScreen:
 		user_name = self.entry_user_name.get()
 		password = self.entry_user_password.get()
 		access_level = self.entry_user_access_level.get()
-		#message = User(user_name, password, access_level)
 		message = User(user_name, password, access_level)
 		self.add_user_window.destroy()
 		logging.warning(message)
@@ -568,7 +660,6 @@ class RemoveUserScreen:
 
 	def start(self):
 		return self.remove_user_window.mainloop()
-
 
 class ChangePasswordScreen:
 	def __init__(self):
@@ -614,16 +705,11 @@ class ChangePasswordScreen:
 
 if __name__ == '__main__':
 	try:
-		#User('admin', 'admin123', 4)
 		user_file = 'program_data/users.csv'
 		User.load_form_csv(user_file)
-		#GreetingScreen().start()
 		LoginScreen().start()
-		#MainScreen().start()
-		#AddUserScreen().start()
 
 	except Exception as e:
-		print('Problem: ', e)
 		messagebox.showerror('Error...!!!', str(e))
 
 

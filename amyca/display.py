@@ -50,11 +50,3 @@ class MessageScreen:
 	def start(self):
 		return self.message_window.mainloop()
 
-
-
-if __name__ == '__main__':
-	file_name = 'program_data/amyca.program_data'
-	file = open(file_name, 'r').read()
-	#GreetingScreen().start()
-	#print(file)
-	MessageScreen('Help', file).start()

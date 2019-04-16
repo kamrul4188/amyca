@@ -1,19 +1,27 @@
-MD KAMRUZZAMAN
----------------
-STUDENT ID: A0107851
-EMAIL: kamruzzaman@u.nus.edu
-GITHUB: https://github.com/kamrul4188/amyca
-HP: +6592420551
+COLLABORATORS:
+==============
+
+    MD KAMRUZZAMAN
+    STUDENT ID: A0107851
+    EMAIL: kamruzzaman@u.nus.edu
+    GITHUB: https://github.com/kamrul4188/amyca
+    HP: +6592420551
 
 
-ABDULLAH AL MAMUN KAHN
-----------------------
-STUDENT ID: A0147365Y
-EMAIL: e0011959@u.nus.edu
-HP: +6592791325
+    ABDULLAH AL MAMUN KAHN
+    STUDENT ID: A0147365Y
+    EMAIL: e0011959@u.nus.edu
+    HP: +6592791325
 
-CHIA XIAO HUI
--------------
-STUDENT ID: A0147375X
-EMAIL: e0011969@u.nus.edu
-HP: +6586615640
+    CHIA XIAO HUI
+    STUDENT ID: A0147375X
+    EMAIL: e0011969@u.nus.edu
+    HP: +6586615640
+
+
+INSTRUCTORS:
+============
+
+    DAMITH CHATURA RAJAPKSE
+    Associate Professor, NUS School of Computing
+    https://www.comp.nus.edu.sg/~damithch

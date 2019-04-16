@@ -1,8 +1,0 @@
-List of new feature added:
-==========================
-
-Module Amyca:
--------------
-1. Graphical User Interface (GUI)
-    > Added title icon image
-    > Column for History, Task, Resource, Cost

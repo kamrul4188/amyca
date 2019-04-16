@@ -1,23 +1,48 @@
-I'm glad you asked. Here it is:
-==================================================
-Monty can understand the following commands:
+=================================================================
+Hi, I am Amyca. I'm glad you asked. Here it is:
+=================================================================
+Amyca can understand the following commands:
 
 todo DESCRIPTION
-    Adds a task to the list
+    Adds a todo task into the task list
     Example: todo read book
 
 deadline DESCRIPTION by DEADLINE
-    Adds a task to the list
+    Adds a deadline task into the task list
     Example: deadline read book by tomorrow
 
+timeline DESCRIPTION from DATE to DATE
+    Adds a timeline task into the task list
+    Example: timeline borrow book from 30/04/2019 to 30/05/2019
+
+resource DESCRIPTION is QUANTITY PREFIX
+    Adds resource into resource list
+    Example: resource manpower is 10 pack
+
+cost of DESCRIPTION is AMOUNT
+    adds cost into cost list
+    example: cost of manpower is 10000
+
 done INDEX
-    Marks the task at INDEX as 'done'
+    Marks the task at index as 'done'
     Example: done 1
 
 pending INDEX
-    Marks the task at INDEX as 'pending'
+    Marks the task at index as 'pending'
     Example: pending 1
+
+remove task INDEX
+    Remove task as indexed from task list
+    Example: remove task 1
+
+remove resource INDEX
+    Remove resource as indexed from the resource list
+    Example: remove resource 1
+
+remove cost INDEX
+    Remove cost as indexed from the cost list
+    Example: remove cost 1
 
 exit
     Exits the application
---------------------------------------------------
+=================================================================
