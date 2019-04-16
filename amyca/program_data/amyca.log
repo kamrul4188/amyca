@@ -1,0 +1,61 @@
+16/04/2019 02:08:31 PM INFO     Start Amyca...
+16/04/2019 02:08:31 PM INFO     Load Data
+16/04/2019 02:08:44 PM INFO     Command Entered: remove task 2
+16/04/2019 02:09:45 PM INFO     Command Entered: remove resource 2
+16/04/2019 02:09:58 PM INFO     Command Entered: remove resource 1
+16/04/2019 02:13:44 PM INFO     Start Amyca...
+16/04/2019 02:13:44 PM INFO     Load Data
+16/04/2019 02:14:42 PM INFO     Command Entered: resource lorry 2
+16/04/2019 02:14:51 PM INFO     Command Entered: resource lorry is 2
+16/04/2019 02:15:17 PM INFO     Command Entered: cost of lorry is 100
+16/04/2019 02:15:27 PM INFO     Save Data
+16/04/2019 02:26:31 PM INFO     Start Amyca...
+16/04/2019 02:26:31 PM INFO     Load Data
+16/04/2019 02:26:57 PM INFO     Command Entered: resource manpower is 20 person
+16/04/2019 02:27:42 PM INFO     Command Entered: resource cutting machine is 5 pcs
+16/04/2019 02:27:54 PM INFO     Command Entered: remove resource 1
+16/04/2019 02:28:06 PM INFO     Command Entered: remove resource 1
+16/04/2019 03:39:33 PM INFO     Amyca Start
+16/04/2019 03:39:33 PM INFO     Data loaded
+16/04/2019 03:41:49 PM INFO     Amyca Start
+16/04/2019 03:41:49 PM INFO     Data loaded
+16/04/2019 03:42:56 PM INFO     Amyca Start
+16/04/2019 03:42:56 PM INFO     Data loaded
+16/04/2019 03:43:20 PM WARNING  New User added. [foo]
+16/04/2019 03:43:43 PM INFO     Amyca Start
+16/04/2019 03:43:43 PM INFO     Data loaded
+16/04/2019 04:06:34 PM INFO     Amyca Start
+16/04/2019 04:06:34 PM INFO     Data loaded
+16/04/2019 04:06:53 PM WARNING  New User added. [mamun]
+16/04/2019 04:07:01 PM INFO     Save data to hard disk to back up
+16/04/2019 04:07:12 PM INFO     Amyca Start
+16/04/2019 04:07:12 PM INFO     Data loaded
+16/04/2019 04:07:22 PM INFO     Command Entered: todo read book
+16/04/2019 04:40:34 PM INFO     Amyca Start
+16/04/2019 04:40:34 PM INFO     Data loaded
+16/04/2019 04:40:54 PM WARNING  New User added. [foo]
+16/04/2019 04:41:09 PM WARNING  New User added. [mamun]
+16/04/2019 04:41:26 PM WARNING  New User added. [kamrul]
+16/04/2019 04:41:31 PM INFO     Save data to hard disk to back up
+16/04/2019 04:42:37 PM INFO     Save data to hard disk to back up
+16/04/2019 04:42:37 PM WARNING  User [admin] logout
+16/04/2019 04:42:49 PM INFO     Amyca Start
+16/04/2019 04:42:49 PM INFO     Data loaded
+16/04/2019 04:42:58 PM INFO     Command Entered: todo read book
+16/04/2019 04:43:20 PM INFO     Command Entered: deadline return book by tomorrow
+16/04/2019 04:47:23 PM INFO     Save data to hard disk to back up
+16/04/2019 04:47:23 PM WARNING  User [foo] logout
+16/04/2019 05:47:10 PM INFO     Amyca Start
+16/04/2019 05:47:10 PM INFO     Data loaded
+16/04/2019 05:49:48 PM INFO     Amyca Start
+16/04/2019 05:49:48 PM INFO     Data loaded
+16/04/2019 06:04:23 PM INFO     Amyca Start
+16/04/2019 06:04:23 PM INFO     Data loaded
+16/04/2019 06:07:24 PM INFO     Command Entered: dfs
+16/04/2019 06:07:24 PM ERROR    Command not recognized.
+16/04/2019 06:09:34 PM INFO     Command Entered: todo read book
+16/04/2019 06:09:53 PM INFO     Command Entered: done 5
+16/04/2019 06:10:25 PM INFO     Save data to hard disk to back up
+16/04/2019 06:10:25 PM WARNING  User [admin] logout
+16/04/2019 06:10:35 PM INFO     Amyca Start
+16/04/2019 06:10:35 PM INFO     Data loaded
