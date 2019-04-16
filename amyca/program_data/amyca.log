@@ -59,3 +59,31 @@
 16/04/2019 06:10:25 PM WARNING  User [admin] logout
 16/04/2019 06:10:35 PM INFO     Amyca Start
 16/04/2019 06:10:35 PM INFO     Data loaded
+16/04/2019 07:12:52 PM INFO     Amyca Start
+16/04/2019 07:12:52 PM INFO     Data loaded
+16/04/2019 07:50:05 PM INFO     Amyca Start
+16/04/2019 07:50:05 PM INFO     Data loaded
+16/04/2019 07:53:25 PM WARNING  [kamrul] has been remove from user.
+16/04/2019 07:53:42 PM WARNING  [foo] has been remove from user.
+16/04/2019 07:53:57 PM WARNING  [mamun] has been remove from user.
+16/04/2019 07:54:11 PM WARNING  [mamun] Not exit in user list
+16/04/2019 07:54:15 PM INFO     Save data to hard disk to back up
+16/04/2019 07:56:27 PM INFO     Amyca Start
+16/04/2019 07:56:27 PM INFO     Data loaded
+16/04/2019 07:56:42 PM WARNING  [kamrul] has been remove from user.
+16/04/2019 07:57:22 PM INFO     Command Entered: remove task 1
+16/04/2019 07:57:27 PM INFO     Command Entered: remove task 1
+16/04/2019 07:59:20 PM INFO     Command Entered: remove task 1
+16/04/2019 07:59:27 PM INFO     Command Entered: remove task 1
+16/04/2019 07:59:32 PM INFO     Command Entered: remove task 1
+16/04/2019 07:59:37 PM INFO     Command Entered: remove task 1
+16/04/2019 07:59:53 PM INFO     Command Entered: remove resource 1
+16/04/2019 07:59:58 PM INFO     Command Entered: remove resource 1
+16/04/2019 08:00:03 PM INFO     Command Entered: remove cost 1
+16/04/2019 08:00:07 PM INFO     Command Entered: remove cost 1
+16/04/2019 08:00:12 PM INFO     Save data to hard disk to back up
+16/04/2019 08:02:37 PM INFO     Amyca Start
+16/04/2019 08:02:37 PM INFO     Data loaded
+16/04/2019 08:02:40 PM INFO     Save data to hard disk to back up
+16/04/2019 08:03:12 PM WARNING  [kamrul] has been remove from user.
+16/04/2019 08:03:32 PM INFO     Save data to hard disk to back up

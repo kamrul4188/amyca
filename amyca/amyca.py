@@ -316,10 +316,11 @@ class MainScreen:
 
 	def update_chat_history(self, command, response, status_format):
 		"""
-		:param command:
-		:param response:
-		:param status_format: indicates which color to use for the status message. eg 'normal_format', 'error_format' or 'success_format'
-		:return:
+		This function is update chat history and display with following parameter
+		:param command: command entered by user in command window
+		:param response: return response form execute function
+		:param status_format: tag: normal_format, success_format, error_format.
+		:return: None
 		"""
 		current_time = datetime.datetime.now().strftime('%H:%M:%S')
 		self.history_area.insert(1.0, '-'*40 + '\n', 'normal_format')
@@ -328,8 +329,12 @@ class MainScreen:
 		self.history_area.insert(1.0, current_time + '\n', 'normal_format')
 
 	def update_task_list(self, tasks):
-		self.list_area.delete('1.0', END)  # Clear the list area
+		"""
 
+		:param tasks:
+		:return:
+		"""
+		self.list_area.delete('1.0', END)  # Clear the list area
 		completed_task = 0
 		total_task = 0
 		self.list_area.insert(END, ' '*12 + 'LIST OF TASKS' + '\n', 'title_format')
@@ -661,6 +666,7 @@ class RemoveUserScreen:
 	def start(self):
 		return self.remove_user_window.mainloop()
 
+
 class ChangePasswordScreen:
 	def __init__(self):
 		self.user = User
@@ -705,11 +711,10 @@ class ChangePasswordScreen:
 
 if __name__ == '__main__':
 	try:
+		User('admin', 'admin123', 4)
 		user_file = 'program_data/users.csv'
 		User.load_form_csv(user_file)
 		LoginScreen().start()
 
 	except Exception as e:
 		messagebox.showerror('Error...!!!', str(e))
-
-
