@@ -38,6 +38,9 @@ Additional Functionality:
 	a. Minimum length of password is 6. Amyca not add user with below minimum length.
 	b. Stored user particular into hard disk with password as hash (encrypted)
 
+**********************************************
+NOTE: Default User: admin, Password: admin123
+**********************************************
 """
 import datetime
 import logging
