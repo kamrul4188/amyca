@@ -1,5 +1,3 @@
-from todo import ToDo
-from deadline import Deadline
 
 
 class Project:
@@ -58,3 +56,7 @@ class Project:
 
 	def __str__(self):
 		return 'Project name is: ' + self.name + ' and ID: ' + str(self.id)
+
+
+if __name__ == '__main__':
+	pass
