@@ -696,10 +696,12 @@ class AddUserScreen:
 		messagebox.showwarning('User', message)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.add_user_window.mainloop()
 
 
 class RemoveUserScreen:
+	"""This class is a GUI to remove user"""
 	def __init__(self):
 		self.user = User
 
@@ -725,6 +727,7 @@ class RemoveUserScreen:
 		self.remove_user_button.pack(padx=10, pady=10)
 
 	def remove_user(self):
+		"""This function is called user remove method"""
 		user_name = self.entry_user_name.get()
 		user_password = self.entry_user_password.get()
 		message = User.remove(user_name, user_password)
@@ -732,10 +735,12 @@ class RemoveUserScreen:
 		messagebox.showwarning('User', message)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.remove_user_window.mainloop()
 
 
 class ChangePasswordScreen:
+	"""This cass is GUI to change password"""
 	def __init__(self):
 		self.user = User
 
@@ -766,6 +771,7 @@ class ChangePasswordScreen:
 		self.change_password_button.pack(padx=10, pady=10)
 
 	def change_password(self):
+		"""This function call user to change password method"""
 		user_name = self.entry_user_name.get()
 		current_password = self.entry_user_password.get()
 		new_password = self.entry_new_password.get()
@@ -774,15 +780,20 @@ class ChangePasswordScreen:
 		messagebox.showwarning('User', message)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.change_password_window.mainloop()
 
 
 if __name__ == '__main__':
+	"""
+	This is called main. When reun this module the executable module run as name main
+	Here is this th begain of Amyca runtime.  
+	"""
 	try:
-		User('admin', 'admin123', 4)
+		User('admin', 'admin123', 4)  # Create default user admin
 		user_file = 'program_data/users.csv'
-		User.load_form_csv(user_file)
-		LoginScreen().start()
+		User.load_form_csv(user_file) # load user database
+		LoginScreen().start()  # Start Amyca loging window to began
 
 	except Exception as e:
 		messagebox.showerror('Error...!!!', str(e))
