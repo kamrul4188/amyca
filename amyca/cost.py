@@ -6,6 +6,7 @@ This module to create cost object for amyca
 
 
 class Cost:
+	"""This class is to create cost object"""
 	TYPE_KEY = 'C'
 
 	def __init__(self, description, cost):
