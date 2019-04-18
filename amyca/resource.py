@@ -1,6 +1,5 @@
 """
 Module Name : resource
-
 This is module is to create resource object for Amyca
 """
 
