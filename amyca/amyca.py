@@ -1,13 +1,16 @@
 """
+-------------------------------------------------re
 Module Name : amyca
+Module Type : root
+Github      : https://github.com/kamrul4188/amyca
+-------------------------------------------------
 
-==============================================================================================================
-The software is named 'Amyca' is a Project Management Assistance
+The software named  is 'Amyca' - Project Management Assistance
 It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
-==============================================================================================================
+
 
 Project Naming:
-===============
+---------------
 The software to help the project team to run the project smoothly.
 As our software is part of the project team as assistance, So we get a lovely Name.
 The latin female form of Amicus of Latin Origin: Meaning: Female friend or Friendly, Loving Woman
@@ -15,7 +18,7 @@ Form latin Amicus to English Amyca. We have selected name of our software is Amy
 [Amyca - Project Management Assistance]
 
 Basic Functionality:
-====================
+--------------------
 1. Initially Amyca interface build in text-base than updated Graphical User Interface (GUI).
 2. Amyca and storing and retrieving various data type is require to project management. following are:
 	eg: todo, deadline, timeline, resource and cost
@@ -28,7 +31,7 @@ Basic Functionality:
 	3. Documentation data stored as .txt
 
 Additional Functionality:
-=========================
+-------------------------
 1. Timeline as graph: User can view all of there timeline task as graph by just clicking TimeLine menu
 2. View Calender: User can view calender in monthly view. Pup up in current date by clicking can be view as needed.
 3. Multiple Users: Multiple users is support by Amyca. Amyca has four user access levels.
@@ -40,9 +43,9 @@ Additional Functionality:
 	a. Minimum length of password is 6. Amyca not add user with below minimum length.
 	b. Stored user particular into hard disk with password as hash (encrypted)
 
-**********************************************
+----------------------------------------------
 NOTE: Default User: admin, Password: admin123
-**********************************************
+----------------------------------------------
 """
 
 import datetime

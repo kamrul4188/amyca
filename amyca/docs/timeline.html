@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module timeline</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>timeline</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:e%3A%5C02%20-%20educational%5C00%20-%20project%5Cpython%5Cte3201-software-engineering%5Camyca%5Ctimeline.py">e:\02 - educational\00 - project\python\te3201-software-engineering\amyca\timeline.py</a></font></td></tr></table>
+    <p><tt>Module&nbsp;Name:&nbsp;timeline<br>
+This&nbsp;module&nbsp;is&nbsp;to&nbsp;crate&nbsp;timeline&nbsp;object</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="todo.html">todo</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="todo.html#ToDo">todo.ToDo</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="timeline.html#TimeLine">TimeLine</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TimeLine">class <strong>TimeLine</strong></a>(<a href="todo.html#ToDo">todo.ToDo</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#TimeLine">TimeLine</a>(description,&nbsp;status,&nbsp;start_date,&nbsp;end_date)<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;is&nbsp;to&nbsp;add&nbsp;Timeline&nbsp;object<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="timeline.html#TimeLine">TimeLine</a></dd>
+<dd><a href="todo.html#ToDo">todo.ToDo</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TimeLine-__init__"><strong>__init__</strong></a>(self, description, status, start_date, end_date)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;initialize&nbsp;<a href="#TimeLine">TimeLine</a>&nbsp;class<br>
+:param&nbsp;description:&nbsp;name/details&nbsp;of&nbsp;timeline&nbsp;object.<br>
+:param&nbsp;status:&nbsp;task&nbsp;status&nbsp;-&gt;&nbsp;bool<br>
+:param&nbsp;start_date:&nbsp;stating&nbsp;date&nbsp;of&nbsp;timeline&nbsp;task<br>
+:param&nbsp;end_date:&nbsp;ending&nbsp;date&nbsp;of&nbsp;timeline&nbsp;task</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-as_csv"><strong>as_csv</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;timeline&nbsp;object&nbsp;as&nbsp;csv&nbsp;format<br>
+:return:&nbsp;as&nbsp;csv</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-datetime_to_print_format"><strong>datetime_to_print_format</strong></a>(self, date)</dt><dd><tt>This&nbsp;function&nbsp;in&nbsp;to&nbsp;convert&nbsp;date&nbsp;into&nbsp;printable&nbsp;format&nbsp;from&nbsp;datetime&nbsp;format.<br>
+:param&nbsp;date:<br>
+:return:</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-due_to_end"><strong>due_to_end</strong></a>(self, date)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;duration&nbsp;form&nbsp;today<br>
+:param&nbsp;date:&nbsp;input&nbsp;date<br>
+:return:&nbsp;duration&nbsp;from&nbsp;today</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-due_to_start"><strong>due_to_start</strong></a>(self, date)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;duration&nbsp;of&nbsp;date&nbsp;from&nbsp;today.<br>
+:param&nbsp;date:&nbsp;input&nbsp;date<br>
+:return:&nbsp;duration&nbsp;from&nbsp;today</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-duration_datetime"><strong>duration_datetime</strong></a>(self, start_date, end_date)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;duration&nbsp;between&nbsp;two&nbsp;days<br>
+:param&nbsp;start_date:&nbsp;stating&nbsp;date<br>
+:param&nbsp;end_date:&nbsp;end&nbsp;date<br>
+:return:&nbsp;duration</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-format_to_datetime"><strong>format_to_datetime</strong></a>(self, date)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;convert&nbsp;input&nbsp;date&nbsp;into&nbsp;datetime&nbsp;format.<br>
+:param&nbsp;date:&nbsp;input&nbsp;date<br>
+:return:&nbsp;datetime</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-get_as_string"><strong>get_as_string</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;to&nbsp;get&nbsp;timeline&nbsp;object&nbsp;as&nbsp;string.<br>
+Suitable&nbsp;to&nbsp;display&nbsp;into&nbsp;gui.<br>
+:return:&nbsp;timeline&nbsp;object&nbsp;as&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-get_duration"><strong>get_duration</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;duration&nbsp;of&nbsp;timeline&nbsp;object&nbsp;between&nbsp;stat&nbsp;date&nbsp;and&nbsp;end&nbsp;date.<br>
+:return:&nbsp;duration.</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-get_end_date"><strong>get_end_date</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;end&nbsp;date&nbsp;of&nbsp;timeline&nbsp;object.<br>
+:return:&nbsp;date.</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-get_start_date"><strong>get_start_date</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;get&nbsp;starting&nbsp;date&nbsp;of&nbsp;timeline&nbsp;object.<br>
+:return:&nbsp;date</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>TYPE_KEY</strong> = 'TL'</dl>
+
+<hr>
+Methods inherited from <a href="todo.html#ToDo">todo.ToDo</a>:<br>
+<dl><dt><a name="TimeLine-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;call&nbsp;during&nbsp;initialization.<br>
+:return:&nbsp;todo&nbsp;object&nbsp;as&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-as_string"><strong>as_string</strong></a>(self)</dt><dd><tt>This&nbsp;is&nbsp;to&nbsp;get&nbsp;todo&nbsp;object&nbsp;as&nbsp;printable&nbsp;string<br>
+Suitable&nbsp;to&nbsp;commandline&nbsp;print.<br>
+:return:&nbsp;dodo&nbsp;obj&nbsp;as&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-get_status"><strong>get_status</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;status&nbsp;of&nbsp;todo&nbsp;object<br>
+:return:&nbsp;status&nbsp;-&gt;&nbsp;True</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-get_status_as_icon"><strong>get_status_as_icon</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;get&nbsp;status&nbsp;icon&nbsp;of&nbsp;todo&nbsp;object<br>
+:return:</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-mark_as_done"><strong>mark_as_done</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;to&nbsp;set&nbsp;task&nbsp;status&nbsp;(True)&nbsp;as&nbsp;done</tt></dd></dl>
+
+<dl><dt><a name="TimeLine-mark_as_pending"><strong>mark_as_pending</strong></a>(self)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;reset&nbsp;task&nbsp;status&nbsp;(False)&nbsp;as&nbsp;pending</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="todo.html#ToDo">todo.ToDo</a>:<br>
+<dl><dt><a name="TimeLine-get_str"><strong>get_str</strong></a>()<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>This&nbsp;function&nbsp;ist&nbsp;to&nbsp;get&nbsp;todo&nbsp;object&nbsp;as&nbsp;string<br>
+:return:&nbsp;as&nbsp;string</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="todo.html#ToDo">todo.ToDo</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
