@@ -77,3 +77,6 @@ class MessageScreen:
 		"""
 		return self.message_window.mainloop()
 
+
+if __name__ == '__main__':
+	pass

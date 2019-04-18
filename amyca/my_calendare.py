@@ -1,11 +1,19 @@
+"""
+Module Name: my_calendar
+
+This module to create calender in monthly view.
+"""
+
 import datetime
 from tkinter import *
 from tkinter import ttk
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import Calendar
 
 
 class CalendarScreen:
+	"""This class to create calendar object"""
 	def __init__(self):
+		"""Initialize CalendarScreen class"""
 		self.current_year = int(datetime.date.today().strftime('%Y'))
 		self.current_month = int(datetime.date.today().strftime('%m'))
 		self.current_day = int(datetime.date.today().strftime('%d'))
@@ -17,4 +25,12 @@ class CalendarScreen:
 		self.ok_button.pack(padx=5, pady=5)
 
 	def start(self):
+		"""
+		This function is to stat.
+		:return: mainloop()
+		"""
 		return self.calendar_window.mainloop()
+
+
+if __name__ == '__main__':
+	pass
