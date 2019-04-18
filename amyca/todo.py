@@ -85,3 +85,8 @@ class ToDo:
 		:return: as csv
 		"""
 		return ['T', self.description, 'done' if self.is_done else 'pending']
+
+
+if __name__ == '__main__':
+	pass
+
