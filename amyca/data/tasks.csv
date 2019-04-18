@@ -1,6 +1,3 @@
-T,read book,pending
-T,return book,done
-D,install aircon,done,monday
-TL,service air con,pending,30/04/2019,30/05/2019
-TL,borrow book,done,20/04/2019,15/05/2019
+T,read book,done
+D,install aircon,pending,tomorrow
 T,read book,pending

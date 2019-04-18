@@ -1,4 +1,6 @@
 """
+Module Name : amyca
+
 ==============================================================================================================
 The software is named 'Amyca' is a Project Management Assistance
 It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
@@ -16,29 +18,33 @@ Basic Functionality:
 ====================
 1. Initially Amyca interface build in text-base than updated Graphical User Interface (GUI).
 2. Amyca and storing and retrieving various data type is require to project management. following are:
-	eg: todo, deadline, timeline, resource, cost
+	eg: todo, deadline, timeline, resource and cost
 3. Amyca is not understand natural language but command format most likely as natural and user friendly.
 	but user require to follow those strict format. more information you can found on help menu.
 	Example: cost of DESCRIPTION is AMOUNT
-4. Data stored into hard disk.
+4. Amyca data stored into hard disk.
 	a. Project and user data stored as .csv
 	2. Logging data stored as .log
 	3. Documentation data stored as .txt
 
 Additional Functionality:
 =========================
-1. Timeline as graph: User can view all of there timeline task as graph
-2. View Calender: from menu bar > Calendar user can view calender in monthly view
-3. Multiple Users: Multiple users is support by Amyca. Amyca has four user access levels
+1. Timeline as graph: User can view all of there timeline task as graph by just clicking TimeLine menu
+2. View Calender: User can view calender in monthly view. Pup up in current date by clicking can be view as needed.
+3. Multiple Users: Multiple users is support by Amyca. Amyca has four user access levels.
 	a. Team Member: Access Level = 1
 	b. Team Leader: Access Level = 2
 	c. Project Manager: Access Level = 3
 	d. System Admin: Access Level = 4
-4. Password:
+4. Password: Amyca has posword policy to stored password not understandable by users.
 	a. Minimum length of password is 6. Amyca not add user with below minimum length.
 	b. Stored user particular into hard disk with password as hash (encrypted)
 
+**********************************************
+NOTE: Default User: admin, Password: admin123
+**********************************************
 """
+
 import datetime
 import logging
 from tkinter import *
@@ -116,6 +122,7 @@ class MainScreen:
 		self.menu_bar.add_cascade(label='Amyca', menu=self.amyca_menu)
 		self.main_window.config(menu=self.menu_bar)
 
+		# Add command into menu
 		self.file_menu.add_command(label='save', command=self.save_data)
 		self.file_menu.add_command(label='Exit', command=self.main_window.destroy)
 		self.user_menu.add_command(label='Add User', command=self.add_user)
@@ -134,20 +141,23 @@ class MainScreen:
 		self.header_font = ('Courier New', 30)
 		self.footer_font = ('Courier New', 10)
 
-		# add Label as header box
-		self.header_box = Label(self.header, text='AMYCA - Project Management Assistance',
-		                        font=self.header_font) # ('Helvetica', 30)
+		# add Label on header box
+		self.header_box = Label(self.header,
+		                        text='AMYCA - Project Management Assistance',
+		                        font=self.header_font)
 		self.header_box.pack()
 
-		# add Label as footer box
-		self.footer_box = Label(self.footer, text='Copyright © 2019 Amyca | Develop By: Md Kamruzzaman (A0107851),'
-		 + ' Abdullah-al-mamun Khan (A0147365Y) and Chia Xiao Hui (A0147375X) | Project: TE3201-Software Engineering | NUS', font=self.footer_font)
+		# add Label on footer box
+		self.footer_box = Label(self.footer,
+		                        text='Copyright © 2019 Amyca | Develop By: Md Kamruzzaman (A0107851),'
+		                             + ' Abdullah-al-mamun Khan (A0147365Y) and Chia Xiao Hui (A0147375X) | '
+		                               'Project: TE3201-Software Engineering | NUS', font=self.footer_font)
 		self.footer_box.pack()
 
 		# add a Entry as input_box to enter command
-		self.input_box = Entry(self.content)  # create input box
+		self.input_box = Entry(self.content)
 		self.input_box.pack(padx=5, pady=5, fill='x')
-		self.input_box.bind('<Return>', self.command_entered)  # bind the command_entered function to the Enter key
+		self.input_box.bind('<Return>', self.command_entered)
 		self.input_box.focus()
 
 		# add a Text area to show chat history
@@ -218,21 +228,19 @@ class MainScreen:
 
 	def add_user(self):
 		"""This function to add user to amyca"""
-		if self.current_user_level == 4:
-			"""condition: Admin to add user"""
+		if self.current_user_level == 4:  # condition: Only admin to add user
 			AddUserScreen(self.project).start()
 		else:
 			messagebox.showwarning('Add User', 'Only admin can add user')
 
 	def remove_user(self):
-		if self.current_user_level == 4:
+		if self.current_user_level == 4:  # Condition: Only admin to remove user
 			RemoveUserScreen().start()
 		else:
 			messagebox.showwarning('Remove User','Only admin can add user')
 
 	def change_password(self):
-		if self.current_user_level == 4:
-			"""Admin is to access to change password"""
+		if self.current_user_level == 4:  # Condition: Only admin to change password
 			ChangePasswordScreen().start()
 		else:
 			messagebox.showwarning('Change Password', 'Only Admin can password')
@@ -253,11 +261,21 @@ class MainScreen:
 		CalendarScreen().start()
 
 	def get_timeline_graph(self):
+		"""
+		This function to call for display timeline object as graph
+		timeline object is a task with start and end date of task
+		"""
 		task_id = []
 		duration = []
 		timeline_task = []
 
 		def duration_datetime(start_date, end_date):
+			"""
+			This function is to calculate duration between start and end date
+			:param start_date: Starting date of timeline object
+			:param end_date: End date of timeline object
+			:return: Duration
+			"""
 			try:
 				if end_date >= start_date:
 					duration = end_date - start_date
@@ -270,7 +288,7 @@ class MainScreen:
 
 		for i, task in enumerate(self.project.tasks):
 			if type(task) == TimeLine:
-				timeline_task.append(task)
+				timeline_task.append(task)  # append timeline task from the task list
 
 		if len(timeline_task) == 0:
 			messagebox.showinfo('Timeline',  'Nothing to show on time-line')
@@ -291,22 +309,40 @@ class MainScreen:
 			plt.show()
 
 	def help(self):
+		"""This function is call to show/display help info"""
 		file = open(self.help_file, 'r').read()
 		MessageScreen('Help', file).start()
 
 	def get_log(self):
+		"""
+		This function is called to display logging.
+		Open log file form hard disk as read only mode.
+		File stored in hard disk as .log format
+		"""
 		file = open(self.log_file, 'r').read()
 		MessageScreen('Log', file).start()
 
 	def get_about_developer(self):
+		"""
+		This function is call to display developer personal and contract information.
+		File stored in hard disk as .txt format
+		"""
 		file = open(self.about_developer_file, 'r').read()
 		MessageScreen('About Developer', file)
 
 	def get_about_amyca(self):
+		"""
+		This function is call to display software information
+		File stored in .txt format. and open file as read mode
+		"""
 		file = open(self.about_amyca_file, 'r').read()
 		MessageScreen('About Amyca', file)
 
 	def get_current_time(self):
+		"""
+		This function is to get current time as datetime format
+		:return: current time
+		"""
 		self.current_time = datetime.datetime.now().strftime('%H:%M:%S')
 		return self.current_time
 
@@ -316,10 +352,10 @@ class MainScreen:
 
 	def update_chat_history(self, command, response, status_format):
 		"""
-		:param command:
-		:param response:
-		:param status_format: indicates which color to use for the status message. eg 'normal_format', 'error_format' or 'success_format'
-		:return:
+		This function is update chat history and display with following parameter
+		:param command: command entered by user in command window
+		:param response: return response form execute function
+		:param status_format: tag: normal_format, success_format, error_format.
 		"""
 		current_time = datetime.datetime.now().strftime('%H:%M:%S')
 		self.history_area.insert(1.0, '-'*40 + '\n', 'normal_format')
@@ -328,8 +364,11 @@ class MainScreen:
 		self.history_area.insert(1.0, current_time + '\n', 'normal_format')
 
 	def update_task_list(self, tasks):
+		"""
+		This function is to update task list into display  as string
+		:param tasks: Project task list
+		"""
 		self.list_area.delete('1.0', END)  # Clear the list area
-
 		completed_task = 0
 		total_task = 0
 		self.list_area.insert(END, ' '*12 + 'LIST OF TASKS' + '\n', 'title_format')
@@ -354,6 +393,10 @@ class MainScreen:
 		self.list_area.insert(END, '-' * 40 + '\n', 'line_format')
 
 	def update_resource_list(self, resources):
+		"""
+		This function is to update project resources list into display as string
+		:param resources: project resources
+		"""
 		self.resource_area.delete('1.0', END)
 		self.resource_area.insert(END, ' ' * 11 + 'LIST OF RESOURCES' + '\n', 'title_format')
 		self.resource_area.insert(END, '-' * 40 + '\n', 'title_format')
@@ -362,6 +405,10 @@ class MainScreen:
 		self.resource_area.insert(END, '-' * 40 + '\n', 'title_format')
 
 	def update_cost_list(self, cost_list):
+		"""
+		This function is to update project cost list into display as string
+		:param cost_list: project cost list
+		"""
 		self.cost_area.delete('1.0', END)
 		if self.current_user_level >= 3:
 			self.cost_area.insert(END, ' ' * 11 + 'LIST OF COST' + '\n', 'title_format')
@@ -378,6 +425,11 @@ class MainScreen:
 			self.cost_area.insert(END, 'Only Manager and above can view and update cost', '\n')
 
 	def command_entered(self, event):
+		"""
+		This function is event interrupt function.
+		At command enter window press enter to call this function
+		:param event: command
+		"""
 		command = None
 
 		try:
@@ -397,6 +449,12 @@ class MainScreen:
 			messagebox.showerror('Error...!!!', str(e))
 
 	def remove_from_word(self, text, word):
+		"""
+		This function is to break a string by key word
+		:param text: Input string to be break
+		:param word: Key word to break the string
+		:return: first part of string
+		"""
 		tail_start_position = text.find(word)
 		if tail_start_position != -1:
 			text = text[:tail_start_position]
@@ -406,6 +464,12 @@ class MainScreen:
 			raise ValueError('Your command not in correct format')
 
 	def remove_to_word(self, text, word):
+		"""
+		This function is to break the string by key word
+		:param text: input string to be break
+		:param word: last part of the string
+		:return:
+		"""
 		word_size = len(word) + 1  # world length + a space after word
 		word_start_position = text.find(word)
 		if word_start_position != -1:
@@ -418,10 +482,11 @@ class MainScreen:
 
 	def execute_command(self, command):
 		"""
-		Amyca only accept following command
-		Enter [exit] to terminate from Amyca
+		This function is to execute the command entered
+		Do pre processing before call the execution function is need
+		:param command: Command entered
+		:return: value form execute function
 		"""
-
 		if command == 'exit':
 			sys.exit()
 		elif command.startswith('todo '):
@@ -537,7 +602,9 @@ class MainScreen:
 
 
 class LoginScreen:
+	"""This is for GUI window for user login"""
 	def __init__(self):
+		"""Initialize Login GUI window"""
 		self.user = User
 		self.login = False
 
@@ -550,11 +617,13 @@ class LoginScreen:
 		self.label = Label(text='Please enter details below to login')
 		self.label.pack(padx=10, pady=10)
 
+		# Create label and entry for user name
 		self.label_user_name = Label(self.login_window, text='Username *')
 		self.label_user_name.pack(padx=5, pady=5)
 		self.username_login_entry = Entry(self.login_window)
 		self.username_login_entry.pack(padx=5, pady=5)
 
+		# Create label and entry for user password
 		self.label_password = Label(self.login_window, text='Password *')
 		self.label_password.pack(padx=5, pady=5)
 		self.password_login_entry = Entry(self.login_window, show='*')
@@ -564,9 +633,11 @@ class LoginScreen:
 		self.login_button.pack(padx=5, pady=5)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.login_window.mainloop()
 
 	def verify_user_login(self):
+		"""Tins function is to verify valid user in registered in database"""
 		user_name = self.username_login_entry.get()
 		user_password = self.password_login_entry.get()
 		access_login = self.user.verify(user_name, user_password)
@@ -576,6 +647,11 @@ class LoginScreen:
 			messagebox.showerror('Login', 'Login not successful')
 
 	def login_success(self):
+		"""
+		This function is call after get successfully verify a valid users
+		This function will kil login window screed and call welcome/greeting window
+		Get ack form greeting window to start MainScreen window
+		"""
 		self.login_window.destroy()
 		greeting = GreetingScreen().start()
 		if greeting:
@@ -583,7 +659,9 @@ class LoginScreen:
 
 
 class AddUserScreen:
+	"""This class is as GUI to add new user"""
 	def __init__(self, project):
+		"""Initialize add user screen GUI window"""
 		self.user = User
 		self.project = project
 
@@ -614,6 +692,7 @@ class AddUserScreen:
 		self.add_user_button.pack(padx=5, pady=5)
 
 	def add_user(self):
+		"""Ths function is to execute user object"""
 		user_name = self.entry_user_name.get()
 		password = self.entry_user_password.get()
 		access_level = self.entry_user_access_level.get()
@@ -623,10 +702,12 @@ class AddUserScreen:
 		messagebox.showwarning('User', message)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.add_user_window.mainloop()
 
 
 class RemoveUserScreen:
+	"""This class is a GUI to remove user"""
 	def __init__(self):
 		self.user = User
 
@@ -652,6 +733,7 @@ class RemoveUserScreen:
 		self.remove_user_button.pack(padx=10, pady=10)
 
 	def remove_user(self):
+		"""This function is called user remove method"""
 		user_name = self.entry_user_name.get()
 		user_password = self.entry_user_password.get()
 		message = User.remove(user_name, user_password)
@@ -659,9 +741,12 @@ class RemoveUserScreen:
 		messagebox.showwarning('User', message)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.remove_user_window.mainloop()
 
+
 class ChangePasswordScreen:
+	"""This cass is GUI to change password"""
 	def __init__(self):
 		self.user = User
 
@@ -692,6 +777,7 @@ class ChangePasswordScreen:
 		self.change_password_button.pack(padx=10, pady=10)
 
 	def change_password(self):
+		"""This function call user to change password method"""
 		user_name = self.entry_user_name.get()
 		current_password = self.entry_user_password.get()
 		new_password = self.entry_new_password.get()
@@ -700,16 +786,20 @@ class ChangePasswordScreen:
 		messagebox.showwarning('User', message)
 
 	def start(self):
+		"""This function is for call mainloop for starting GUI"""
 		return self.change_password_window.mainloop()
 
 
 if __name__ == '__main__':
+	"""
+	This is called main. When reun this module the executable module run as name main
+	Here is this th began of Amyca runtime.  
+	"""
 	try:
+		User('admin', 'admin123', 4)  # Create default user admin
 		user_file = 'program_data/users.csv'
-		User.load_form_csv(user_file)
-		LoginScreen().start()
+		User.load_form_csv(user_file) # load user database
+		LoginScreen().start()  # Start Amyca loging window to began
 
 	except Exception as e:
 		messagebox.showerror('Error...!!!', str(e))
-
-

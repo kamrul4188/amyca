@@ -1,3 +1,8 @@
+"""
+Module Name : storage
+This module is to mange storage data to hard disk to back up.
+"""
+
 import csv
 from todo import ToDo
 from deadline import Deadline
@@ -9,9 +14,17 @@ from cost import Cost
 class StorageManager:
 	"""this class used to read data from the data file and write data back to the data file."""
 	def __init__(self, file_path):
+		"""
+		This function is to initialize storage manager.
+		:param file_path: path to storage datal.
+		"""
 		self.storage = file_path
 
 	def load_tasks(self):
+		"""
+		This function is to lead task list date from storage.
+		:return: task object list.
+		"""
 		data_task = []
 		data_file = open(self.storage)
 		deliveries_reader = csv.reader(data_file)
@@ -26,6 +39,10 @@ class StorageManager:
 		return data_task
 
 	def load_deadline(self):
+		"""
+		This function is to load deadline object data form storage.
+		:return: deadline object list.
+		"""
 		data_deadline = []
 		data_file = open(self.storage)
 		deliveries_reader = csv.reader(data_file)
@@ -36,6 +53,10 @@ class StorageManager:
 		return data_deadline
 
 	def load_resource(self):
+		"""
+		This function is to load resource object date form storage.
+		:return: resource object list.
+		"""
 		data_resource = []
 		data_file = open(self.storage)
 		deliveries_reader = csv.reader(data_file)
@@ -45,8 +66,11 @@ class StorageManager:
 		data_file.close()
 		return data_resource
 
-
 	def load_cost(self):
+		"""
+		This function is to load cost object data from storage.
+		:return: cost object list.
+		"""
 		data_cost = []
 		data_file = open(self.storage)
 		deliveries_reader = csv.reader(data_file)
@@ -57,6 +81,11 @@ class StorageManager:
 		return data_cost
 
 	def save_data(self, data):
+		"""
+		This function is to store data into storage.
+		:param data: data to be storage.
+		:return: confirmation
+		"""
 		data = data
 		output_file = open(self.storage, 'w', newline='')
 		output_writer = csv.writer(output_file)
@@ -66,47 +95,12 @@ class StorageManager:
 		return 'Data save to ' + '[ /' + self.storage + ' ]' + ' as csv format.'
 
 	def __str__(self):
+		"""
+		This function call during initialization
+		:return: storage
+		"""
 		return self.storage
 
 
 if __name__ == '__main__':
-	tasks = []
-	task_1 = ToDo('Read book', False)
-	task_2 = ToDo('Return book', True)
-	task_3 = Deadline('install Air-Con', False, 'Monday')
-	task_4 = Deadline('Servicing Air-Con', True, 'Today')
-	tasks.append(task_1)
-	tasks.append(task_2)
-	tasks.append(task_3)
-	tasks.append(task_4)
-
-	resources = []
-	resources.append(Resource('Manpower', 100))
-	resources.append(Resource('Service Charge', 5000))
-
-	storage_manager = StorageManager('data/data.csv')
-	print(storage_manager)
-
-	save = storage_manager.save_data(tasks)
-	print(save)
-
-	todo = storage_manager.load_todo()
-	print(todo)
-
-	deadline = storage_manager.load_deadline()
-	print(deadline)
-
-	res = StorageManager('data/resources.csv')
-	res_save = res.save_data(resources)
-	print(res_save)
-
-	my_resource = res.load_resource()
-	print(my_resource)
-
-	costs = [Cost('Manpower', 500), Cost('Service Charge', 50)]
-	my_cost = StorageManager('data/cost.csv')
-	my_cost.save_data(costs)
-
-	cost = my_cost.load_cost()
-	print(cost)
-
+	pass
