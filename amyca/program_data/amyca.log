@@ -123,3 +123,19 @@
 19/04/2019 12:17:13 AM INFO     Amyca Start
 19/04/2019 12:17:13 AM INFO     Data loaded
 19/04/2019 12:17:23 AM INFO     Save data to hard disk to back up
+19/04/2019 12:57:08 AM INFO     Amyca Start
+19/04/2019 12:57:08 AM INFO     Data loaded
+19/04/2019 12:57:37 AM INFO     Command Entered: remove task 3
+19/04/2019 12:58:21 AM INFO     Command Entered: timeline repair aircon form 30/04/2019 to 30/05/2019
+19/04/2019 12:58:54 AM INFO     Command Entered: timeline repair aircon from 30/04/2019 to 30/05/2019
+19/04/2019 12:59:52 AM INFO     Command Entered: timeline borrow book from 15/05/2019 to 10/06/2019
+19/04/2019 01:00:18 AM INFO     Command Entered: remove resource 2
+19/04/2019 01:00:56 AM INFO     Command Entered: resource lorry is 02 pack
+19/04/2019 01:01:04 AM INFO     Command Entered: remove resource 1
+19/04/2019 01:01:23 AM INFO     Command Entered: resource manpower is 10 person
+19/04/2019 01:01:42 AM INFO     Command Entered: cost of installatio is 1000
+19/04/2019 01:01:48 AM INFO     Command Entered: remove cost
+19/04/2019 01:01:55 AM INFO     Command Entered: remove cost 2
+19/04/2019 01:02:09 AM INFO     Command Entered: cost of installrion is 1000
+19/04/2019 01:02:22 AM INFO     Command Entered: cost of service charge is 1500
+19/04/2019 01:02:33 AM INFO     Save data to hard disk to back up
