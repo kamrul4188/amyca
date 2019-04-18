@@ -1,4 +1,4 @@
-#Amyca - Project Management Assistance
+# Amyca - Project Management Assistance
 ## It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
 
 
@@ -35,3 +35,50 @@ Additional Functionality:
 4. Password: Amyca has posword policy to stored password not understandable by users.
 	a. Minimum length of password is 6. Amyca not add user with below minimum length.
 	b. Stored user particular into hard disk with password as hash (encrypted)``
+	
+Amyca can understand the following commands:
+--------------------------------------------
+```
+todo DESCRIPTION
+    Adds a todo task into the task list
+    Example: todo read book
+
+deadline DESCRIPTION by DEADLINE
+    Adds a deadline task into the task list
+    Example: deadline read book by tomorrow
+
+timeline DESCRIPTION from DATE to DATE
+    Adds a timeline task into the task list
+    Example: timeline borrow book from 30/04/2019 to 30/05/2019
+
+resource DESCRIPTION is QUANTITY PREFIX
+    Adds resource into resource list
+    Example: resource manpower is 10 pack
+
+cost of DESCRIPTION is AMOUNT
+    adds cost into cost list
+    example: cost of manpower is 10000
+
+done INDEX
+    Marks the task at index as 'done'
+    Example: done 1
+
+pending INDEX
+    Marks the task at index as 'pending'
+    Example: pending 1
+
+remove task INDEX
+    Remove task as indexed from task list
+    Example: remove task 1
+
+remove resource INDEX
+    Remove resource as indexed from the resource list
+    Example: remove resource 1
+
+remove cost INDEX
+    Remove cost as indexed from the cost list
+    Example: remove cost 1
+
+exit
+    Exits the application
+ ```
