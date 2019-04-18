@@ -1,4 +1,6 @@
 """
+Module Name : amyca
+
 ==============================================================================================================
 The software is named 'Amyca' is a Project Management Assistance
 It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
