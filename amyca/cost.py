@@ -1,6 +1,5 @@
 """
 Module Name : cost
-
 This module to create cost object for amyca
 """
 

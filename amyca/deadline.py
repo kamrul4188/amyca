@@ -1,7 +1,6 @@
 """
 Module Name     : deadline
 Parent Module   : todo
-
 This module is to create deadline task object for Amyca.
 """
 import todo

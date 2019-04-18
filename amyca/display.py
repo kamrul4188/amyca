@@ -1,6 +1,5 @@
 """
 Module Name : display
-
 This module is created to POP-UP display in GUI
 """
 

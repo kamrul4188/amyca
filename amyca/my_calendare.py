@@ -1,6 +1,5 @@
 """
 Module Name: my_calendar
-
 This module to create calender in monthly view.
 """
 

@@ -44,6 +44,7 @@ Additional Functionality:
 NOTE: Default User: admin, Password: admin123
 **********************************************
 """
+
 import datetime
 import logging
 from tkinter import *
@@ -792,7 +793,7 @@ class ChangePasswordScreen:
 if __name__ == '__main__':
 	"""
 	This is called main. When reun this module the executable module run as name main
-	Here is this th begain of Amyca runtime.  
+	Here is this th began of Amyca runtime.  
 	"""
 	try:
 		User('admin', 'admin123', 4)  # Create default user admin
