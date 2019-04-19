@@ -1,9 +1,9 @@
 """
--------------------------------------------------re
-Module Name : amyca
-Module Type : root
-Github      : https://github.com/kamrul4188/amyca
--------------------------------------------------
+
+- Module Name : amyca
+- Module Type : root
+- Github      : https://github.com/kamrul4188/amyca
+
 
 The software named  is 'Amyca' - Project Management Assistance
 It has been build as project requirement of TE3201 - Software Engineering of National University of Singapore
@@ -43,9 +43,9 @@ Additional Functionality:
 	a. Minimum length of password is 6. Amyca not add user with below minimum length.
 	b. Stored user particular into hard disk with password as hash (encrypted)
 
-----------------------------------------------
-NOTE: Default User: admin, Password: admin123
-----------------------------------------------
+
+	NOTE: Default User: admin, Password: admin123
+
 """
 
 import datetime
